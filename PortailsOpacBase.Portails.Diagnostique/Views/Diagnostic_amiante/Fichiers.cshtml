@@ -1,0 +1,25 @@
+﻿@model List<diag_logement_fichiers>
+
+@using PortailsOpacBase.Portails.Diagnostique.Models
+
+<table id="table_fichiers" class="table table-striped">
+    <thead>
+        <tr class="info">
+            <th>Type fichier</th>
+            <th>Nom fichier</th>
+            <th>Num rapport
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(diag_logement_fichiers l in Model)
+        {
+        <tr>
+            <td>@l.type_fichier</td>
+            <td>@l.nom_fichier</td>
+            <td>@l.numrapport</td>
+            <td style="text-align:right"><input class="selfichier" type="checkbox" data-id="@l.id" /></td>
+        </tr>
+        }
+    </tbody>
+</table>

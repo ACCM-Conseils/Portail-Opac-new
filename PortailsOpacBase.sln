@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortailsOpacBase.Portails.Diagnostic", "PortailsOpacBase.Portails.Diagnostique\PortailsOpacBase.Portails.Diagnostic.csproj", "{9BB0402B-05FB-4612-AA00-55FCF8D315E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortailsOpacBase.Provider.Docuware", "PortailsOpacBase.Provider.Docuware\PortailsOpacBase.Provider.Docuware.csproj", "{348035A8-73EC-4EC1-8BF2-EB47BEB467B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortailsOpacBase.Common", "PortailsOpacBase.Common\PortailsOpacBase.Common.csproj", "{9F9B8519-E92F-40E7-A23D-B28B77F05F43}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortailsOpacBase.Authentication", "PortailsOpacBase.Authentication\PortailsOpacBase.Authentication.csproj", "{84D3C6DF-A363-4DC9-9A7A-0D23DD828715}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeleteConnections", "DeleteConnections\DeleteConnections.csproj", "{28D8C7AB-A1B9-439F-96D3-E5DA8B4BBC42}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortailsOpacBase.Portails.IFrame", "PortailsOpacBase.Portails.IFrame\PortailsOpacBase.Portails.IFrame.csproj", "{4C1AF88E-25CE-4E3D-8BB2-D6AE4D1C3C83}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9BB0402B-05FB-4612-AA00-55FCF8D315E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BB0402B-05FB-4612-AA00-55FCF8D315E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BB0402B-05FB-4612-AA00-55FCF8D315E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BB0402B-05FB-4612-AA00-55FCF8D315E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{348035A8-73EC-4EC1-8BF2-EB47BEB467B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{348035A8-73EC-4EC1-8BF2-EB47BEB467B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{348035A8-73EC-4EC1-8BF2-EB47BEB467B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{348035A8-73EC-4EC1-8BF2-EB47BEB467B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F9B8519-E92F-40E7-A23D-B28B77F05F43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F9B8519-E92F-40E7-A23D-B28B77F05F43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F9B8519-E92F-40E7-A23D-B28B77F05F43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F9B8519-E92F-40E7-A23D-B28B77F05F43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84D3C6DF-A363-4DC9-9A7A-0D23DD828715}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84D3C6DF-A363-4DC9-9A7A-0D23DD828715}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84D3C6DF-A363-4DC9-9A7A-0D23DD828715}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84D3C6DF-A363-4DC9-9A7A-0D23DD828715}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28D8C7AB-A1B9-439F-96D3-E5DA8B4BBC42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28D8C7AB-A1B9-439F-96D3-E5DA8B4BBC42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28D8C7AB-A1B9-439F-96D3-E5DA8B4BBC42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28D8C7AB-A1B9-439F-96D3-E5DA8B4BBC42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C1AF88E-25CE-4E3D-8BB2-D6AE4D1C3C83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C1AF88E-25CE-4E3D-8BB2-D6AE4D1C3C83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C1AF88E-25CE-4E3D-8BB2-D6AE4D1C3C83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C1AF88E-25CE-4E3D-8BB2-D6AE4D1C3C83}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4B269D94-9652-4376-8A06-92AC1E4B5CD5}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,25 @@
+﻿@model List<Item>
+
+@using PortailsOpacBase.Portails.Diagnostique.Models
+
+@Html.DropDownList("Communes", new SelectList(Model, "nomcom", "nomcom"), "Choisissez une ville", new { @class = "form-control", @readonly = "readonly" })
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#Communes').change(function (e) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("Adresses", "Home"))?ville=" + $('#Communes').val(),
+                cache: false,
+                type: "get",
+                dataType: "html",
+                beforeSend: function (e) {
+                    $('#divgbal').html("");
+                    $("#divadresse").html("Recherche en cours...");
+                },
+                success: function (result) {
+                    $("#divadresse").html(result);
+                }
+            });
+        });
+        $('#Communes').chosen({ width: "100%" });
+    });
+</script>

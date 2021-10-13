@@ -1,0 +1,5 @@
+﻿@model List<ElemDiag>
+
+@using PortailsOpacBase.Portails.Diagnostique.Models
+
+@Html.DropDownList("typefile", new SelectList(Model, "LIBELLE", "LIBELLE"), "Choisissez le type du fichier", new { @class = "form-control" })

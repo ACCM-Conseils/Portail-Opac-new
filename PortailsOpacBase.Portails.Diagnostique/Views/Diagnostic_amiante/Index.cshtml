@@ -1,0 +1,1791 @@
+﻿
+@{
+    ViewBag.Title = "Diagnostic amiante";
+}
+
+<div class="form-group">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Déposer un diagnostic amiante</h2>
+        </div>
+        <div class="col-md-4">
+            <a href="/claimapp/Home/Index/@ViewBag.connect" class="btn btn-success btn-lg btn-block">Retour</a>
+        </div>
+    </div>
+</div>
+<hr />
+<h4>Identification</h4>
+<div class="form-group">
+    <div class="row">
+        <div class="col-md-4">
+            Numéro de commande *
+            <input type="text" class="form-control" id="numcmd" placeholder="N° Commande (obligatoire)" />
+            <label id="error" style="display:none;color:red">Numéro de commande inconnu</label>
+        </div>
+        <div class="col-md-4">
+            Société *
+            <input type="text" class="form-control" id="societe" placeholder="Nom société" />
+        </div>
+        <div class="col-md-4">
+            Correspondant *
+            <input type="text" class="form-control" id="corres" placeholder="Correspondant OPAC" />
+        </div>
+    </div>
+</div>
+<div id="bloc_2" class="form-group" style="display:none">
+    <div class="row">
+        <div class="col-md-4">
+            Nom diagnostiqueur *
+            <input id="nomdiag" type="text" class="form-control" placeholder="Diagnostiqueur (obligatoire)" value="@ViewBag.Profil" />
+        </div>
+        <div class="col-md-4">
+            Date du rapport *
+            <input id="daterapport" type="text" class="form-control datecontrol" placeholder="Date du rapport (obligatoire)" />
+        </div>
+        <div class="col-md-4">
+            Date de dépot
+            <input id="datedepot" type="text" class="form-control datecontrol" value="@DateTime.Today.ToShortDateString()" disabled />
+        </div>
+        <hr />
+    </div>
+    <h4>Identification logement</h4>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-4">
+                Groupe *
+                <input id="g" type="text" class="form-control" placeholder="Groupe (obligatoire)" />
+            </div>
+            <div class="col-md-4">
+                Bâtiment *
+                <input id="b" type="text" class="form-control" placeholder="Bâtiment (obligatoire)" />
+            </div>
+            <div class="col-md-4">
+                Allée
+                <input id="a" type="text" class="form-control" placeholder="Allée" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-2">
+                Partie à contrôler *:
+            </div>
+            <div class="col-md-10">
+                <label class="radio-inline">
+                    <input type="radio" name="choix" id="choix1" value="1"> Parties communes
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="choix" id="choix2" value="2"> Logement
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+<hr />
+<div id="bloc_3" class="row" style="display:none">
+    <div class="col-md-4">
+        <div class="form-group">
+            <button id="validerinfos" class="btn btn-primary btn-lg btn-block">Valider les informations</button>
+        </div>
+    </div>
+    <div class="col-md-4" style="padding-top:10px">
+        <span id="adresse_gbal"></span>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <button id="modifierinfos" class="btn btn-default btn-lg btn-block" disabled>Modifier la saisie</button>
+        </div>
+    </div>
+</div>
+<div id="bloc_logement" style="display:none">
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-8">
+                <div id="div_logements_controles">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="info">
+                                <th>Logements contrôlés</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="action0">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button id="addlogement" class="btn btn-success btn-xs">Ajouter</button>
+                    </div>
+                    <div class="col-md-3">
+                    </div>
+                    <div class="col-md-3">
+                        <button id="dellogement" class="btn btn-danger btn-xs" disabled>Supprimer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-8">
+                <div id="div_diag_controles">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="info">
+                                <th>Parties contrôlées</th>
+                                <th></th>
+                                <th>Nb logements</th>
+                                <th>Prélèvement</th>
+                                <th>Amiante</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="action1">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button id="addcontrole" class="btn btn-success btn-xs" disabled>Ajouter</button>
+                    </div>
+                    <div class="col-md-3">
+                        <button id="modcontrole" class="btn btn-primary btn-xs" disabled>Modifier</button>
+                    </div>
+                    <div class="col-md-3">
+                        <button id="delcontrole" class="btn btn-danger btn-xs" disabled>Supprimer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-8">
+                <div id="div_diag_fichiers">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="info">
+                                <th>Type fichier</th>
+                                <th>Nom fichier</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="action2">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button id="addfiles" class="btn btn-success btn-xs" disabled>Ajouter</button>
+                    </div>
+                    <div class="col-md-3">
+                    </div>
+                    <div class="col-md-3">
+                        <button id="delfile" class="btn btn-danger btn-xs" disabled>Supprimer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group" style="padding-top:30px">
+        <div class="row">
+            <div class="col-md-8">
+                <button id="savediag" class="btn btn-primary btn-lg btn-block" disabled>Enregistrer le diagnostic</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="dialog-logements" tabindex="-1" role="dialog" aria-labelledby="dialog-logements" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="title">Logements</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-12 text-right">
+                            Sélectionner tout <input type="checkbox" id="selectalllogements" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <input id="filtre_g" type="text" class="form-control filtre" placeholder="Groupe" disabled />
+                        </div>
+                        <div class="col-md-3">
+                            <input id="filtre_b" type="text" class="form-control filtre" placeholder="Bati" disabled />
+                        </div>
+                        <div class="col-md-3">
+                            <input id="filtre_a" type="text" class="form-control filtre" placeholder="Allee" />
+                        </div>
+                        <div class="col-md-3">
+                            <input id="filtre_l" type="text" class="form-control filtre" placeholder="Local" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="divlogements" style="height:500px;overflow:auto">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="validlogements" type="button" class="btn btn-primary">Valider les logements</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="dialog-fichiers" tabindex="-1" role="dialog" aria-labelledby="dialog-fichiers" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="title">Ajout fichier</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="form-group" id="container">
+                        <button id="pickfiles" class="btn btn-primary">Choisir le(s) fichier(s)</button>
+                    </div>
+                    <div class="form-group">
+                        <div id="divfichiers" style="height:250px;overflow:auto">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr class="info">
+                                        <th>Nom fichier</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="listefiles"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div id="divtypefichiers"></div>
+                    </div>
+                    <div id="classement_fichiers" style="display:none">
+                        <div class="form-group">
+                            Numéro de rapport *:
+                            <input id="numrapport" type="text" class="form-control" placeholder="Numéro de rapport" />
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12 text-right">
+                                    Sélectionner tout <input type="checkbox" id="selectalllogementsfichiers" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div id="divlogementsFichiers" style="height:150px;overflow:auto">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="validfichiers" type="button" class="btn btn-primary" disabled>Enregistrer les fichiers</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="dialog-dpa" tabindex="-1" role="dialog" aria-labelledby="dialog-dpa" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-12 text-right">
+                            Sélectionner tout <input type="checkbox" id="selectalllogementsdiag" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="divlogementsacontroler" style="height:150px;overflow:auto">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            Amiante *:
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="true"> Oui
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="false" checked="checked"> Non
+                            </label>
+                        </div>
+                        <div class="col-md-6">Nb prélèvement par pièce / logt  *: <input id="nb_prelevements" type="number" min="0" max="3" style="width:70px" /></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="hidden" id="idgroupe" />
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-lg-4 text-center" style="background-color:#d9edf7;color:black" id="headerlogement">Logement</div>
+                            <div class="col-lg-4 text-center" style="background-color:#d9edf7;color:black" id="headerparties">Parties communes</div>
+                            <div class="col-lg-4 text-center" style="background-color:#d9edf7;color:black" id="headerdapp">DAPP</div>
+                            <div class="col-lg-4 text-center" style="background-color:#d9edf7;color:black" id="headerlocaux">Locaux</div>
+                        </div>
+                        <div class="row" style="height:270px">
+                            <div class="col-lg-4 text-left" style="height:270px;overflow:auto" id="corpslogement"></div>
+                            <div class="col-lg-4 text-left" style="height:270px;overflow:auto" id="corpsparties"></div>
+                            <div class="col-lg-4 text-left" style="height:270px;overflow:auto" id="corpsdapp"></div>
+                            <div class="col-lg-4 text-left" style="height:270px;overflow:auto" id="corpslocaux"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-lg-4 text-left">
+                                Zone *:
+                            </div>
+                            <div class="col-lg-8 text-left">
+                                Commentaire :
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 text-center">
+                                <div id="corpszones"></div>
+                            </div>
+                            <div class="col-lg-8 text-center">
+                                @Html.TextArea("Commentaire", null, new { @class = "form-control", rows = 3, columns = 40 })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="validdiag" type="button" class="btn btn-primary">Valider les logements</button>
+                <button id="canceldiag" type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="dialog-choix" tabindex="-1" role="dialog" aria-labelledby="dialog-choix" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="title">Enregistrement terminé</h3>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button id="keep" type="button" class="btn btn-primary">Nouveau dépôt pour cette commande</button>
+                <button id="another" type="button" class="btn btn-primary">Nouveau dépôt</button>
+                <a href="/claimapp/Home/Index/@ViewBag.connect" class="btn btn-success">Retour</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="loading">Chargement&#8230;</div>
+<script>
+    $(document).ready(function () {
+        $('.loading').hide();
+        $(".datecontrol").datepicker({ dateFormat: "dd/MM/yyyy", language: "fr" });
+        var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+        };
+        var origine = "";
+        var numcmd = "";
+
+        try {
+            origine = getUrlParameter('id');
+            numcmd = getUrlParameter('cmd');
+        }
+        catch(error)
+        {
+        }
+
+        if (numcmd != null) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("GetDiag", "Diagnostic_amiante"))?diag=" + origine,
+                type: "POST",
+                data: "{ }",
+                success: function (result) {
+                    $('#numcmd').val(result.numcmd);
+                    $('#societe').val(result.societe);
+                    $('#corres').val(result.corres);
+                    $('#nomdiag').val(result.nomdiag);
+                    $('#bloc_2').show();
+                    $('#bloc_3').show();
+                }
+            });
+        }
+        $('#another').click(function (e) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("CreateDiag", "Diagnostic_amiante"))?diag=" + origine + "&cmd=" + $('#numcmd').val(),
+                type: "POST",
+                data: "{ }",
+                beforeSend: function (e) {
+                    $('.loading').show();
+                },
+                success: function (result) {
+                    $('.loading').hide();
+
+                    window.location.href = result.url;
+                }
+            });
+        });
+        $('#keep').click(function (e) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("NewDiag", "Diagnostic_amiante"))?diag=" + origine + "&cmd=" + $('#numcmd').val(),
+                type: "POST",
+                data: "{ }",
+                beforeSend: function (e) {
+                    $('.loading').show();
+                },
+                success: function (result) {
+                    $('.loading').hide();
+
+                    window.location.href = result.url;
+                }
+            });
+        });
+        $('.filtre').focusout(function (e) {
+            if ($(this).val().length > 0) {
+                $.ajax({
+                    url: "@Html.Raw(Url.Action("GetCommande", "Diagnostic_amiante"))?numcommande=" + $('#numcmd').val(),
+                    type: "POST",
+                    data: "{ }",
+                    beforeSend: function (e) {
+                        $('.loading').show();
+                    },
+                    success: function (result) {
+                        $('.loading').hide();
+                        if (result.trouve) {
+                            if (result.societe.length > 0) {
+                                $('#societe').val(result.societe);
+                                $('#societe').prop("disabled", true);
+                            }
+                            if (result.contact.length > 0) {
+                                $('#corres').val(result.contact);
+                                $('#corres').prop("disabled", true);
+                            }
+                            $('#numcmd').prop("disabled", true);
+                            $('#bloc_2').show();
+                            $('#bloc_3').show();
+                            $('#error').hide();
+                        }
+                        else {
+                            $('#bloc_2').hide();
+                            $('#bloc_3').hide();
+                            $('#numcmd').attr("style", "border:1px solid red");
+                            $('#error').show();
+                            $('#numcmd').focus();
+                            $('#societe').prop("disabled", true);
+                            $('#corres').prop("disabled", true);
+                            $('#societe').val("");
+                            $('#corres').val("");
+                        }
+                    }
+                });
+            }
+        });
+        $('#societe').off("focusin").on("focusin", function (e) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("GetCommande", "Diagnostic_amiante"))?numcommande=" + $('#numcmd').val(),
+                type: "POST",
+                data: "{ }",
+                beforeSend: function (e) {
+                    $('.loading').show();
+                },
+                success: function (result) {
+                    $('.loading').hide();
+                    if (result.trouve) {
+                        $('#numcmd').attr("style", "border:1px solid #ccc");
+                        if (result.societe.length > 0) {
+                            $('#societe').val(result.societe);
+                            $('#societe').prop("disabled", true);
+                        }
+                        if (result.contact.length > 0) {
+                            $('#corres').val(result.contact);
+                            $('#corres').prop("disabled", true);
+                        }
+                        $('#bloc_2').show();
+                        $('#bloc_3').show();
+                        $('#numcmd').prop("disabled", true);
+                        $('#error').hide();
+                    }
+                    else {
+                        $('#bloc_2').hide();
+                        $('#bloc_3').hide();
+                        $('#numcmd').attr("style", "border:1px solid red");
+                        $('#error').show();
+                        $('#numcmd').focus();
+                        $('#societe').prop("disabled", true);
+                        $('#corres').prop("disabled", true);
+                        $('#societe').val("");
+                        $('#corres').val("");
+                    }
+                }
+            });
+        });
+        $('#numcmd').off("keypress").on("keypress", function (e) {
+            var key = e.which;
+            if (key == 13)  // the enter key code
+            {
+                $.ajax({
+                    url: "@Html.Raw(Url.Action("GetCommande", "Diagnostic_amiante"))?numcommande=" + $('#numcmd').val(),
+                    type: "POST",
+                    data: "{ }",
+                    beforeSend: function (e) {
+                        $('.loading').show();
+                    },
+                    success: function (result) {
+                        $('.loading').hide();
+                        if (result.trouve) {
+                            $('#numcmd').attr("style", "border:1px solid #ccc");
+                            if (result.societe.length > 0) {
+                                $('#societe').val(result.societe);
+                            }
+                            if (result.contact.length > 0) {
+                                $('#corres').val(result.contact);
+                            }
+                            $('#bloc_2').show();
+                            $('#bloc_3').show();
+                            $('#numcmd').prop("disabled", true);
+                            $('#error').hide();
+                        }
+                        else {
+                            $('#bloc_2').hide();
+                            $('#bloc_3').hide();
+                            $('#numcmd').attr("style", "border:1px solid red");
+                            $('#numcmd').focus();
+                            $('#error').show();
+                            $('#societe').prop("disabled", true);
+                            $('#corres').prop("disabled", true);
+                            $('#societe').val("");
+                            $('#corres').val("");
+                        }
+                    }
+                });
+            }
+        });
+        $('#modifierinfos').click(function (e) {
+            $('#nomdiag').prop("disabled", false);
+            $('#daterapport').prop("disabled", false);
+            $('#validerinfos').prop("disabled", false);
+            $('#addlogement').prop("disabled", true);
+            $('#g').prop("disabled", false);
+            $('#b').prop("disabled", false);
+            $('#a').prop("disabled", false);
+            $('#l').prop("disabled", false);
+            $("input[name=choix]").removeAttr('disabled');
+        });
+
+        $('#validerinfos').click(function (e) {
+            var todayDate = new Date();
+            var parts = $('#daterapport').val().split('/');
+            var mydate = new Date(parts[2], parts[1] -1, parts[0], 0, 0, 0);
+
+            if (todayDate >= mydate) {
+                if ($('#nomdiag').val().length > 0 && $('#daterapport').val().length > 0 && $('#g').val().length > 0 && $('#b').val().length > 0 && $("input[name='choix']:checked").length > 0) {
+
+                    $.ajax({
+                        url: "@Html.Raw(Url.Action("Valider", "Diagnostic_amiante"))",
+                        type: "POST",
+                        data: {
+                            g: $('#g').val(), b: $('#b').val(), a: $('#a').val(), cmd: $('#numcmd').val(), societe: $('#societe').val(), corres: $('#corres').val(), nomdiag: $('#nomdiag').val(), daterapport: $('#daterapport').val(), datedepot: $('#datedepot').val(), controle: $("input[name='choix']:checked").val()
+                        },
+                        beforeSend: function (e) {
+                            $('.loading').show();
+                        },
+                        success: function (result) {
+                            $('.loading').hide();
+                            if (result.trouve) {
+                                $('#numcmd').prop("disabled", true);
+                                $('#societe').prop("disabled", true);
+                                $('#corres').prop("disabled", true);
+                                $('#nomdiag').prop("disabled", true);
+                                $('#daterapport').prop("disabled", true);
+                                $('#modifierinfos').removeAttr("disabled");
+                                $('#validerinfos').prop("disabled", true);
+                                $('#addlogement').prop("disabled", false);
+                                $('#g').prop("disabled", true);
+                                $('#b').prop("disabled", true);
+                                $('#a').prop("disabled", true);
+                                $('#l').prop("disabled", true);
+                                $('#filtre_g').val($('#g').val());
+                                $('#filtre_b').val($('#b').val());
+                                $('#filtre_a').val($('#a').val());
+                                $('#filtre_l').val($('#l').val());
+                                $("input[name=choix]").attr('disabled', 'disabled');
+                                $('#adresse_gbal').html(result.adresse);
+                                $('#bloc_logement').show();
+
+                                if ($("input[name='choix']:checked").val() == "1") {
+                                    $('#headerlogement').hide();
+                                    $('#corpslogement').hide();
+                                    $('#headerdapp').hide();
+                                    $('#corpsdapp').hide();
+                                    $('#headerlocaux').hide();
+                                    $('#corpslocaux').hide();
+                                }
+                                else {
+                                    $('#headerparties').hide();
+                                    $('#corpsparties').hide();
+                                    
+                                }
+
+                                $.ajax({
+                                    url: "@Html.Raw(Url.Action("GetFichiers", "Diagnostic_amiante"))",
+                                    data: { typelogement: $("input[name='choix']:checked").val() },
+                                    cache: false,
+                                    type: "get",
+                                    dataType: "html",
+                                    beforeSend: function (e) {
+                                        $('#divtypefichiers').html("");
+                                    },
+                                    success: function (result) {
+                                        $('#divtypefichiers').html(result);
+
+                                        $('#typefile').show();
+
+                                        $('#typefile').change(function (e) {
+                                            if ($(this).val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                                $('#validfichiers').prop("disabled", false);
+                                            }
+                                            else {
+                                                $('#validfichiers').prop("disabled", true);
+                                            }
+                                        });
+                                    }
+                                });
+
+                                $.ajax({
+                                    url: "@Html.Raw(Url.Action("DiagLogements", "Diagnostic_amiante"))",
+                                    cache: false,
+                                    type: "get",
+                                    dataType: "html",
+                                    success: function (result) {
+                                        $('#div_logements_controles').html(result);
+                                        $('#divlogementsFichiers').html(result);
+
+                                        if ($('#div_logements_controles tbody tr').length > 0)
+                                            $('#modifierinfos').prop("disabled", true);
+                                        else
+                                            $('#modifierinfos').prop("disabled", false);
+
+                                        $('#div_logements_controles .lgt_diag').change(function (e) {
+                                            if ($('#div_logements_controles .lgt_diag:checked').length > 0) {
+                                                $('#dellogement').prop("disabled", false);
+                                            }
+                                            else
+                                                $('#dellogement').prop("disabled", true);
+
+                                            if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                                $('#validfichiers').prop("disabled", false);
+                                            }
+                                            else {
+                                                $('#validfichiers').prop("disabled", true);
+                                            }
+                                        });
+
+                                        $('#divlogementsFichiers .lgt_diag').change(function (e) {
+
+                                            if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                                $('#validfichiers').prop("disabled", false);
+                                            }
+                                            else {
+                                                $('#validfichiers').prop("disabled", true);
+                                            }
+                                        });
+                                    }
+                                });
+                                $.ajax({
+                                    url: "@Html.Raw(Url.Action("ListeDiagEffectues", "Diagnostic_amiante"))",
+                                    cache: false,
+                                    type: "get",
+                                    dataType: "html",
+                                    success: function (result) {
+                                        $('#div_diag_controles').html(result);
+                                        $('.seldiag').change(function (e) {
+                                            if ($(this).prop("checked")) {
+                                                $('.seldiag').prop("checked", false);
+                                                $(this).prop("checked", true);
+                                                $('#modcontrole').prop("disabled", false);
+                                                $('#delcontrole').prop("disabled", false);
+                                            }
+                                            else {
+                                                $('#modcontrole').prop("disabled", true);
+                                                $('#delcontrole').prop("disabled", true);
+                                            }
+                                        });
+                                    }
+                                });
+                                $.ajax({
+                                    url: "@Html.Raw(Url.Action("Fichiers", "Diagnostic_amiante"))",
+                                    cache: false,
+                                    type: "get",
+                                    dataType: "html",
+                                    success: function (result) {
+                                        $('#div_diag_fichiers').html(result);
+
+                                        $('.selfichier').change(function (e) {
+                                            if ($('.selfichier:checked').length > 0) {
+                                                $('#delfile').prop("disabled", false);
+                                            }
+                                            else {
+                                                $('#delfile').prop("disabled", true);
+                                            }
+                                        });
+                                    }
+                                });
+                                $.ajax({
+                                    url: "@Html.Raw(Url.Action("LogementsAControler", "Diagnostic_amiante"))",
+                                    cache: false,
+                                    type: "get",
+                                    dataType: "html",
+                                    success: function (result) {
+                                        $('#divlogementsacontroler').html(result);
+                                    }
+                                });
+                            }
+                            else {
+                                alert("Groupe/Batiment/Allée inexistant");
+                            }
+                        }
+                    });
+                    //$('#bloc_logement').show();
+                }
+                else {
+                    alert("Veuillez vérifier les champs obligatoires SVP");
+                }
+            }
+            else
+                alert("La date du rapport doit être inférieure ou égale à la date du jour.")
+        });
+
+        $('#dellogement').click(function (e) {
+            var sel = new Array();
+
+            $('#div_logements_controles .lgt_diag:checked').each(function (e) {
+                sel.push($(this).data("id"));
+            });
+
+            $.ajax({
+                    url: "@Html.Raw(Url.Action("DelDiag", "Diagnostic_amiante"))",
+                    type: "POST",
+                    data: {
+                        ids: sel
+                    },
+                    beforeSend: function (e) {
+                        $('.loading').show();
+                    },
+                    success: function (result) {
+                        $('.loading').hide();
+
+                        if (!result.success)
+                            alert("Au moins un logement n'a pu être supprimé (parties contrôlées ?)");
+
+                        $.ajax({
+                        url: "@Html.Raw(Url.Action("DiagLogements", "Diagnostic_amiante"))",
+                            cache: false,
+                            type: "get",
+                            dataType: "html",
+                            success: function (result) {
+                                $('#dialog-logements').modal("hide");
+                                $('#dellogement').prop("disabled", true);
+                                $('#div_logements_controles').html(result);
+                                $('#divlogementsFichiers').html(result);
+
+                                if ($('#div_logements_controles tbody tr').length > 0)
+                                    $('#modifierinfos').prop("disabled", true);
+                                else
+                                    $('#modifierinfos').prop("disabled", false);
+
+                                $('#div_logements_controles .lgt_diag').change(function (e) {
+                                    if ($('#div_logements_controles .lgt_diag:checked').length > 0) {
+                                        $('#dellogement').prop("disabled", false);
+                                    }
+                                    else
+                                        $('#dellogement').prop("disabled", true);
+
+                                    if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                        $('#validfichiers').prop("disabled", false);
+                                    }
+                                    else {
+                                        $('#validfichiers').prop("disabled", true);
+                                    }
+                                });
+
+                                $('#divlogementsFichiers .lgt_diag').change(function (e) {
+
+                                    if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                        $('#validfichiers').prop("disabled", false);
+                                    }
+                                    else {
+                                        $('#validfichiers').prop("disabled", true);
+                                    }
+                                });
+
+                                $.ajax({
+                                    url: "@Html.Raw(Url.Action("LogementsAControler", "Travaux_amiante"))",
+                                    cache: false,
+                                    type: "get",
+                                    dataType: "html",
+                                    success: function (result) {
+                                        $('#divlogementsacontroler').html(result);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+        });
+
+        $('#numrapport').keyup(function (e) {
+            if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                $('#validfichiers').prop("disabled", false);
+            }
+            else {
+                $('#validfichiers').prop("disabled", true);
+            }
+        });
+
+        $('#validfichiers').click(function (e) {
+            if ($('#numrapport').val().length > 0) {
+                $('.loading').show();
+                uploader.start();
+            }
+            else
+                alert("Le numéro de rapport est obligatoire.");
+        });
+
+        $('#filtre_g').keyup(function (e) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("LogementsFiltre", "Diagnostic_amiante"))?choix=" + $("input[name='choix']:checked").val() + "&g=" + $('#filtre_g').val() + "&b=" + $('#filtre_b').val() + (($('#filtre_a').val().length > 0) ? "&a=" + $('#filtre_a').val() : "") + (($('#filtre_l').val().length > 0) ? "&l=" + $('#filtre_l').val() : ""),
+                    cache: false,
+                    type: "get",
+                    dataType: "html",
+                    success: function (result) {
+                        $('#divlogements').html(result);
+                }
+            });
+        });
+
+        $('#filtre_b').keyup(function (e) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("LogementsFiltre", "Diagnostic_amiante"))?choix=" + $("input[name='choix']:checked").val() + "&g=" + $('#filtre_g').val() + "&b=" + $('#filtre_b').val() + (($('#filtre_a').val().length > 0) ? "&a=" + $('#filtre_a').val() : "") + (($('#filtre_l').val().length > 0) ? "&l=" + $('#filtre_l').val() : ""),
+                    cache: false,
+                    type: "get",
+                    dataType: "html",
+                    success: function (result) {
+                        $('#divlogements').html(result);
+                }
+            });
+        });
+
+        $('#filtre_a').keyup(function (e) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("LogementsFiltre", "Diagnostic_amiante"))?choix=" + $("input[name='choix']:checked").val() + "&g=" + $('#filtre_g').val() + "&b=" + $('#filtre_b').val() + (($('#filtre_a').val().length > 0) ? "&a=" + $('#filtre_a').val() : "") + (($('#filtre_l').val().length > 0) ? "&l=" + $('#filtre_l').val() : ""),
+                    cache: false,
+                    type: "get",
+                    dataType: "html",
+                    success: function (result) {
+                        $('#divlogements').html(result);
+                }
+            });
+        });
+
+        $('#filtre_l').keyup(function (e) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("LogementsFiltre", "Diagnostic_amiante"))?choix=" + $("input[name='choix']:checked").val() + "&g=" + $('#filtre_g').val() + "&b=" + $('#filtre_b').val() + (($('#filtre_a').val().length > 0) ? "&a=" + $('#filtre_a').val() : "") + (($('#filtre_l').val().length > 0) ? "&l=" + $('#filtre_l').val() : ""),
+                    cache: false,
+                    type: "get",
+                    dataType: "html",
+                    success: function (result) {
+                        $('#divlogements').html(result);
+                }
+            });
+        });
+
+        $('#selectalllogements').change(function (e) {
+            if ($(this).prop("checked")) {
+                $('.sel_logement').each(function (e) {
+                    $(this).prop("checked", true);
+                });
+            }
+            else {
+                $('.sel_logement').each(function (e) {
+                    $(this).prop("checked", false);
+                });
+            }
+        });
+
+        $('#nb_prelevements').change(function (e) {
+            if ($(this).val().length < 0)
+                $(this).val("0");
+            if ($(this).val().length > 3)
+                $(this).val("999");
+        });
+
+        $('#selectalllogementsfichiers').change(function (e) {
+            if ($(this).prop("checked")) {
+                $('#divlogementsFichiers .lgt_diag').each(function (e) {
+                    $(this).prop("checked", true);
+                });
+            }
+            else {
+                $('#divlogementsFichiers .lgt_diag').each(function (e) {
+                    $(this).prop("checked", false);
+                });
+            }
+
+            if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                $('#validfichiers').prop("disabled", false);
+            }
+            else {
+                $('#validfichiers').prop("disabled", true);
+            }
+        });
+
+        $('#selectalllogementsdiag').change(function (e) {
+            if ($(this).prop("checked")) {
+                $('.diag').each(function (e) {
+                    $(this).prop("checked", true);
+                });
+            }
+            else {
+                $('.diag').each(function (e) {
+                    $(this).prop("checked", false);
+                });
+            }
+        });
+
+        $('#canceldiag').click(function (e) {
+            $('#selectalllogementsdiag').prop("checked", false);
+            $('#nb_prelevements').val("");
+            $('#inlineRadio1').prop("checked", false);
+            $('#inlineRadio2').prop("checked", false);
+            $(".piece:checked").prop("checked", false);
+            $("#Zones").val("");
+            $('#Commentaire').val("");
+        });
+
+        $('#validdiag').click(function (e) {
+
+            var commOblig = false;
+            var error = false;
+
+            if ($('#Zones').val() == 'O')
+                commOblig = true;
+
+            if ($('#nb_prelevements').val().length > 0 && $("input[name='inlineRadioOptions']:checked").length > 0 && $(".piece:checked").length > 0 && $('#divlogementsacontroler .diag:checked').length > 0 && $("#Zones option:selected").index() > 0) {
+
+                if (commOblig && $('#Commentaire').val().length == 0) {
+                    error = true;
+                }
+                if (!error) {
+                    var sellogements = new Array();
+                    var pieces = new Array();
+
+                    $(".diag").each(function (index) {
+                        if ($(this).prop("checked"))
+                            sellogements.push($(this).data('id'));
+                    });
+
+                    $(".piece").each(function (index) {
+                        if ($(this).prop("checked"))
+                            pieces.push($(this).data('piece'));
+                    });
+                    var update = (($('#idgroupe').val().length > 0) ? true : false);
+
+                    $.ajax({
+                        url: "@Html.Raw(Url.Action("DiagEffectues", "Diagnostic_amiante"))",
+                        type: "POST",
+                        data: {
+                            selection: sellogements, pieces: pieces, amiante: jQuery("input[name='inlineRadioOptions']:checked").val(), prelevements: $('#nb_prelevements').val(), maj: update, idGroupe: $('#idgroupe').val(), zone: $("#Zones option:selected").text(), commentaire: $('#Commentaire').val()
+                        },
+                        success: function (result) {
+                            $.ajax({
+                                url: "@Html.Raw(Url.Action("ListeDiagEffectues", "Diagnostic_amiante"))",
+                                cache: false,
+                                type: "get",
+                                dataType: "html",
+                                success: function (result) {
+                                    $('#div_diag_controles').html(result);
+                                    ControlOK();
+                                    $('.seldiag').change(function (e) {
+                                        if ($(this).prop("checked")) {
+                                            $('.seldiag').prop("checked", false);
+                                            $(this).prop("checked", true);
+                                            $('#modcontrole').prop("disabled", false);
+                                            $('#delcontrole').prop("disabled", false);
+                                        }
+                                        else {
+                                            $('#modcontrole').prop("disabled", true);
+                                            $('#delcontrole').prop("disabled", true);
+                                        }
+                                    });
+                                    $('#modcontrole').prop("disabled", true);
+                                    $('#delcontrole').prop("disabled", true);
+                                    $('#selectalllogementsdiag').prop("checked", false);
+                                    $('.piece').prop("checked", false);
+                                    $('#nb_prelevements').val('');
+                                    $('#Zones').val('');
+                                    $('#Commentaire').val('');
+                                    $('#inlineRadio1').prop("checked", false);
+                                    $('#inlineRadio2').prop("checked", false);
+                                    $('#dialog-dpa').modal("hide");
+                                }
+                            });
+                        }
+                    });
+                }
+                else
+                    alert("Le champ commentaire est obligatoire");
+            }
+            else
+                alert("Veuillez renseigner les champs obligatoires SVP");
+	    });
+        $('#validlogements').click(function (e) {
+            var sellogements = new Array();
+
+	        $(".sel_logement").each(function( index ) {
+                if ($(this).prop("checked"))
+                    sellogements.push($(this).data('gbal'));
+            });
+
+            $.ajax({
+                url: "@Html.Raw(Url.Action("Selections", "Diagnostic_amiante"))",
+                type: "POST",
+                data: { selection: sellogements, g: $('#g').val(), b: $('#b').val(), a: $('#a').val() },
+                success: function (result) {
+                    $.ajax({
+                        url: "@Html.Raw(Url.Action("DiagLogements", "Diagnostic_amiante"))",
+                        cache: false,
+                        type: "get",
+                        dataType: "html",
+                        success: function (result) {
+                            $('#dialog-logements').modal("hide");
+                            $('#div_logements_controles').html(result);
+                            $('#divlogementsFichiers').html(result);
+
+                            if ($('#div_logements_controles tbody tr').length > 0)
+                                $('#modifierinfos').prop("disabled", true);
+                            else
+                                $('#modifierinfos').prop("disabled", false);
+
+                            $('#filtre_g').val($('#g').val());
+                            $('#filtre_b').val($('#b').val());
+                            $('#filtre_a').val($('#a').val());
+                            $('#filtre_l').val($('#l').val());
+                            
+                            $('#addcontrole').prop("disabled", false);
+                            $('#addfiles').prop("disabled", false);
+
+                            $('#div_logements_controles .lgt_diag').change(function (e) {
+                                if ($('#div_logements_controles .lgt_diag:checked').length > 0) {
+                                    $('#dellogement').prop("disabled", false);
+                                }
+                                else
+                                    $('#dellogement').prop("disabled", true);
+
+                                if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                    $('#validfichiers').prop("disabled", false);
+                                }
+                                else {
+                                    $('#validfichiers').prop("disabled", true);
+                                }
+                            });
+                            $('#divlogementsFichiers .lgt_diag').change(function (e) {
+
+                                if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                    $('#validfichiers').prop("disabled", false);
+                                }
+                                else {
+                                    $('#validfichiers').prop("disabled", true);
+                                }
+                            });
+                        }
+                    });
+                    }
+                });
+	    });
+        $('#addlogement').click(function (e) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("Logements", "Diagnostic_amiante"))?choix=" + $("input[name='choix']:checked").val(),
+                    cache: false,
+                    type: "get",
+                    dataType: "html",
+                    success: function (result) {
+                        $('#divlogements').html(result);
+			$('#dellogement').prop("disabled", true);
+			$('#div_logements_controles .lgt_diag').each(function (e) {
+                            $(this).prop("checked", false);
+                        });
+                        $('#selectalllogements').prop("checked", false);
+                        $('#dialog-logements').modal("show");
+                    }
+                });
+        });
+        $('#delfile').click(function (e) {
+            if (confirm("Supprimer ce fichier ?")) {
+                var selected = new Array();
+
+                $('.selfichier:checked').each(function (e) {
+                    selected.push($(this).data('id'));
+                });
+                $.ajax({
+                    url: "@Html.Raw(Url.Action("DelFichier", "Diagnostic_amiante"))",
+                    type: "POST",
+                    data: {
+                        ids: selected
+                    },
+                    beforeSend: function (e) {
+                        $('.loading').show();
+                    },
+                    success: function (result) {
+                        $('.loading').hide();
+                        $.ajax({
+                            url: "@Html.Raw(Url.Action("Fichiers", "Diagnostic_amiante"))",
+                            cache: false,
+                            type: "get",
+                            dataType: "html",
+                            success: function (result) {
+                                $('#div_diag_fichiers').html(result);
+                                ControlOK();
+                                $('#delfile').prop("disabled", true);
+                                $('.selfichier').change(function (e) {
+                                    if ($('.selfichier:checked').length > 0) {
+                                        $('#delfile').prop("disabled", false);
+                                    }
+                                    else {
+                                        $('#delfile').prop("disabled", true);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        $('#modcontrole').click(function (e) {
+            $('#idgroupe').val($('.seldiag:checked').data('id'));
+            $.ajax({
+                url: "@Html.Raw(Url.Action("modcontrole", "Diagnostic_amiante"))?groupe=" + $('.seldiag:checked').data('id'),
+                    type: "POST",
+                    data: "{ }",
+                    beforeSend: function (e) {
+                        $('.loading').show();
+                        $('.diag').prop("checked", false);
+                    },
+                success: function (result) {
+                    $('.loading').hide();
+                    if (result.success) {
+                        $.each(result.logements, function (idx, obj) {
+                            $('.diag').each(function (e) {
+                                if ($(this).data('gbal') == obj) {
+                                    $(this).prop("checked", true);
+                                }
+                            });
+                        });
+                        $.each(result.pieces, function (idx, obj) {
+                            $('.piece').each(function (e) {
+                                if ($(this).data('piece') == obj) {
+                                    $(this).prop("checked", true);
+                                }
+                            });
+                        });
+                        if (result.amiante) {
+                            $('#inlineRadio1').prop("checked", true);
+                        }
+                        else
+                        {
+                            $('#inlineRadio2').prop("checked", true);
+                        }
+                        $("#Zones option").filter(function () {
+                            return $(this).text() == result.zone;
+                        }).prop("selected", true);
+                        $('#nb_prelevements').val(result.prelevements);
+                        $('#Commentaire').val(result.commentaire);
+                        $('#dialog-dpa').modal("show");
+                    }
+                    }
+                });
+            $('#dialog-dpa').modal("show");
+        });
+        $('#delcontrole').click(function (e) {
+            if (confirm("Supprimer ce contrôle ?")) {
+                $.ajax({
+                url: "@Html.Raw(Url.Action("DeleteGroupe", "Diagnostic_amiante"))",
+                type: "POST",
+                data: {
+                    idgroupe: $('.seldiag:checked').data('id')
+                },
+                success: function (result) {
+                    $.ajax({
+                                url: "@Html.Raw(Url.Action("ListeDiagEffectues", "Diagnostic_amiante"))",
+                                    cache: false,
+                                    type: "get",
+                                    dataType: "html",
+                                success: function (result) {
+                                    $('#div_diag_controles').html(result);
+                                    $('#modcontrole').prop("disabled", true);
+                                    $('#delcontrole').prop("disabled", true);
+                                    ControlOK();
+                                    $('.seldiag').change(function (e) {
+                                        if ($(this).prop("checked")) {
+                                            $('.seldiag').prop("checked", false);
+                                            $(this).prop("checked", true);
+                                            $('#modcontrole').prop("disabled", false);
+                                            $('#delcontrole').prop("disabled", false);
+                                        }
+                                        else {
+                                            $('#modcontrole').prop("disabled", true);
+                                            $('#delcontrole').prop("disabled", true);
+                                        }
+                                    });
+                                }
+                            });
+                    }
+                });
+            }
+        });
+        $('#addfiles').click(function (e) {
+            $('#dialog-fichiers').modal("show");
+        });
+        $('#savediag').click(function (e) {
+
+            var nblogements = $('#div_logements_controles tr').length -1;
+            var nbpieces = $('#table_controles tr').length - 1;
+            var nbfichiers = $('#table_fichiers tr').length - 1;
+
+            if (nblogements > 0 && nbpieces > 0 && nbfichiers > 0) {
+                var logements = new Array();
+                $('#divlogementsFichiers .lgt_diag').each(function (e) {
+                    logements.push($(this).data("gbal"));
+                });
+                $.ajax({
+                    url: "@Html.Raw(Url.Action("SaveDiag", "Diagnostic_amiante"))",
+                    type: "POST",
+                    data: { adresse: $('#adresse_gbal').html(), liste_logements: logements },
+                    beforeSend: function (e) {
+                        $('.loading').show();
+                    },
+                    success: function (result) {
+                        $('.loading').hide();
+                        if (result.success) {
+                            $('#dialog-choix').modal("show");
+                        }
+                    }
+                });
+            }
+            else {
+                if (nblogements == 0)
+                    alert("Veuillez renseigner les logements contrôlés SVP");
+                if (nbpieces == 0)
+                    alert("Veuillez renseigner les pièces contrôlées SVP");
+                if (nbfichiers == 0)
+                    alert("Veuillez ajouter les fichiers de contrôle SVP");
+            }
+        });
+        $('#addcontrole').click(function (e) {
+            $('#idgroupe').val("");
+            $('.sel_logement').each(function (e) {
+                $(this).prop("checked", false);
+            });
+            $('.piece').each(function (e) {
+                $(this).prop("checked", false);
+            });
+            $('#inlineRadio1').prop("checked", false);
+            $('#inlineRadio2').prop("checked", false);
+            $('#nb_prelevements').val("");
+            $('.seldiag').prop("checked", false);
+            $.ajax({
+                url: "@Html.Raw(Url.Action("LogementsAControler", "Diagnostic_amiante"))",
+                    cache: false,
+                    type: "get",
+                    dataType: "html",
+                    success: function (result) {
+                        $('#divlogementsacontroler').html(result);
+                        $('#dialog-dpa').modal("show");
+                        $('.diag').change(function (e) {
+                            $('#selectalllogementsdiag').prop("checked", false);
+                        });
+
+                        $.ajax({
+                            url: "@Html.Raw(Url.Action("listeLogements", "Diagnostic_amiante"))",
+                            cache: false,
+                            type: "get",
+                            dataType: "html",
+                            beforeSend: function (e) {
+                                $('#corpslogement').html("");
+                            },
+                            success: function (result) {
+                                $('#corpslogement').html(result);
+                            }
+                        });
+
+                        $.ajax({
+                            url: "@Html.Raw(Url.Action("listeCommuns", "Diagnostic_amiante"))",
+                            cache: false,
+                            type: "get",
+                            dataType: "html",
+                            beforeSend: function (e) {
+                                $('#corpsparties').html("");
+                            },
+                            success: function (result) {
+                                $('#corpsparties').html(result);
+                            }
+                        });
+
+                        $.ajax({
+                            url: "@Html.Raw(Url.Action("listeDAPP", "Diagnostic_amiante"))",
+                            cache: false,
+                            type: "get",
+                            dataType: "html",
+                            beforeSend: function (e) {
+                                $('#corpsdapp').html("");
+                            },
+                            success: function (result) {
+                                $('#corpsdapp').html(result);
+                            }
+                        });
+
+                                $.ajax({
+                                    url: "@Html.Raw(Url.Action("listeLocaux", "Diagnostic_amiante"))",
+                                    cache: false,
+                                    type: "get",
+                                    dataType: "html",
+                                    beforeSend: function (e) {
+                                        $('#corpslocaux').html("");
+                                    },
+                                    success: function (result) {
+                                        $('#corpslocaux').html(result);
+                                    }
+                                });
+
+                                $.ajax({
+                                    url: "@Html.Raw(Url.Action("listeZones", "Diagnostic_amiante"))",
+                                    cache: false,
+                                    type: "get",
+                                    dataType: "html",
+                                    beforeSend: function (e) {
+                                        $('#corpszones').html("");
+                                    },
+                                    success: function (result) {
+                                        $('#corpszones').html(result);
+                                    }
+                        });
+
+
+                    }
+                });
+        });
+
+        moxie.core.utils.Mime.addMimeType("application/pdf,pdf");
+        moxie.core.utils.Mime.addMimeType("application/word,doc");
+
+        var uploader = new plupload.Uploader({
+            runtimes: 'html5,flash,silverlight,html4',
+            max_file_count: 1,
+            max_file_size: '100mb',
+            multi_selection: false,
+            browse_button: 'pickfiles', // you can pass in id...
+            multipart_params: { typeDoc: $('#typefile').val(), numrapport: $('#numrapport').val() },
+            container: document.getElementById('container'), // ... or DOM Element itself
+            url: "/claimapp/Diagnostic_amiante/Upload",
+            flash_swf_url: '/plupload/js/Moxie.swf',
+            silverlight_xap_url: '/plupload/js/Moxie.xap',
+            init: {
+                FilesAdded: function (up, files) {
+                    var filenames = "";
+                    for (var i in files) {
+                        if (!files[i].name.endsWith(".doc") && !files[i].name.endsWith(".docx") && !files[i].name.endsWith(".pdf")) {
+                            up.removeFile(files[i]);
+                            alert("Le format du fichier n'est pas accepté");
+                        }
+                        else {
+                            if (files[i].size < 25000000)
+                                filenames += "<tr class='file'><td>" + files[i].name + "</td><td style='text-align:right'><span class='glyphicon glyphicon-trash delfichier' data-id='" + files[i].id + "' style='font-size:0.8em'></span></td></tr>";
+                            else {
+                                up.removeFile(files[i]);
+                                alert("Le fichier " + files[i].name + " est trop volumineux");
+                            }
+                        }
+                    }
+                    $('#listefiles').append(filenames);
+                    $('#classement_fichiers').show();
+
+                    if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                        $('#validfichiers').prop("disabled", false);
+                    }
+                    else {
+                        $('#validfichiers').prop("disabled", true);
+                    }
+
+                    $('#divfichiers .delfichier').off("click").on("click", function (e) {
+                        uploader.removeFile($(this).data("id"));
+                        $(this).closest("tr").remove();
+                        if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                            $('#validfichiers').prop("disabled", false);
+                        }
+                        else {
+                            $('#validfichiers').prop("disabled", true);
+                        }
+                    });
+                },
+
+                UploadComplete: function (up, file) {
+                    $('.loading').hide();
+                    $('#classement_fichiers').hide();
+                    $.ajax({
+                                url: "@Html.Raw(Url.Action("Fichiers", "Diagnostic_amiante"))",
+                                    cache: false,
+                                    type: "get",
+                                    dataType: "html",
+                                success: function (result) {
+                                    $('#div_diag_fichiers').html(result);
+
+                                    $('#dialog-fichiers').modal("hide");
+                                    $('#divfichiers').html("<table class='table table-striped'><thead><tr class='info'><th>Nom fichier</th><th></th></tr></thead><tbody id='listefiles'></tbody></table>");
+                                    $('#typefile').val("");
+
+                                    $('#numrapport').val("");
+                                    $('#selectalllogementsfichiers').prop("checked", false);
+                                    $('.lgt_diag').prop("checked", false);
+
+                                    $('.selfichier').change(function (e) {
+                                        if ($('.selfichier:checked').length > 0) {
+                                            $('#delfile').prop("disabled", false);
+                                        }
+                                        else {
+                                            $('#delfile').prop("disabled", true);
+                                        }
+                                    });
+
+                                    ControlOK();
+                                }
+                            });
+                },
+
+                Error: function (up, err) {
+                    $('.loading').hide();
+                    $('#classement_fichiers').hide();
+                    if (err.message == "File extension error.") {
+                        alert("Format de fichier incorrect");
+                    }
+                }
+            }
+        });
+
+        uploader.bind('BeforeUpload', function (up, file) {
+            var gbal = new Array();
+            $('#divlogementsFichiers .lgt_diag:checked').each(function (e) {
+                gbal.push($(this).data("gbal"));
+            });;
+            up.settings.multipart_params = { typeDoc: $('#typefile').val(), Gbal: gbal, numrapport: $('#numrapport').val()  }
+        });
+
+        uploader.init();
+
+        if(numcmd == null)
+            LoadRapport();
+
+        function ControlOK() {
+            if ($('#table_fichiers tr').length > 0 && $('#table_controles tr').length > 0 && $('#table_logements tr').length > 0) {
+                $('#savediag').prop("disabled", false);
+            }
+            else {
+                $('#savediag').prop("disabled", true);
+            }
+        }
+
+        function LoadRapport() {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("LoadDiag", "Diagnostic_amiante"))?id=@ViewBag.idRapport",
+                    type: "POST",
+                    data: "{ }",
+                    beforeSend: function (e) {
+                        $('.loading').show();
+                    },
+                success: function (result) {
+                    $('.loading').hide();
+                    if (result.trouve) {
+                        $('#numcmd').val(result.commande);
+                        $('#societe').val(result.societe);
+                        $('#corres').val(result.corres);
+                        $('#nomdiag').val(result.nomdiag);
+                        $('#daterapport').val(result.datedurapport);
+                        $('#datedepot').val(result.datedepot);
+                        $('#g').val(result.grouperapport);
+                        $('#b').val(result.batirapport);
+                        $('#a').val(result.alleerapport);
+                        $('#filtre_g').val($('#g').val());
+                        $('#filtre_b').val($('#b').val());
+                        $('#filtre_a').val($('#a').val());
+                        $('#filtre_l').val($('#l').val());
+                        $('#modifierinfos').removeAttr("disabled");
+                        $('#validerinfos').prop("disabled", true);
+                        $("input[name=choix][value='" + result.type_parties + "']").attr('checked', 'checked');
+                        $('#bloc_2').show();
+                        $('#bloc_3').show();
+                        $('#bloc_logement').show();
+                        $('#savediag').prop("disabled", false);
+
+                        if ($("input[name='choix']:checked").val() == "1") {
+                            $('#headerlogement').hide();
+                            $('#corpslogement').hide();
+                            $('#headerdapp').hide();
+                            $('#corpsdapp').hide();
+                            $('#headerlocaux').hide();
+                            $('#corpslocaux').hide();
+                        }
+                        else {
+                            $('#headerparties').hide();
+                            $('#corpsparties').hide();
+
+                        }
+
+                        $.ajax({
+                            url: "@Html.Raw(Url.Action("Valider", "Diagnostic_amiante"))",
+                            type: "POST",
+                                    data: {
+                                        g: $('#g').val(), b: $('#b').val(), a: $('#a').val(), cmd: $('#numcmd').val(), societe: $('#societe').val(), corres: $('#corres').val(), nomdiag: $('#nomdiag').val(), daterapport: $('#daterapport').val(), datedepot: $('#datedepot').val(), controle: $("input[name='choix']:checked").val()
+                            },
+                            beforeSend: function (e) {
+                                $('.loading').show();
+                            },
+                            success: function (result) {
+                                $('.loading').hide();
+                                if (result.trouve) {
+                                    $('#numcmd').prop("disabled", true);
+                                    $('#societe').prop("disabled", true);
+                                    $('#corres').prop("disabled", true);
+                                    $('#nomdiag').prop("disabled", true);
+                                    $('#daterapport').prop("disabled", true);
+                                    $('#g').prop("disabled", true);
+                                    $('#b').prop("disabled", true);
+                                    $('#a').prop("disabled", true);
+                                    $("input[name=choix]").attr('disabled', 'disabled');
+                                    $('#adresse_gbal').html(result.adresse);
+                                    $('#bloc_logement').show();
+
+                                    if (result.export) {
+                                        $('#action0').hide();
+                                        $('#action1').hide();
+                                        $('#action2').hide();
+                                        $('#validerinfos').hide();
+                                        $('#savediag').hide();
+                                    }
+
+                                    $.ajax({
+                                        url: "@Html.Raw(Url.Action("DiagLogements", "Diagnostic_amiante"))",
+                                            cache: false,
+                                            type: "get",
+                                            dataType: "html",
+                                            success: function (result) {
+                                                $('#div_logements_controles').html(result);
+                                                $('#divlogementsFichiers').html(result);
+
+                                                if ($('#div_logements_controles tbody tr').length > 0)
+                                                    $('#modifierinfos').prop("disabled", true);
+                                                else
+                                                    $('#modifierinfos').prop("disabled", false);
+
+                                                if ($('#div_logements_controles .lgt_diag').length > 0) {
+                                                    $('#addcontrole').prop("disabled", false);
+                                                    $('#addfiles').prop("disabled", false);
+                                                }
+
+                                                $('#div_logements_controles .lgt_diag').change(function (e) {
+                                                    if ($('#div_logements_controles .lgt_diag:checked').length > 0) {
+                                                        $('#dellogement').prop("disabled", false);
+                                                    }
+                                                    else
+                                                        $('#dellogement').prop("disabled", true);
+
+                                                    if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                                        $('#validfichiers').prop("disabled", false);
+                                                    }
+                                                    else {
+                                                        $('#validfichiers').prop("disabled", true);
+                                                    }
+                                                });
+
+                                                $('#divlogementsFichiers .lgt_diag').change(function (e) {
+
+                                                    if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                                        $('#validfichiers').prop("disabled", false);
+                                                    }
+                                                    else {
+                                                        $('#validfichiers').prop("disabled", true);
+                                                    }
+                                                });
+                                            }
+                                    });
+                                    $.ajax({
+                                        url: "@Html.Raw(Url.Action("ListeDiagEffectues", "Diagnostic_amiante"))",
+                                            cache: false,
+                                            type: "get",
+                                            dataType: "html",
+                                        success: function (result) {
+                                            $('#div_diag_controles').html(result);
+                                            $('.seldiag').change(function (e) {
+                                                if ($(this).prop("checked")) {
+                                                    $('.seldiag').prop("checked", false);
+                                                    $(this).prop("checked", true);
+                                                    $('#modcontrole').prop("disabled", false);
+                                                    $('#delcontrole').prop("disabled", false);
+                                                }
+                                                else {
+                                                    $('#modcontrole').prop("disabled", true);
+                                                    $('#delcontrole').prop("disabled", true);
+                                                }
+                                            });
+                                        }
+                                    });
+                                    $.ajax({
+                                        url: "@Html.Raw(Url.Action("Fichiers", "Diagnostic_amiante"))",
+                                            cache: false,
+                                            type: "get",
+                                            dataType: "html",
+                                        success: function (result) {
+                                            $('#div_diag_fichiers').html(result);
+
+                                            $('.selfichier').change(function (e) {
+                                                if ($('.selfichier:checked').length > 0) {
+                                                    $('#delfile').prop("disabled", false);
+                                                }
+                                                else {
+                                                    $('#delfile').prop("disabled", true);
+                                                }
+                                            });
+                                        }
+                                    });
+                                    $.ajax({
+                                        url: "@Html.Raw(Url.Action("GetFichiers", "Diagnostic_amiante"))",
+                                        data: { typelogement: $("input[name='choix']:checked").val() },
+                                        cache: false,
+                                        type: "get",
+                                        dataType: "html",
+                                        beforeSend: function (e) {
+                                            $('#divtypefichiers').html("");
+                                        },
+                                        success: function (result) {
+                                            $('#divtypefichiers').html(result);
+
+                                            $('#typefile').show();
+
+                                            $('#typefile').change(function (e) {
+                                                if ($(this).val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                                    $('#validfichiers').prop("disabled", false);
+                                                }
+                                                else {
+                                                    $('#validfichiers').prop("disabled", true);
+                                                }
+                                            });
+                                        }
+                                    });
+                                    $.ajax({
+                                        url: "@Html.Raw(Url.Action("LogementsAControler", "Diagnostic_amiante"))",
+                                            cache: false,
+                                            type: "get",
+                                            dataType: "html",
+                                            success: function (result) {
+                                                $('#divlogementsacontroler').html(result);
+
+                                                if ($('#div_logements_controles tr').length > 0)
+                                                    $('#modifierinfos').prop("disabled", true);
+                                            }
+                                        });
+                                }
+                                else {
+                                    alert("Groupe/Batiment/Allée inexistant");
+                                }
+                            }
+                        });
+                    }
+                    }
+                });
+        }
+        $.ajax({
+            url: "@Html.Raw(Url.Action("listeLogements", "Diagnostic_amiante"))",
+            cache: false,
+            type: "get",
+            dataType: "html",
+            beforeSend: function (e) {
+                $('#corpslogement').html("");
+            },
+            success: function (result) {
+                $('#corpslogement').html(result);
+            }
+        });
+
+        $.ajax({
+            url: "@Html.Raw(Url.Action("listeCommuns", "Diagnostic_amiante"))",
+            cache: false,
+            type: "get",
+            dataType: "html",
+            beforeSend: function (e) {
+                $('#corpsparties').html("");
+            },
+            success: function (result) {
+                $('#corpsparties').html(result);
+            }
+        });
+
+        $.ajax({
+            url: "@Html.Raw(Url.Action("listeDAPP", "Diagnostic_amiante"))",
+            cache: false,
+            type: "get",
+            dataType: "html",
+            beforeSend: function (e) {
+                $('#corpsdapp').html("");
+            },
+            success: function (result) {
+                $('#corpsdapp').html(result);
+            }
+        });
+
+        $.ajax({
+            url: "@Html.Raw(Url.Action("listeLocaux", "Diagnostic_amiante"))",
+            cache: false,
+            type: "get",
+            dataType: "html",
+            beforeSend: function (e) {
+                $('#corpslocaux').html("");
+            },
+            success: function (result) {
+                $('#corpslocaux').html(result);
+            }
+        });
+
+        $.ajax({
+            url: "@Html.Raw(Url.Action("listeZones", "Diagnostic_amiante"))",
+            cache: false,
+            type: "get",
+            dataType: "html",
+            beforeSend: function (e) {
+                $('#corpszones').html("");
+            },
+            success: function (result) {
+                $('#corpszones').html(result);
+            }
+        });
+
+    });
+</script>

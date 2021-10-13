@@ -1,0 +1,23 @@
+﻿@model List<diag_logement>
+
+@using PortailsOpacBase.Portails.Diagnostique.Models
+
+<table class="table table-striped">
+    <thead>
+        <tr class="info">
+            <th>Logements contrôlés</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (diag_logement l in Model)
+        {
+        <tr>
+            <td>@l.gbal</td>
+            <td>@l.appt</td>
+            <td style="text-align:right"><input class="lgt_diag" type="checkbox" data-id="@l.id" data-gbal="@l.gbal" /></td>
+        </tr>
+        }
+    </tbody>
+</table>

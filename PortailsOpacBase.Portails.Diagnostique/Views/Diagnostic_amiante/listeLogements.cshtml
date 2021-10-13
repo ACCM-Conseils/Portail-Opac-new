@@ -1,0 +1,10 @@
+﻿@model List<ElemDiag>
+
+@using PortailsOpacBase.Portails.Diagnostique.Models
+
+@foreach(ElemDiag e in Model)
+{
+    <div>
+        <input type="checkbox" data-oblig="@e.commentaire" class="piece" data-piece="@e.libelle" /> @e.libelle
+    </div>
+}

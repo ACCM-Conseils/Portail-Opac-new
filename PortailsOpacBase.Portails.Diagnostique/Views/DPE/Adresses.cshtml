@@ -1,0 +1,13 @@
+﻿@model List<Cible>
+
+@using PortailsOpacBase.Portails.Diagnostique.Models
+
+@Html.DropDownList("Adresses", new SelectList(Model, "gbal", "adresse"), "Choisissez une adresse", new { @class = "form-control", @readonly = "readonly" })
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#Adresses').change(function (e) {
+            $("#divgbal").html("GBAL : <span id='code'>" + $(this).val() + "</span>");
+        });
+        $('#Adresses').chosen({ width: "100%" });
+    });
+</script>

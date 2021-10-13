@@ -1,0 +1,282 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DiagnostiquesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="connexions">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="idconnexion" Type="uniqueidentifier" />
+          <Property Name="nom" Type="nvarchar" MaxLength="50" />
+          <Property Name="profil" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="diag">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="iddiag" Type="uniqueidentifier" />
+          <Property Name="numcommande" Type="nvarchar" MaxLength="50" />
+          <Property Name="nomsociete" Type="nvarchar" MaxLength="100" />
+          <Property Name="correspondant" Type="nvarchar" MaxLength="100" />
+          <Property Name="diagnostiqueur" Type="nvarchar" MaxLength="100" />
+          <Property Name="daterapport" Type="date" />
+          <Property Name="datedepot" Type="date" />
+          <Property Name="groupe" Type="nvarchar" MaxLength="10" />
+          <Property Name="bati" Type="nvarchar" MaxLength="10" />
+          <Property Name="allee" Type="nvarchar" MaxLength="10" />
+          <Property Name="export" Type="bit" Nullable="false" />
+          <Property Name="profil" Type="nvarchar" MaxLength="50" />
+          <Property Name="type_diag" Type="int" />
+          <Property Name="type_parties" Type="int" />
+          <Property Name="type_energie_chauffage" Type="nvarchar" MaxLength="50" />
+          <Property Name="type_energie_ecs" Type="nvarchar" MaxLength="50" />
+          <Property Name="energie_consommation" Type="int" />
+          <Property Name="energie_etiquette" Type="nvarchar" MaxLength="50" />
+          <Property Name="ges_emissions" Type="int" />
+          <Property Name="ges_etiquettes" Type="nvarchar" MaxLength="50" />
+          <Property Name="surface" Type="int" />
+        </EntityType>
+        <EntityType Name="diag_logement">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="iddiag" Type="uniqueidentifier" />
+          <Property Name="gbal" Type="nvarchar" MaxLength="50" />
+          <Property Name="appt" Type="nvarchar" MaxLength="50" />
+          <Property Name="datediag" Type="date" />
+          <Property Name="valid" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="diag_logement_fichiers">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="iddiag" Type="uniqueidentifier" />
+          <Property Name="nom_fichier" Type="nvarchar" MaxLength="255" />
+          <Property Name="type_fichier" Type="nvarchar" MaxLength="50" />
+          <Property Name="gbal" Type="nvarchar" MaxLength="50" />
+          <Property Name="numrapport" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="diag_logement_pieces">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="idligne" Type="uniqueidentifier" />
+          <Property Name="piece" Type="nvarchar" MaxLength="50" />
+          <Property Name="amiante" Type="bit" />
+          <Property Name="plomb" Type="bit" />
+          <Property Name="prelevements" Type="int" />
+          <Property Name="groupe" Type="uniqueidentifier" />
+          <Property Name="zone" Type="nvarchar" MaxLength="50" />
+          <Property Name="commentaires" Type="nvarchar(max)" />
+          <Property Name="elements_traites" Type="nvarchar" MaxLength="50" />
+          <Property Name="nature_travaux" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityContainer Name="DiagnostiquesModelStoreContainer">
+          <EntitySet Name="connexions" EntityType="Self.connexions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="diag" EntityType="Self.diag" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="diag_logement" EntityType="Self.diag_logement" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="diag_logement_fichiers" EntityType="Self.diag_logement_fichiers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="diag_logement_pieces" EntityType="Self.diag_logement_pieces" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DiagnostiquesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="DiagnostiquesEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="diag_logement" EntityType="DiagnostiquesModel.diag_logement" />
+          <EntitySet Name="diag_logement_pieces" EntityType="DiagnostiquesModel.diag_logement_pieces" />
+          <EntitySet Name="diag_logement_fichiers" EntityType="DiagnostiquesModel.diag_logement_fichiers" />
+          <EntitySet Name="diag" EntityType="DiagnostiquesModel.diag" />
+          <EntitySet Name="connexions" EntityType="DiagnostiquesModel.connexions" />
+        </EntityContainer>
+        <EntityType Name="diag_logement">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Guid" Nullable="false" />
+          <Property Name="iddiag" Type="Guid" />
+          <Property Name="gbal" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="appt" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="datediag" Type="DateTime" Precision="0" />
+          <Property Name="valid" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="diag_logement_pieces">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Guid" Nullable="false" />
+          <Property Name="idligne" Type="Guid" />
+          <Property Name="piece" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="amiante" Type="Boolean" />
+          <Property Name="prelevements" Type="Int32" />
+          <Property Name="groupe" Type="Guid" />
+          <Property Name="zone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="commentaires" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="elements_traites" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="nature_travaux" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="plomb" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="diag_logement_fichiers">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Guid" Nullable="false" />
+          <Property Name="iddiag" Type="Guid" />
+          <Property Name="nom_fichier" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="type_fichier" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="gbal" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="numrapport" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="diag">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Guid" Nullable="false" />
+          <Property Name="iddiag" Type="Guid" />
+          <Property Name="numcommande" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="nomsociete" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="correspondant" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="diagnostiqueur" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="daterapport" Type="DateTime" Precision="0" />
+          <Property Name="groupe" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="bati" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="allee" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="export" Type="Boolean" Nullable="false" />
+          <Property Name="profil" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="datedepot" Type="DateTime" Precision="0" />
+          <Property Name="type_diag" Type="Int32" />
+          <Property Name="type_parties" Type="Int32" />
+          <Property Name="type_energie_chauffage" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="type_energie_ecs" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="energie_consommation" Type="Int32" />
+          <Property Name="energie_etiquette" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ges_emissions" Type="Int32" />
+          <Property Name="ges_etiquettes" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="surface" Type="Int32" />
+        </EntityType>
+        <EntityType Name="connexions">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Guid" Nullable="false" />
+          <Property Name="idconnexion" Type="Guid" />
+          <Property Name="nom" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="profil" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DiagnostiquesModelStoreContainer" CdmEntityContainer="DiagnostiquesEntities">
+          <EntitySetMapping Name="diag_logement">
+            <EntityTypeMapping TypeName="DiagnostiquesModel.diag_logement">
+              <MappingFragment StoreEntitySet="diag_logement">
+                <ScalarProperty Name="valid" ColumnName="valid" />
+                <ScalarProperty Name="datediag" ColumnName="datediag" />
+                <ScalarProperty Name="appt" ColumnName="appt" />
+                <ScalarProperty Name="gbal" ColumnName="gbal" />
+                <ScalarProperty Name="iddiag" ColumnName="iddiag" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="diag_logement_pieces">
+            <EntityTypeMapping TypeName="DiagnostiquesModel.diag_logement_pieces">
+              <MappingFragment StoreEntitySet="diag_logement_pieces">
+                <ScalarProperty Name="plomb" ColumnName="plomb" />
+                <ScalarProperty Name="nature_travaux" ColumnName="nature_travaux" />
+                <ScalarProperty Name="elements_traites" ColumnName="elements_traites" />
+                <ScalarProperty Name="commentaires" ColumnName="commentaires" />
+                <ScalarProperty Name="zone" ColumnName="zone" />
+                <ScalarProperty Name="groupe" ColumnName="groupe" />
+                <ScalarProperty Name="prelevements" ColumnName="prelevements" />
+                <ScalarProperty Name="amiante" ColumnName="amiante" />
+                <ScalarProperty Name="piece" ColumnName="piece" />
+                <ScalarProperty Name="idligne" ColumnName="idligne" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="diag_logement_fichiers">
+            <EntityTypeMapping TypeName="DiagnostiquesModel.diag_logement_fichiers">
+              <MappingFragment StoreEntitySet="diag_logement_fichiers">
+                <ScalarProperty Name="numrapport" ColumnName="numrapport" />
+                <ScalarProperty Name="gbal" ColumnName="gbal" />
+                <ScalarProperty Name="type_fichier" ColumnName="type_fichier" />
+                <ScalarProperty Name="nom_fichier" ColumnName="nom_fichier" />
+                <ScalarProperty Name="iddiag" ColumnName="iddiag" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="diag">
+            <EntityTypeMapping TypeName="DiagnostiquesModel.diag">
+              <MappingFragment StoreEntitySet="diag">
+                <ScalarProperty Name="surface" ColumnName="surface" />
+                <ScalarProperty Name="ges_etiquettes" ColumnName="ges_etiquettes" />
+                <ScalarProperty Name="ges_emissions" ColumnName="ges_emissions" />
+                <ScalarProperty Name="energie_etiquette" ColumnName="energie_etiquette" />
+                <ScalarProperty Name="energie_consommation" ColumnName="energie_consommation" />
+                <ScalarProperty Name="type_energie_ecs" ColumnName="type_energie_ecs" />
+                <ScalarProperty Name="type_energie_chauffage" ColumnName="type_energie_chauffage" />
+                <ScalarProperty Name="type_parties" ColumnName="type_parties" />
+                <ScalarProperty Name="type_diag" ColumnName="type_diag" />
+                <ScalarProperty Name="datedepot" ColumnName="datedepot" />
+                <ScalarProperty Name="profil" ColumnName="profil" />
+                <ScalarProperty Name="export" ColumnName="export" />
+                <ScalarProperty Name="allee" ColumnName="allee" />
+                <ScalarProperty Name="bati" ColumnName="bati" />
+                <ScalarProperty Name="groupe" ColumnName="groupe" />
+                <ScalarProperty Name="daterapport" ColumnName="daterapport" />
+                <ScalarProperty Name="diagnostiqueur" ColumnName="diagnostiqueur" />
+                <ScalarProperty Name="correspondant" ColumnName="correspondant" />
+                <ScalarProperty Name="nomsociete" ColumnName="nomsociete" />
+                <ScalarProperty Name="numcommande" ColumnName="numcommande" />
+                <ScalarProperty Name="iddiag" ColumnName="iddiag" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="connexions">
+            <EntityTypeMapping TypeName="DiagnostiquesModel.connexions">
+              <MappingFragment StoreEntitySet="connexions">
+                <ScalarProperty Name="profil" ColumnName="profil" />
+                <ScalarProperty Name="nom" ColumnName="nom" />
+                <ScalarProperty Name="idconnexion" ColumnName="idconnexion" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Aucun" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

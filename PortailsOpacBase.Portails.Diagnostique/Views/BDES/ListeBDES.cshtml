@@ -1,0 +1,292 @@
+﻿@model List<DocumentBDES>
+
+@using PortailsOpacBase.Portails.Diagnostique.Models;
+
+@{
+    string Niveau1 = "";   
+    
+    int i = 1;
+    int j = 1;
+    int k = 1;
+    int l = 1;
+    int n = 1;
+}
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
+    @if (Model.Count > 0)
+    {
+        foreach (DocumentBDES d in Model.OrderBy(m => m.Niveau1))
+        {
+            if (d.Niveau1 != Niveau1)
+            {
+                <text>
+                    <div class="form-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="heading_@i">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse_@i" aria-expanded="true" aria-controls="collapse_@i">
+                                        @d.Niveau1 @Model.Where(m => m.Niveau1 == d.Niveau1).Count() document(s)
+                                    </a>
+                                </h4>
+                            </div>
+                        </div>
+                        <div id="collapse_@i" class="panel-collapse collapse col1" role="tabpanel" aria-labelledby="heading_@i">
+                            <div class="panel-body">
+                                @{
+                                    string Niveau2 = "";
+
+                                    List<DocumentBDES> docs = Model.Where(m => m.Niveau1 == d.Niveau1).OrderBy(m => m.Niveau2).ToList();
+
+                                    List<DocumentBDES>
+                                        docs3 = Model.Where(m => m.Niveau1 == d.Niveau1 && m.Niveau2 == "").OrderBy(m => m.NomDocument).ToList();
+
+                                    if (docs3.Count > 0)
+                                    {
+                                        <table class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col"></th>
+                                                    <th scope="col"></th>
+                                                    <th scope="col">Documents</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (DocumentBDES docNiveau in docs3)
+                                                {
+                                                    <tr data-id="@docNiveau.DocId">
+                                                        <td style="width:30px"><button class="btn btn-success btn-xs voir"><i class="glyphicon glyphicon-eye-open" aria-hidden="true"></i></button></td>
+                                                        <td style="width:30px"><button onclick="location.href='@Url.Action("Download", "BDES", new { iddoc = docNiveau.DocId })'" class="btn btn-primary btn-xs downloaddoc"><i class="glyphicon glyphicon-circle-arrow-down" aria-hidden="true"></i></button></td>
+                                                        <td><b>@docNiveau.NomDocument</b></td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    }
+
+                                    foreach (DocumentBDES doc in docs)
+                                    {
+                                        if (doc.Niveau2 != Niveau2)
+                                        {
+                                            List<DocumentBDES> docs2 = Model.Where(m => m.Niveau1 == doc.Niveau1 && m.Niveau2 == doc.Niveau2).OrderBy(m => m.Niveau2).ToList();
+                                            <div class="form-group">
+                                                <div class="panel-group" id="inside" role="tablist" aria-multiselectable="false">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading" role="tab" id="heading2_@j">
+                                                            <h4 class="panel-title">
+                                                                <a role="button" data-toggle="collapse" data-parent="#inside" href="#collapse2_@j" aria-expanded="true" aria-controls="collapse2_@j">
+                                                                    <div class="row"><div class="col-lg-6 text-left">@doc.Niveau2</div></div>
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+                                                    </div>
+                                                    <div id="collapse2_@j" class="panel-collapse collapse col2" role="tabpanel" aria-labelledby="heading2_@j">
+                                                        <div class="panel-body">
+                                                            @{
+                                                                string Niveau3 = "";
+
+                                                                List<DocumentBDES> docs4 = Model.Where(m => m.Niveau1 == doc.Niveau1 && m.Niveau2 == doc.Niveau2 && m.Niveau3.Length > 0).OrderBy(m => m.Niveau3).ToList();
+                                                                List<DocumentBDES> docsInside = Model.Where(m => m.Niveau1 == doc.Niveau1 && m.Niveau2 == doc.Niveau2 && m.Niveau3.Length == 0).OrderBy(m => m.NomDocument).ToList();
+
+                                                                if (docsInside.Count > 0)
+                                                                {
+                                                                    <table class="table table-striped table-bordered">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th scope="col"></th>
+                                                                                <th scope="col"></th>
+                                                                                <th scope="col">Documents</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            @foreach (DocumentBDES docNiveau in docsInside)
+                                                                            {
+                                                                                <tr data-id="@docNiveau.DocId">
+                                                                                    <td style="width:30px"><button class="btn btn-success btn-xs voir"><i class="glyphicon glyphicon-eye-open" aria-hidden="true"></i></button></td>
+                                                                                    <td style="width:30px"><button onclick="location.href='@Url.Action("Download", "BDES", new { iddoc = docNiveau.DocId })'" class="btn btn-primary btn-xs downloaddoc"><i class="glyphicon glyphicon-circle-arrow-down" aria-hidden="true"></i></button></td>
+                                                                                    <td><b>@docNiveau.NomDocument</b></td>
+                                                                                </tr>
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                }
+
+                                                                foreach (DocumentBDES docInside in docs4)
+                                                                {
+                                                                    if (docInside.Niveau3 != Niveau3)
+                                                                    {
+                                                                        List<DocumentBDES> docs5 = Model.Where(o => o.Niveau1 == docInside.Niveau1 && o.Niveau2 == docInside.Niveau2 && o.Niveau3 == docInside.Niveau3 && o.Niveau4.Length > 0).OrderBy(o => o.Niveau4).ToList();
+                                                                        List<DocumentBDES> docsInside5 = Model.Where(m => m.Niveau1 == docInside.Niveau1 && m.Niveau2 == docInside.Niveau2 && m.Niveau3 == docInside.Niveau3 && m.Niveau4.Length == 0).OrderBy(m => m.NomDocument).ToList();
+
+                                                                        <div class="form-group">
+                                                                            <div class="panel panel-default">
+                                                                                <div class="panel-heading" role="tab" id="heading3_@k">
+                                                                                    <h4 class="panel-title">
+                                                                                        <a role="button" data-toggle="collapse" data-parent="#inside" href="#collapse3_@k" aria-expanded="true" aria-controls="collapse3_@k">
+                                                                                            <div class="row"><div class="col-lg-6 text-left">@docInside.Niveau3</div></div>
+                                                                                        </a>
+                                                                                    </h4>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div id="collapse3_@k" class="panel-collapse collapse col2" role="tabpanel" aria-labelledby="heading3_@k">
+                                                                                <div class="panel-body">
+                                                                                    @{
+                                                                                        string Niveau4 = "";
+
+                                                                                        if (docsInside5.Count > 0)
+                                                                                        {
+                                                                                            <table class="table table-striped table-bordered">
+                                                                                                <thead>
+                                                                                                    <tr>
+                                                                                                        <th scope="col"></th>
+                                                                                                        <th scope="col"></th>
+                                                                                                        <th scope="col">Documents</th>
+                                                                                                    </tr>
+                                                                                                </thead>
+                                                                                                <tbody>
+                                                                                                    @foreach (DocumentBDES docNiveau in docsInside5)
+                                                                                                    {
+                                                                                                        <tr data-id="@docNiveau.DocId">
+                                                                                                            <td style="width:30px"><button class="btn btn-success btn-xs voir"><i class="glyphicon glyphicon-eye-open" aria-hidden="true"></i></button></td>
+                                                                                                            <td style="width:30px"><button onclick="location.href='@Url.Action("Download", "BDES", new { iddoc = docNiveau.DocId })'" class="btn btn-primary btn-xs downloaddoc"><i class="glyphicon glyphicon-circle-arrow-down" aria-hidden="true"></i></button></td>
+                                                                                                            <td><b>@docNiveau.NomDocument</b></td>
+                                                                                                        </tr>
+                                                                                                    }
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        }
+
+
+                                                                                        foreach (DocumentBDES docInside2 in docs5)
+                                                                                        {
+                                                                                            List<DocumentBDES> docs6 = Model.Where(m => m.Niveau1 == docInside2.Niveau1 && m.Niveau2 == docInside2.Niveau2 && m.Niveau3 == docInside2.Niveau3 && m.Niveau4 == docInside2.Niveau4 && m.Niveau5.Length > 0).OrderBy(m => m.Niveau5).ToList();
+                                                                                            List<DocumentBDES> docsInside4 = Model.Where(m => m.Niveau1 == docInside2.Niveau1 && m.Niveau2 == docInside2.Niveau2 && m.Niveau3 == docInside2.Niveau3 && m.Niveau4 == docInside2.Niveau4 && m.Niveau5.Length == 0).OrderBy(m => m.NomDocument).ToList();
+
+                                                                                            if (docInside2.Niveau4 != Niveau4)
+                                                                                            {
+                                                                                                <div class="form-group">
+                                                                                                    <div class="panel panel-default">
+                                                                                                        <div class="panel-heading" role="tab" id="heading4_@l">
+                                                                                                            <h4 class="panel-title">
+                                                                                                                <a role="button" data-toggle="collapse" data-parent="#inside" href="#collapse4_@l" aria-expanded="true" aria-controls="collapse4_@l">
+                                                                                                                    <div class="row"><div class="col-lg-6 text-left">@docInside2.Niveau4</div></div>
+                                                                                                                </a>
+                                                                                                            </h4>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div id="collapse4_@l" class="panel-collapse collapse col2" role="tabpanel" aria-labelledby="heading4_@l">
+                                                                                                        <div class="panel-body">
+                                                                                                            @{
+                                                                                                                List<DocumentBDES> docsInside7 = Model.Where(m => m.Niveau1 == docInside2.Niveau1 && m.Niveau2 == docInside2.Niveau2 && m.Niveau3 == docInside2.Niveau3 && m.Niveau4 == docInside2.Niveau4 && m.Niveau5 == docInside2.Niveau5).OrderBy(m => m.NomDocument).ToList();
+                                                                                                                string Niveau5 = "";
+
+                                                                                                                foreach (DocumentBDES docInside3 in docs6)
+                                                                                                                {
+                                                                                                                    if (docInside3.Niveau5 != Niveau5)
+                                                                                                                    {
+                                                                                                                        <div class="form-group">
+                                                                                                                            <div class="panel panel-default">
+                                                                                                                                <div class="panel-heading" role="tab" id="heading5_@n">
+                                                                                                                                    <h4 class="panel-title">
+                                                                                                                                        <a role="button" data-toggle="collapse" data-parent="#inside" href="#collapse5_@n" aria-expanded="true" aria-controls="collapse5_@n">
+                                                                                                                                            <div class="row"><div class="col-lg-6 text-left">@docInside3.Niveau5</div></div>
+                                                                                                                                        </a>
+                                                                                                                                    </h4>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                            <div id="collapse5_@n" class="panel-collapse collapse col2" role="tabpanel" aria-labelledby="heading5_@n">
+                                                                                                                                <div class="panel-body">
+                                                                                                                                    @{
+                                                                                                                                        List<DocumentBDES> docsInside8 = Model.Where(m => m.Niveau1 == docInside3.Niveau1 && m.Niveau2 == docInside3.Niveau2 && m.Niveau3 == docInside3.Niveau3 && m.Niveau4 == docInside3.Niveau4 && m.Niveau5 == docInside3.Niveau5).OrderBy(m => m.NomDocument).ToList();
+
+                                                                                                                                        if (docsInside8.Count > 0)
+                                                                                                                                        {
+                                                                                                                                            <table class="table table-striped table-bordered">
+                                                                                                                                                <thead>
+                                                                                                                                                    <tr>
+                                                                                                                                                        <th scope="col"></th>
+                                                                                                                                                        <th scope="col"></th>
+                                                                                                                                                        <th scope="col">Documents</th>
+                                                                                                                                                    </tr>
+                                                                                                                                                </thead>
+                                                                                                                                                <tbody>
+                                                                                                                                                    @foreach (DocumentBDES docNiveau in docsInside8)
+                                                                                                                                                    {
+                                                                                                                                                        <tr data-id="@docNiveau.DocId">
+                                                                                                                                                            <td style="width:30px"><button class="btn btn-success btn-xs voir"><i class="glyphicon glyphicon-eye-open" aria-hidden="true"></i></button></td>
+                                                                                                                                                            <td style="width:30px"><button onclick="location.href='@Url.Action("Download", "BDES", new { iddoc = docNiveau.DocId })'" class="btn btn-primary btn-xs downloaddoc"><i class="glyphicon glyphicon-circle-arrow-down" aria-hidden="true"></i></button></td>
+                                                                                                                                                            <td><b>@docNiveau.NomDocument</b></td>
+                                                                                                                                                        </tr>
+                                                                                                                                                    }
+                                                                                                                                                </tbody>
+                                                                                                                                            </table>
+                                                                                                                                        }
+                                                                                                                                    }
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    }
+                                                                                                                    n++;
+                                                                                                                    Niveau5 = docInside3.Niveau5;
+                                                                                                                }
+
+
+
+                                                                                                                if (docsInside4.Count > 0)
+                                                                                                                {
+                                                                                                                    <table class="table table-striped table-bordered">
+                                                                                                                        <thead>
+                                                                                                                            <tr>
+                                                                                                                                <th scope="col"></th>
+                                                                                                                                <th scope="col"></th>
+                                                                                                                                <th scope="col">Documents</th>
+                                                                                                                            </tr>
+                                                                                                                        </thead>
+                                                                                                                        <tbody>
+                                                                                                                            @foreach (DocumentBDES docNiveau in docsInside4)
+                                                                                                                            {
+                                                                                                                                <tr data-id="@docNiveau.DocId">
+                                                                                                                                    <td style="width:30px"><button class="btn btn-success btn-xs voir"><i class="glyphicon glyphicon-eye-open" aria-hidden="true"></i></button></td>
+                                                                                                                                    <td style="width:30px"><button onclick="location.href='@Url.Action("Download", "BDES", new { iddoc = docNiveau.DocId })'" class="btn btn-primary btn-xs downloaddoc"><i class="glyphicon glyphicon-circle-arrow-down" aria-hidden="true"></i></button></td>
+                                                                                                                                    <td><b>@docNiveau.NomDocument</b></td>
+                                                                                                                                </tr>
+                                                                                                                            }
+                                                                                                                        </tbody>
+                                                                                                                    </table>
+                                                                                                                }
+                                                                                                            }
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            }
+                                                                                            l++;
+                                                                                            Niveau4 = docInside2.Niveau4;
+                                                                                        }
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    }
+                                                                    k++;
+                                                                    Niveau3 = docInside.Niveau3;
+                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        j++;
+                                        Niveau2 = doc.Niveau2;
+                                    }
+
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+                </text>
+                Niveau1 = d.Niveau1; i++;
+            }
+        }
+    }
+</div>

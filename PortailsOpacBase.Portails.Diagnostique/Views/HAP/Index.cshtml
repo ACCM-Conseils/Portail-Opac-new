@@ -1,0 +1,497 @@
+﻿@{
+    ViewBag.Title = "H.A.P.";
+}
+
+@model Communes
+
+@using PortailsOpacBase.Portails.Diagnostique.Models
+
+<div class="form-group">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Déposer un HAP</h2>
+        </div>
+        <div class="col-md-4">
+            <a href="/claimapp/Home/Index/@ViewBag.connect" class="btn btn-success btn-lg btn-block">Retour</a>
+        </div>
+    </div>
+</div>
+<hr />
+<h4>Identification</h4>
+<div class="form-group">
+    <div class="row">
+        <div class="col-md-4">
+            Numéro de commande *
+            <input type="text" class="form-control" id="numcmd" placeholder="N° Commande (obligatoire)" />
+            <label id="error" style="display:none;color:red">Numéro de commande inconnu</label>
+        </div>
+        <div class="col-md-4">
+            Société *
+            <input type="text" class="form-control" id="societe" placeholder="Nom société" />
+        </div>
+        <div class="col-md-4">
+            Correspondant *
+            <input type="text" class="form-control" id="corres" placeholder="Correspondant OPAC" />
+        </div>
+    </div>
+</div>
+<div id="bloc_2" class="form-group" style="display:none">
+    <div class="row">
+        <div class="col-md-4">
+            Nom diagnostiqueur *
+            <input id="nomdiag" type="text" class="form-control" placeholder="Diagnostiqueur (obligatoire)" value="@ViewBag.Profil" />
+        </div>
+        <div class="col-md-4">
+            Date du rapport *
+            <input id="daterapport" type="text" class="form-control datecontrol" placeholder="Date du rapport (obligatoire)" />
+        </div>
+        <div class="col-md-4">
+            Date de dépot
+            <input id="datedepot" type="text" class="form-control datecontrol" value="@DateTime.Today.ToShortDateString()" disabled />
+        </div>
+        <hr />
+    </div>
+    <h4>Identification logement</h4>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                Groupe *
+                <input id="g" type="text" class="form-control" placeholder="Groupe (obligatoire)" />
+            </div>
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-3">
+            </div>
+        </div>
+    </div>
+</div>
+<hr />
+<div id="bloc_3" class="row" style="display:none">
+    <div class="col-md-4">
+        <div class="form-group">
+            <button id="validerinfos" class="btn btn-primary btn-lg btn-block">Valider les informations</button>
+        </div>
+    </div>
+    <div class="col-md-4" style="padding-top:10px">
+        <span id="adresse_gbal"></span>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <button id="modifierinfos" class="btn btn-default btn-lg btn-block" disabled>Modifier la saisie</button>
+        </div>
+    </div>
+</div>
+<div id="findiag" style="margin-top:20px;display:none">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                Numéro de rapport *
+                <input id="numrapport" type="text" class="form-control" placeholder="Numéro de rapport" />
+            </div>
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-3">
+            </div>
+        </div>
+    </div>
+    <div class="form-group" id="container">
+        <button id="pickfiles" class="btn btn-success btn-lg">Choisir le fichier</button>
+    </div>
+    <div id="div_diag_fichiers">
+        Fichier à déposer *
+        <table class="table table-striped">
+            <thead>
+                <tr class="info">
+                    <th>Nom fichier</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="listefiles"></tbody>
+        </table>
+    </div>
+    <div class="form-group" id="savediv" style="padding-top:30px">
+        <div class="row">
+            <div class="col-md-12">
+                <button id="savediag" class="btn btn-primary btn-lg btn-block" disabled>Enregistrer le dépôt</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="dialog-choix" tabindex="-1" role="dialog" aria-labelledby="dialog-choix" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="title">Enregistrement terminé</h3>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button id="keep" type="button" class="btn btn-primary">Nouveau dépôt pour cette commande</button>
+                <button id="another" type="button" class="btn btn-primary">Nouveau dépôt</button>
+                <a href="javascript:void(0);" onclick="history.go(-1);" class="btn btn-success">Retour</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="loading">Chargement&#8230;</div>
+<script>
+    $(document).ready(function () {
+        var dpemin = 0;
+        var dpemax = 0;
+
+        var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+        };
+        var origine = "";
+        var numcmd = "";
+
+        try {
+            origine = getUrlParameter('id');
+            numcmd = getUrlParameter('cmd');
+        }
+        catch(error)
+        {
+        }
+
+        if (numcmd != null) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("GetCommande", "DPE"))?diag=" + origine,
+                type: "POST",
+                data: "{ }",
+                success: function (result) {
+                    $('#numcmd').val(result.numcmd);
+                    $('#societe').val(result.societe);
+                    $('#corres').val(result.corres);
+                    $('#nomdiag').val(result.nomdiag);
+                    $('#bloc_2').show();
+                    $('#bloc_3').show();
+                }
+            });
+        }
+
+        $('.loading').hide();
+        $(".datecontrol").datepicker({ dateFormat: "dd/MM/yyyy", language: "fr" });
+
+        $('#another').click(function (e) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("CreateHAP", "HAP"))?diag=" + origine + "&cmd=" + $('#numcmd').val(),
+                type: "POST",
+                data: "{ }",
+                beforeSend: function (e) {
+                    $('.loading').show();
+                },
+                success: function (result) {
+                    $('.loading').hide();
+
+                    window.location.href = result.url;
+                }
+            });
+        });
+        $('#keep').click(function (e) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("NewHAP", "HAP"))?diag=" + origine + "&cmd=" + $('#numcmd').val(),
+                type: "POST",
+                data: "{ }",
+                beforeSend: function (e) {
+                    $('.loading').show();
+                },
+                success: function (result) {
+                    $('.loading').hide();
+
+                    window.location.href = result.url;
+                }
+            });
+        });
+
+        $('#mcarre').focusout(function (e) {
+            if (parseFloat($('#mcarre').val()) < 0 || parseFloat($('#mcarre').val()) > 999) {
+                alert("La superficie doit être inférieure ou égale à 999 m2");
+            }
+        });
+        $('#valeurdpe').focusout(function (e) {
+            CheckValeurDPE();
+        });
+        $('#etiquettedpe').change(function (e) {
+            if ($("#etiquettedpe")[0].selectedIndex > 0 && $('#valeurdpe').val().length > 0)
+                CheckValeurDPE();
+        });
+        $('#valeurges').focusout(function (e) {
+            CheckValeurGES();
+        });
+        $('#etiquetteGES').change(function (e) {
+            if ($("#etiquetteGES")[0].selectedIndex > 0 && $('#valeurges').val().length > 0)
+                CheckValeurGES();
+        });
+        $('#societe').off("focusin").on("focusin", function (e) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("GetCommande", "Diagnostic_amiante"))?numcommande=" + $('#numcmd').val(),
+                type: "POST",
+                data: "{ }",
+                beforeSend: function (e) {
+                    $('.loading').show();
+                },
+                success: function (result) {
+                    $('.loading').hide();
+                    if (result.trouve) {
+                        $('#numcmd').attr("style", "border:1px solid #ccc");
+                        if (result.societe.length > 0) {
+                            $('#societe').val(result.societe);
+                            $('#societe').prop("disabled", true);
+                        }
+                        if (result.contact.length > 0) {
+                            $('#corres').val(result.contact);
+                            $('#corres').prop("disabled", true);
+                        }
+                        $('#bloc_2').show();
+                        $('#bloc_3').show();
+                        $('#error').hide();
+                    }
+                    else {
+                        $('#bloc_2').hide();
+                        $('#bloc_3').hide();
+                        $('#numcmd').attr("style", "border:1px solid red");
+                        $('#numcmd').focus();
+                        $('#error').show();
+                        $('#societe').prop("disabled", true);
+                        $('#corres').prop("disabled", true);
+                        $('#societe').val("");
+                        $('#corres').val("");
+                    }
+                }
+            });
+        });
+        $('#numcmd').off("keypress").on("keypress", function (e) {
+            var key = e.which;
+            if (key == 13)  // the enter key code
+            {
+                $.ajax({
+                    url: "@Html.Raw(Url.Action("GetCommande", "Diagnostic_amiante"))?numcommande=" + $('#numcmd').val(),
+                    type: "POST",
+                    data: "{ }",
+                    beforeSend: function (e) {
+                        $('.loading').show();
+                    },
+                    success: function (result) {
+                        $('.loading').hide();
+                        if (result.trouve) {
+                            $('#numcmd').attr("style", "border:1px solid #ccc");
+                            if (result.societe.length > 0) {
+                                $('#societe').val(result.societe);
+                            }
+                            if (result.contact.length > 0) {
+                                $('#corres').val(result.contact);
+                            }
+                            $('#bloc_2').show();
+                            $('#bloc_3').show();
+                            $('#error').hide();
+                        }
+                        else {
+                            $('#bloc_2').hide();
+                            $('#bloc_3').hide();
+                            $('#numcmd').attr("style", "border:1px solid red");
+                            $('#numcmd').focus();
+                            $('#error').show();
+                            $('#societe').prop("disabled", true);
+                            $('#corres').prop("disabled", true);
+                            $('#societe').val("");
+                            $('#corres').val("");
+                        }
+                    }
+                });
+            }
+        });
+
+        $('#savediag').click(function (e) {
+            if ($('#numrapport').val().length > 0 && $('.file').length > 0) {
+                
+                $.ajax({
+                    url: "@Html.Raw(Url.Action("SaveDiag", "HAP"))",
+                    type: "POST",
+                    data: {
+                        adresse: $('#adresse_gbal').html(), numrapport: $('#numrapport').val()  },
+                    beforeSend: function (e) {
+                        $('.loading').show();
+                    },
+                    success: function (result) {
+                        $('.loading').hide();
+                        if (result.success) {
+                            $('#dialog-choix').modal("show");
+                        }
+                    }
+                });
+            }
+            else
+                alert("Veuillez contrôler les champs obligatoires SVP");
+        });
+
+        $('#validerinfos').click(function (e) {
+            var todayDate = new Date();
+            var parts = $('#daterapport').val().split('/');
+            var mydate = new Date(parts[2], parts[1] - 1, parts[0], 0, 0, 0);
+
+            if (todayDate >= mydate) {
+                if ($('#nomdiag').val().length > 0 && $('#daterapport').val().length > 0 && $('#g').val().length > 0) {
+
+                    $.ajax({
+                        url: "@Html.Raw(Url.Action("Valider", "HAP"))",
+                        type: "POST",
+                        data: {
+                            g: $('#g').val(), cmd: $('#numcmd').val(), societe: $('#societe').val(), corres: $('#corres').val(), nomdiag: $('#nomdiag').val(), daterapport: $('#daterapport').val(), datedepot: $('#datedepot').val(), controle: 2
+                        },
+                        beforeSend: function (e) {
+                            $('.loading').show();
+                        },
+                        success: function (result) {
+                            $('.loading').hide();
+                            if (result.trouve) {
+                                $('#societe').prop("disabled", true);
+                                $('#corres').prop("disabled", true);
+                                $('#nomdiag').prop("disabled", true);
+                                $('#daterapport').prop("disabled", true);
+                                $('#modifierinfos').prop("disabled", false);
+                                $('#validerinfos').prop("disabled", true);
+                                $('#savediag').prop("disabled", false);
+                                $('#g').prop("disabled", true);
+                                $('#findiag').show();
+                                $('#adresse_gbal').html(result.adresse);
+
+                            }
+                            else {
+                                alert("Groupe non trouvé ");
+                            }
+                        }
+                    });
+                    //$('#bloc_logement').show();
+                }
+                else {
+                    alert("Veuillez vérifier les champs obligatoires SVP");
+                }
+            }
+            else
+                alert("La date du rapport doit être inférieure ou égale à la date du jour.")
+        });
+
+        $('#modifierinfos').click(function (e) {
+            $('#numcmd').prop("disabled", false);
+            $('#nomdiag').prop("disabled", false);
+            $('#daterapport').prop("disabled", false);
+            $('#validerinfos').prop("disabled", false);
+            $('#savediag').prop("disabled", true);
+            $('#g').prop("disabled", false);
+            $("input[name=choix]").removeAttr('disabled');
+        });
+
+        var uploader = new plupload.Uploader({
+            runtimes: 'html5,flash,silverlight,html4',
+            max_file_count: 1,
+            multi_selection: false,
+            browse_button: 'pickfiles', // you can pass in id...
+            multipart_params: { numrapport: $('#numrapport').val() },
+            container: document.getElementById('container'), // ... or DOM Element itself
+            url: "/claimapp/DPE/Upload",
+            filters: {
+                mime_types: [
+                    { title: "Excel Files", extensions: "xls,xslx,csv" },
+                    { title: "MSWord Files", extensions: "doc, docx" },
+                    { title: "PDF Files", extensions: "pdf" }
+                ]
+            },
+            flash_swf_url: '/plupload/js/Moxie.swf',
+            silverlight_xap_url: '/plupload/js/Moxie.xap',
+            init: {
+                FilesAdded: function (up, files) {
+                    var filenames = "";
+                    for (var i in files) {
+                        if (files[i].size < 25000000)
+                            filenames += "<tr class='file'><td>" + files[i].name + "</td><td style='text-align:right'><span class='glyphicon glyphicon-trash delfichier' data-id='" + files[i].id + "' style='font-size:0.8em'></span></td></tr>";
+                        else {
+                            up.removeFile(files[i]);
+                            alert("Le fichier " + files[i].name + " est trop volumineux");
+                        }
+                    }
+                    $('#listefiles').append(filenames);
+
+                    $('#div_diag_fichiers .delfichier').off("click").on("click", function (e) {
+                        uploader.removeFile($(this).data("id"));
+                        $(this).closest("tr").remove();
+                        $('#pickfiles').prop("disabled", false);
+                    });
+                    $('.loading').show();
+                    uploader.start();
+                },
+
+                UploadComplete: function (up, file) {
+                    $('.loading').hide();
+                    if ($('.file').length > 0) {
+                                $('#pickfiles').prop("disabled", true);
+                            }
+                },
+                Error: function (up, err) {
+                    $('.loading').hide();
+                    if (err.message == "File extension error.") {
+                        alert("Format de fichier incorrect");
+                    }
+                }
+            }
+        });
+
+        uploader.bind('BeforeUpload', function (up, file) {
+            var gbal = $('#g').val();
+            up.settings.multipart_params = { Gbal: gbal, numrapport: $('#numrapport').val()  }
+        });
+
+        uploader.init();
+
+        $.ajax({
+                            url: "@Html.Raw(Url.Action("GetCommunes", "Home"))",
+                            cache: false,
+                            type: "get",
+                            dataType: "html",
+                            beforeSend: function (e) {
+                                $('#divcommunes').html("");
+                            },
+                            success: function (result) {
+                                $('#divcommunes').html(result);
+                            }
+        });
+        $.ajax({
+                            url: "@Html.Raw(Url.Action("GetChauffage", "DPE"))",
+                            cache: false,
+                            type: "get",
+                            dataType: "html",
+                            beforeSend: function (e) {
+                                $('#divchauffage').html("");
+                            },
+                            success: function (result) {
+                                $('#divchauffage').html(result);
+                            }
+        });
+        $.ajax({
+                            url: "@Html.Raw(Url.Action("GetECS", "DPE"))",
+                            cache: false,
+                            type: "get",
+                            dataType: "html",
+                            beforeSend: function (e) {
+                                $('#divecs').html("");
+                            },
+                            success: function (result) {
+                                $('#divecs').html(result);
+                            }
+        });
+    });
+</script>

@@ -1,0 +1,39 @@
+﻿@model List<Diag_effectues>
+
+@using PortailsOpacBase.Portails.Diagnostique.Models
+
+@{ 
+    var i = 0;
+    Guid groupe = Guid.Empty;
+}
+
+<table id="table_controles" class="table table-striped">
+    <thead>
+        <tr class="info">
+            <th></th>
+            <th>Parties contrôlées</th>
+            <th>GBAL</th>
+            <th>Elément traité</th>
+            <th>Plomb</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Diag_effectues l in Model.OrderBy(m => m.numligne))
+        {
+            if(groupe != l.groupe)
+            {
+                i += 1;
+                groupe = l.groupe;
+            }
+        <tr>
+            <td>@i</td>
+            <td>@l.piece</td>
+            <td>@l.gbal</td>
+            <td>@l.elements_traites</td>
+            <td>@((l.plomb) ? "Oui" : "Non")</td>
+            <td style="text-align:right"><input class="seldiag" type="checkbox" data-id="@l.groupe" /></td>
+        </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,5 @@
+﻿@model List<ElemDiag>
+
+@using PortailsOpacBase.Portails.Diagnostique.Models
+
+@Html.DropDownList("Zones", new SelectList(Model, "commentaire", "libelle"), "Choisissez une zone", new { @class = "form-control", @readonly = "readonly" })

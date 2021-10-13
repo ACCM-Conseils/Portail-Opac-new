@@ -1,0 +1,240 @@
+﻿<?xml version="1.0"?>
+<!--
+  Pour plus d'informations sur la configuration de votre application ASP.NET, visitez
+  https://go.microsoft.com/fwlink/?LinkId=301880
+  -->
+<configuration>
+  <configSections>
+    <!-- For more information on Entity Framework configuration, visit http://go.microsoft.com/fwlink/?LinkID=237468 -->
+    <section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net"/>
+    <section name="microsoft.identityModel" type="Microsoft.IdentityModel.Configuration.MicrosoftIdentityModelSection, Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"/>
+  </configSections>
+  <appSettings>
+    <add key="webpages:Version" value="3.0.0.0"/>
+    <add key="webpages:Enabled" value="false"/>
+    <add key="ClientValidationEnabled" value="true"/>
+    <add key="UnobtrusiveJavaScriptEnabled" value="true"/>
+    <add key="ida:ADFSMetadata" value="https://adfs.opacoise.fr/federationmetadata/2007-06/federationmetadata.xml"/>
+    <add key="ida:Wtrealm" value="http://portail-diagnostics.opacoise.fr/"/>
+    <add key="FederationMetadataLocation" value="https://adfs.opacoise.fr/federationmetadata/2007-06/federationmetadata.xml"/>
+  </appSettings>
+  <log4net>
+    <appender name="RollingLogFileAppender" type="log4net.Appender.RollingFileAppender,log4net">
+      <param name="File" value="c:\\AppData\\Altexence\\LogsAuth\\"/>
+      <datePattern value="dd-MM-yyyy'-FULL.log'"/>
+      <staticLogFileName value="false"/>
+      <appendToFile value="true"/>
+      <rollingStyle value="Composite"/>
+      <maxSizeRollBackups value="100"/>
+      <maximumFileSize value="5MB"/>
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline"/>
+      </layout>
+    </appender>
+    <root>
+      <level value="DEBUG"/>
+      <appender-ref ref="RollingLogFileAppender"/>
+    </root>
+  </log4net>
+  <location path="FederationMetadata">
+    <system.web>
+      <authorization>
+        <allow users="*"/>
+      </authorization>
+    </system.web>
+  </location>
+  <!--
+    Pour obtenir une description des modifications de web.config, voir http://go.microsoft.com/fwlink/?LinkId=235367.
+
+    Les attributs suivants peuvent être définis dans la balise <httpRuntime>.
+      <system.Web>
+        <httpRuntime targetFramework="4.5" />
+      </system.Web>
+  -->
+  <system.web>
+    <authorization>
+      <deny users="?"/>
+    </authorization>
+    <authentication mode="None"/>
+    <compilation debug="true" targetFramework="4.6.1">
+      <assemblies>
+        <add assembly="Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35"/>
+      </assemblies>
+    </compilation>
+    <httpRuntime/>
+    <httpModules>
+      <add name="WSFederationAuthenticationModule" type="Microsoft.IdentityModel.Web.WSFederationAuthenticationModule, Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"/>
+      <add name="SessionAuthenticationModule" type="Microsoft.IdentityModel.Web.SessionAuthenticationModule, Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"/>
+    </httpModules>
+    <pages controlRenderingCompatibilityVersion="3.5" clientIDMode="AutoID"/>
+  </system.web>
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="Microsoft.IdentityModel.Protocols.WsFederation" publicKeyToken="31bf3856ad364e35" culture="neutral"/>
+        <bindingRedirect oldVersion="0.0.0.0-5.2.1.0" newVersion="5.2.1.0"/>
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Microsoft.IdentityModel.Tokens.Saml" publicKeyToken="31bf3856ad364e35" culture="neutral"/>
+        <bindingRedirect oldVersion="0.0.0.0-5.2.1.0" newVersion="5.2.1.0"/>
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Microsoft.IdentityModel.Tokens" publicKeyToken="31bf3856ad364e35"/>
+        <bindingRedirect oldVersion="0.0.0.0-5.2.1.0" newVersion="5.2.1.0"/>
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Microsoft.IdentityModel.Protocols.OpenIdConnect" publicKeyToken="31bf3856ad364e35"/>
+        <bindingRedirect oldVersion="0.0.0.0-5.2.1.0" newVersion="5.2.1.0"/>
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Microsoft.IdentityModel.Protocols" publicKeyToken="31bf3856ad364e35"/>
+        <bindingRedirect oldVersion="0.0.0.0-5.2.1.0" newVersion="5.2.1.0"/>
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.IdentityModel.Tokens.Jwt" publicKeyToken="31bf3856ad364e35"/>
+        <bindingRedirect oldVersion="0.0.0.0-5.2.1.0" newVersion="5.2.1.0"/>
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Antlr3.Runtime" publicKeyToken="eb42632606e9261f"/>
+        <bindingRedirect oldVersion="0.0.0.0-3.5.0.2" newVersion="3.5.0.2"/>
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Optimization" publicKeyToken="31bf3856ad364e35"/>
+        <bindingRedirect oldVersion="0.0.0.0-1.1.0.0" newVersion="1.1.0.0"/>
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="WebGrease" publicKeyToken="31bf3856ad364e35"/>
+        <bindingRedirect oldVersion="0.0.0.0-1.6.5135.21930" newVersion="1.6.5135.21930"/>
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed"/>
+        <bindingRedirect oldVersion="0.0.0.0-11.0.0.0" newVersion="11.0.0.0"/>
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Helpers" publicKeyToken="31bf3856ad364e35"/>
+        <bindingRedirect oldVersion="0.0.0.0-3.0.0.0" newVersion="3.0.0.0"/>
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Mvc" publicKeyToken="31bf3856ad364e35"/>
+        <bindingRedirect oldVersion="0.0.0.0-5.2.4.0" newVersion="5.2.4.0"/>
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.WebPages" publicKeyToken="31bf3856ad364e35"/>
+        <bindingRedirect oldVersion="0.0.0.0-3.0.0.0" newVersion="3.0.0.0"/>
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Net.Http" publicKeyToken="b03f5f7f11d50a3a" culture="neutral"/>
+        <bindingRedirect oldVersion="0.0.0.0-2.0.0.0" newVersion="2.0.0.0"/>
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Net.Http.WebRequest" publicKeyToken="b03f5f7f11d50a3a" culture="neutral"/>
+        <bindingRedirect oldVersion="0.0.0.0-2.0.0.0" newVersion="2.0.0.0"/>
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+  <system.codedom>
+    <compilers>
+      <compiler language="c#;cs;csharp" extension=".cs" type="Microsoft.CSharp.CSharpCodeProvider, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" warningLevel="4" compilerOptions="/langversion:default /nowarn:1659;1699;1701">
+        <providerOption name="CompilerVersion" value="v4.0"/>
+        <providerOption name="WarnAsError" value="false"/>
+      </compiler>
+      <compiler language="vb;vbs;visualbasic;vbscript" extension=".vb" type="Microsoft.VisualBasic.VBCodeProvider, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" warningLevel="4" compilerOptions="/langversion:default /nowarn:41008 /define:_MYTYPE=\&quot;Web\&quot; /optionInfer+">
+        <providerOption name="CompilerVersion" value="v4.0"/>
+        <providerOption name="OptionInfer" value="true"/>
+        <providerOption name="WarnAsError" value="false"/>
+      </compiler>
+    </compilers>
+  </system.codedom>
+  <system.webServer>
+    <modules>
+      <add name="WSFederationAuthenticationModule" type="Microsoft.IdentityModel.Web.WSFederationAuthenticationModule, Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" preCondition="managedHandler"/>
+      <add name="SessionAuthenticationModule" type="Microsoft.IdentityModel.Web.SessionAuthenticationModule, Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" preCondition="managedHandler"/>
+    </modules>
+  </system.webServer>
+  <microsoft.identityModel>
+    <service>
+      <audienceUris>
+        <add value="https://portail-diagnostics.opacoise.fr/"/>
+      </audienceUris>
+      <federatedAuthentication>
+        <wsFederation passiveRedirectEnabled="true" issuer="https://adfs.opacoise.fr/adfs/ls/" realm="https://portail-diagnostics.opacoise.fr/" requireHttps="true"/>
+        <cookieHandler requireSsl="true"/>
+      </federatedAuthentication>
+      <applicationService>
+        <claimTypeRequired>
+          <!--Following are the claims offered by STS 'http://adfs.opacoise.fr/adfs/services/trust'. Add or uncomment claims that you require by your application and then update the federation metadata of this application.-->
+          <claimType type="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name" optional="true"/>
+          <claimType type="http://schemas.microsoft.com/ws/2008/06/identity/claims/role" optional="true"/>
+          <!--<claimType type="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress" optional="true" />-->
+          <!--<claimType type="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname" optional="true" />-->
+          <!--<claimType type="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn" optional="true" />-->
+          <!--<claimType type="http://schemas.xmlsoap.org/claims/CommonName" optional="true" />-->
+          <!--<claimType type="http://schemas.xmlsoap.org/claims/EmailAddress" optional="true" />-->
+          <!--<claimType type="http://schemas.xmlsoap.org/claims/Group" optional="true" />-->
+          <!--<claimType type="http://schemas.xmlsoap.org/claims/UPN" optional="true" />-->
+          <!--<claimType type="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname" optional="true" />-->
+          <!--<claimType type="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/privatepersonalidentifier" optional="true" />-->
+          <!--<claimType type="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationinstant" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/ws/2008/06/identity/claims/authenticationmethod" optional="true" />-->
+          <!--<claimType type="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/denyonlysid" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/ws/2008/06/identity/claims/denyonlyprimarysid" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/ws/2008/06/identity/claims/denyonlyprimarygroupsid" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/ws/2008/06/identity/claims/groupsid" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/ws/2008/06/identity/claims/primarygroupsid" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/01/devicecontext/claims/isregistereduser" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/01/devicecontext/claims/identifier" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/01/devicecontext/claims/registrationid" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/01/devicecontext/claims/displayname" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/01/devicecontext/claims/ostype" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/01/devicecontext/claims/osversion" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/01/devicecontext/claims/ismanaged" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/01/requestcontext/claims/x-ms-forwarded-client-ip" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/01/requestcontext/claims/x-ms-client-application" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/01/requestcontext/claims/x-ms-client-user-agent" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/01/requestcontext/claims/x-ms-client-ip" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/01/requestcontext/claims/x-ms-endpoint-absolute-path" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/01/requestcontext/claims/x-ms-proxy" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/01/requestcontext/claims/relyingpartytrustid" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/12/certificatecontext/extension/applicationpolicy" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/12/certificatecontext/extension/authoritykeyidentifier" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/12/certificatecontext/extension/basicconstraints" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/12/certificatecontext/extension/eku" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/12/certificatecontext/field/issuer" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/12/certificatecontext/field/issuername" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/12/certificatecontext/extension/keyusage" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/12/certificatecontext/field/notafter" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/12/certificatecontext/field/notbefore" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/12/certificatecontext/extension/certificatepolicy" optional="true" />-->
+          <!--<claimType type="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/rsa" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/12/certificatecontext/field/rawdata" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/12/certificatecontext/extension/san" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/ws/2008/06/identity/claims/serialnumber" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/12/certificatecontext/field/signaturealgorithm" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/12/certificatecontext/field/subject" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/12/certificatecontext/extension/subjectkeyidentifier" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/12/certificatecontext/field/subjectname" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/12/certificatecontext/extension/certificatetemplateinformation" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/12/certificatecontext/extension/certificatetemplatename" optional="true" />-->
+          <!--<claimType type="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/thumbprint" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/12/certificatecontext/field/x509version" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/ws/2012/01/insidecorporatenetwork" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/ws/2012/01/passwordexpirationtime" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/ws/2012/01/passwordexpirationdays" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/ws/2012/01/passwordchangeurl" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/claims/authnmethodsreferences" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/2012/01/requestcontext/claims/client-request-id" optional="true" />-->
+          <!--<claimType type="http://schemas.microsoft.com/ws/2013/11/alternateloginid" optional="true" />-->
+        </claimTypeRequired>
+      </applicationService>
+      <issuerNameRegistry type="Microsoft.IdentityModel.Tokens.ConfigurationBasedIssuerNameRegistry, Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+        <trustedIssuers>
+          <add thumbprint="80AC05C6C1DAD7E78ABE6728F0BD265910A98236" name="http://adfs.opacoise.fr/adfs/services/trust"/>
+          <add thumbprint="213672D669D5A72A5898826BA8AA73B8601A82A5" name="http://adfs.opacoise.fr/adfs/services/trust"/>
+        </trustedIssuers>
+      </issuerNameRegistry>
+    </service>
+  </microsoft.identityModel>
+</configuration>

@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Accès refusé";
+}
+
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-md-10">
+            <h1>Portail OPAC Oise</h1>
+        </div>
+        <div class="col-md-2">
+            <img src="~/Content/Logo.jpg" alt="logo Opac" class="img-responsive" />
+        </div>
+    </div>
+    <h2>
+        Vous n’avez aucun accès autorisé<br /><br />
+        Veuillez contacter vote référent à l’OPAC de l’Oise
+    </h2>
+    <a href="@Url.Action("LogOut", "Home")">Deconnexion</a>
+</div>

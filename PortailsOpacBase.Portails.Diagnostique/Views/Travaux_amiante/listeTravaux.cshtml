@@ -1,0 +1,5 @@
+﻿@model List<ElemDiag>
+
+@using PortailsOpacBase.Portails.Diagnostique.Models
+
+@Html.DropDownList("traitement", new SelectList(Model, "LIBELLE", "LIBELLE"), "Choisissez...", new { @class = "form-control" })

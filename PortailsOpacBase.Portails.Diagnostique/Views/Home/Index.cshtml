@@ -1,0 +1,349 @@
+﻿@model Communes
+
+@{
+    ViewBag.Title = "Accueil Portail";
+}
+
+@using PortailsOpacBase.Portails.Diagnostique.Models
+
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-md-10">
+            <h1>Portail OPAC Oise</h1>
+        </div>
+        <div class="col-md-2">
+            <img src="~/Content/Logo.jpg" alt="logo Opac" class="img-responsive" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8">Compte connecté : @ViewBag.Compte - Profil : @ViewBag.Profil &nbsp;&nbsp;&nbsp;<a href="@Url.Action("LogOut", "Home")">Deconnexion</a></div>
+    </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-5">
+            <h2>Rechercher</h2>
+            <hr />
+            <div class="form-group">
+                <button type="button" class="btn btn-success btn-lg btn-block" id="opengbal"><span class="glyphicon glyphicon-home"></span> Trouver GBAL</button>
+            </div>
+            <div class="form-group">
+                Groupe *:
+                <input id="g" type="text" class="form-control" />
+            </div>
+            <div class="form-group">
+                Bâtiment :
+                <input id="b" type="text" class="form-control" />
+            </div>
+            <div class="form-group">
+                Allée :
+                <input id="a" type="text" class="form-control" />
+            </div>
+            <div class="form-group">
+                Logement :
+                <input id="l" type="text" class="form-control" />
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>
+                            <input id="pc" type="checkbox" checked="checked" value="">
+                            Partie commune
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <label>
+                            <input id="logement" type="checkbox" checked="checked" value="">
+                            Logement
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="button" id="showtypo" class="btn btn-primary btn-lg btn-block">Par type de document</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" id="showrep" class="btn btn-primary btn-lg btn-block">Par logement</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-4">
+            <h2>Déposer un document</h2>
+            <hr />
+            <div class="form-group">
+                <a id="newdiagamiante" class="btn btn-primary btn-lg btn-block">Diagnostic Amiante</a>
+            </div>
+            <div class="form-group">
+                <a id="newtravauxamiante" class="btn btn-primary btn-lg btn-block">Travaux Amiante</a>
+            </div>
+            <div class="form-group">
+                <a id="newdiagplomb" class="btn btn-primary btn-lg btn-block">Diagnostic Plomb</a>
+            </div>
+            <div class="form-group">
+                <a id="newtravauxplomb" class="btn btn-primary btn-lg btn-block">Travaux Plomb</a>
+            </div>
+            <div class="form-group">
+                <a id="newhap" class="btn btn-primary btn-lg btn-block">H.A.P.</a>
+            </div>
+            <div class="form-group">
+                <a id="newdpe" class="btn btn-primary btn-lg btn-block">D.P.E.</a>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="dialog-gbal" tabindex="-1" role="dialog" aria-labelledby="dialog-gbal" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="title">Recherche GBAL</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div id="divcommunes">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div id="divadresse">
+                            <i>Veuillez sélectionner une commune SVP</i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div id="divgbal">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="validgbal" type="button" class="btn btn-primary">Valider le GBAL</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="closegbal">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="dialog-documents" tabindex="-1" role="dialog" aria-labelledby="dialog-documents" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="title">Résultats recherche</h3>
+                </div>
+                <div class="modal-body">
+                    <div id="resultats" style="height:500px;overflow:auto"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="dialog-apercu" tabindex="-1" role="dialog" aria-labelledby="dialog-apercu" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                            <h5 class="title">Aperçu du document</h5>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-right">
+                            <button type="button" class="btn btn-success" data-dismiss="modal">Fermer l'aperçu du document</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div id="divdoc">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="loading">Chargement&#8230;</div>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('.loading').hide();
+        var gbal;
+        $('#opengbal').click(function (e) {
+            $('#dialog-gbal').modal("show");
+        });
+        
+        $('#closegbal').click(function (e) {
+            $('#Communes').val("").trigger("chosen:updated");;
+            $('#divgbal').html("");
+            $("#divadresse").html("<i>Veuillez sélectionner une commune SVP</i>");
+        });
+        
+        $('#showtypo').click(function (e) {
+            if ($('#g').val().length > 0) {
+                if (!$('#pc').prop("checked") && !$('#logement').prop("checked")) {
+                    $('#pc').prop("checked", true);
+                    $('#logement').prop("checked", true)
+                }
+                var TypeAffichage = 0;
+                if ($('#pc').prop("checked") && $('#logement').prop("checked")) {
+                    TypeAffichage = 3;
+                }
+                else if ($('#pc').prop("checked")) {
+                    TypeAffichage = 1;
+                }
+                else if ($('#logement').prop("checked")) {
+                    TypeAffichage = 2;
+                }
+                $.ajax({
+                    url: "@Html.Raw(Url.Action("Search", "Home"))?type=" + TypeAffichage + "&g=" + $('#g').val() + "&b=" + $('#b').val() + "&a=" + $('#a').val() + "&l=" + $('#l').val(),
+                    cache: false,
+                    type: "get",
+                    dataType: "html",
+                    beforeSend: function (e) {
+                        $('.loading').show();
+                    },
+                    success: function (result) {
+                        $('.loading').hide();
+                        $('#resultats').html(result);
+                        $('#dialog-documents').modal("show");
+                    }
+                });
+            }
+            else
+                alert("Veuillez remplir le Groupe pour votre recherche");
+        });
+        $('#showrep').click(function (e) {
+            if ($('#g').val().length > 0) {
+                if (!$('#pc').prop("checked") && !$('#logement').prop("checked")) {
+                    $('#pc').prop("checked", true);
+                    $('#logement').prop("checked", true)
+                }
+                var TypeAffichage = 0;
+                if ($('#pc').prop("checked") && $('#logement').prop("checked")) {
+                    TypeAffichage = 3;
+                }
+                else if ($('#pc').prop("checked")) {
+                    TypeAffichage = 1;
+                }
+                else if ($('#logement').prop("checked")) {
+                    TypeAffichage = 2;
+                }
+
+                $.ajax({
+                    url: "@Html.Raw(Url.Action("SearchByRep", "Home"))?type=" + TypeAffichage + "&g=" + $('#g').val() + "&b=" + $('#b').val() + "&a=" + $('#a').val() + "&l=" + $('#l').val(),
+                    cache: false,
+                    type: "get",
+                    dataType: "html",
+                    beforeSend: function (e) {
+                        $('.loading').show();
+                    },
+                    success: function (result) {
+                        $('.loading').hide();
+                        $('#resultats').html(result);
+                        $('#dialog-documents').modal("show");
+                    }
+                });
+            }
+            else
+                alert("Veuillez remplir le Groupe pour votre recherche");
+        });
+            $('#validgbal').click(function (e) {
+                var res = $("#code").html().split("-");
+                $("#g").val(res[0]);
+                $("#b").val(res[1]);
+                $("#a").val(res[2]);
+                $("#l").val(res[3]);
+                $('#divadresse').html("<i>Veuillez sélectionner une commune SVP</i>");
+                $('#divgbal').html("");
+                $('#Communes').val("");
+                $('#Communes').trigger("chosen:updated");
+
+                $('#dialog-gbal').modal("hide");
+        });
+        $('#newdiagamiante').click(function (e) {
+            $.ajax({
+                    url: "@Html.Raw(Url.Action("NewDiagAmiante", "Home"))",
+                type: "POST",
+                beforeSend: function (e) {
+                    $('.loading').show();
+                },
+                    data: "{ }",
+                success: function (result) {
+                    window.location.href = "/claimapp/Diagnostic_amiante/Index?id=" + result.id + "&connect="+result.connect;
+                    }
+            });
+        });
+        $('#newdiagplomb').click(function (e) {
+            $.ajax({
+                    url: "@Html.Raw(Url.Action("NewDiagPlomb", "Home"))",
+                type: "POST",
+                beforeSend: function (e) {
+                    $('.loading').show();
+                },
+                    data: "{ }",
+                success: function (result) {
+                    window.location.href = "/claimapp/Diagnostic_plomb/Index?id=" + result.id + "&connect="+result.connect;
+                    }
+            });
+        });
+        $('#newtravauxamiante').click(function (e) {
+            $.ajax({
+                    url: "@Html.Raw(Url.Action("NewTravauxAmiante", "Home"))",
+                type: "POST",
+                beforeSend: function (e) {
+                    $('.loading').show();
+                },
+                    data: "{ }",
+                success: function (result) {
+                    window.location.href = "/claimapp/Travaux_amiante/Index?id=" + result.id + "&connect="+result.connect;
+                    }
+            });
+        });
+        $('#newtravauxplomb').click(function (e) {
+            $.ajax({
+                    url: "@Html.Raw(Url.Action("NewTravauxPlomb", "Home"))",
+                type: "POST",
+                beforeSend: function (e) {
+                    $('.loading').show();
+                },
+                    data: "{ }",
+                success: function (result) {
+                    window.location.href = "/claimapp/Travaux_plomb/Index?id=" + result.id + "&connect="+result.connect;
+                    }
+            });
+        });
+        $('#newdpe').click(function (e) {
+            $.ajax({
+                    url: "@Html.Raw(Url.Action("NewDPE", "Home"))",
+                type: "POST",
+                beforeSend: function (e) {
+                    $('.loading').show();
+                },
+                    data: "{ }",
+                success: function (result) {
+                    window.location.href = "/claimapp/DPE/Index?id=" + result.id + "&connect=" + result.connect;
+                    }
+            });
+        });
+        $('#newhap').click(function (e) {
+            $.ajax({
+                    url: "@Html.Raw(Url.Action("NewHAP", "Home"))",
+                type: "POST",
+                beforeSend: function (e) {
+                    $('.loading').show();
+                },
+                    data: "{ }",
+                success: function (result) {
+                    window.location.href = "/claimapp/HAP/Index?id=" + result.id + "&connect=" + result.connect;
+                    }
+            });
+        });
+        $.ajax({
+            url: "@Html.Raw(Url.Action("GetCommunes", "Home"))",
+                cache: false,
+                type: "get",
+                dataType: "html",
+                beforeSend: function (e) {
+                    $('#divcommunes').html("");
+                },
+                success: function (result) {
+                    $('#divcommunes').html(result);
+                }
+        });
+    });
+    </script>

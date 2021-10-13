@@ -1,0 +1,45 @@
+﻿@model List<Logement>
+
+@using PortailsOpacBase.Portails.Diagnostique.Models
+
+<table class="table table-striped">
+    <thead>
+        <tr class="info">
+            <th>Logements contrôlés</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(Logement l in Model)
+        {
+            String _gbal = "";
+            if (!String.IsNullOrEmpty(l.numgrpe))
+            {
+                _gbal += l.numgrpe;
+            }
+            if (!String.IsNullOrEmpty(l.numbati))
+            {
+                _gbal += "-" + l.numbati;
+            }
+            if (!String.IsNullOrEmpty(l.numall))
+            {
+                _gbal += "-" + l.numall;
+            }
+            if (!String.IsNullOrEmpty(l.numloc))
+            {
+                _gbal += "-" + l.numloc;
+            }
+            if (l.appt != null)
+            {
+                _gbal += "/" + l.appt;
+            }
+
+            <tr>
+                <td>@l.numgrpe-@l.numbati-@l.numall@(!String.IsNullOrEmpty(l.numloc) ? "-" + l.numloc : " Parties communes")</td>
+                <td>@l.appt</td>
+                <td style="text-align:right"><input class="sel_logement" type="checkbox" data-gbal="@_gbal" /></td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,139 @@
+﻿@model List<DocumentOpac>
+
+@using PortailsOpacBase.Portails.Diagnostique.Models;
+
+@{
+    string famille = "";
+    string gbal = "";
+    int i = 1;
+    int j = 1;
+}
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
+    @if (Model.Count() > 0)
+    {
+        foreach (DocumentOpac d in Model.OrderBy(m => m.FamilleDiagnostic))
+        {
+            if (d.FamilleDiagnostic != famille)
+            {
+                <text>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="heading_@i">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse_@i" aria-expanded="true" aria-controls="collapse_@i">
+                                    @d.FamilleDiagnostic @Model.Where(m => m.FamilleDiagnostic == d.FamilleDiagnostic).Count() document(s)
+                                </a>
+                            </h4>
+                        </div>
+                    </div>
+                    <div id="collapse_@i" class="panel-collapse collapse col1" role="tabpanel" aria-labelledby="heading_@i">
+                        <div class="panel-body">
+                            @{
+                                List<DocumentOpac> docs = Model.Where(m => m.FamilleDiagnostic == d.FamilleDiagnostic).OrderBy(m => m.GBAL).ToList();
+
+                                foreach (DocumentOpac doc in docs)
+                                {
+                                    if (doc.GBAL != gbal)
+                                    {
+                                        List<DocumentOpac> docs2 = Model.Where(m => m.FamilleDiagnostic == d.FamilleDiagnostic && m.GBAL == doc.GBAL).OrderBy(m => m.GBAL).OrderBy(m => m.TypeDocument).ToList();
+                                        <div class="panel-group" id="inside" role="tablist" aria-multiselectable="false">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="heading2_@j">
+                                                    <h4 class="panel-title">
+                                                        <a role="button" data-toggle="collapse" data-parent="#inside" href="#collapse2_@j" aria-expanded="true" aria-controls="collapse2_@j">
+                                                            <div class="row"><div class="col-lg-6 text-left">@doc.GBAL</div> <div class="col-lg-6 text-right">@docs2.Count() document(s)</div></div>
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                            <div id="collapse2_@j" class="panel-collapse collapse col2" role="tabpanel" aria-labelledby="heading2_@j">
+                                                <div class="panel-body">
+                                                    <table class="table table-striped table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col"></th>
+                                                                <th scope="col"></th>
+                                                                <th scope="col"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @{ var typedoc = ""; }
+                                                            @foreach (DocumentOpac doc2 in docs2)
+                                                            {
+                                                                if (doc2.TypeDocument.Length > 0)
+                                                                {
+                                                                    if (typedoc != doc2.TypeDocument)
+                                                                    {
+                                                                        <tr data-id="@doc2.DocId">
+                                                                            <td style="width:30px"></td>
+                                                                            <td style="width:30px"></td>
+                                                                            <td><b>@doc2.TypeDocument</b></td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+                                                                else if (typedoc != "TYPE INCONNU")
+                                                                {
+                                                                    <tr data-id="@doc2.DocId">
+                                                                        <td style="width:30px"></td>
+                                                                        <td style="width:30px"></td>
+                                                                        <td><b>TYPE INCONNU</b></td>
+                                                                    </tr>
+                                                                }
+                                                                <tr data-id="@doc2.DocId">
+                                                                    <td style="width:30px"><button class="btn btn-success btn-xs voir"><i class="glyphicon glyphicon-eye-open" aria-hidden="true"></i></button></td>
+                                                                    <td style="width:30px"><button onclick="location.href='@Url.Action("Download", "Home", new { iddoc = doc2.DocId })'" class="btn btn-primary btn-xs downloaddoc"><i class="glyphicon glyphicon-circle-arrow-down" aria-hidden="true"></i></button></td>
+                                                                    <td>@doc2.GBAL @(!String.IsNullOrEmpty(doc2.DateDiagnostic) ? " du " + DateTime.Parse(doc2.DateDiagnostic).ToShortDateString() : "")</td>
+                                                                </tr>
+                                                                typedoc = ((doc2.TypeDocument.Trim().Length > 0) ? doc2.TypeDocument : "TYPE INCONNU");
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    }
+                                    gbal = doc.GBAL;
+                                    j++;
+                                }
+                            }
+                        </div>
+
+                    </div>
+                </text>
+                famille = d.FamilleDiagnostic; i++;
+            }
+	    gbal = "";
+        }
+    }
+    else
+    {
+        <h3>Aucun résultat pour cette recherche</h3>
+    }
+</div>
+
+<script type="text/javascript">
+    $('.voir').click(function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            url: "@Html.Raw(Url.Action("DocPreview", "Home"))?iddoc=" + $(this).closest('tr').data('id'),
+            data: "{ }",
+            dataType: "html",
+            type: "post",
+            success: function (result) {
+                $('#divdoc').html(result);
+                $('#dialog-apercu').modal("show");
+            }
+        });
+    });
+    $('.downloaddoc').click(function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            url: "@Html.Raw(Url.Action("Download", "Home"))?iddoc=" + $(this).closest('tr').data('id'),
+            data: "{ }"
+        });
+    });
+</script>

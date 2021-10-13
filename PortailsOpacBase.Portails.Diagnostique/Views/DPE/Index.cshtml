@@ -1,0 +1,800 @@
+﻿@{
+    ViewBag.Title = "DPE";
+}
+
+@model Communes
+
+@using PortailsOpacBase.Portails.Diagnostique.Models
+
+<div class="form-group">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Déposer un DPE</h2>
+        </div>
+        <div class="col-md-4">
+            <a href="/claimapp/Home/Index/@ViewBag.connect" class="btn btn-success btn-lg btn-block">Retour</a>
+        </div>
+    </div>
+</div>
+<hr />
+<h4>Identification</h4>
+<div class="form-group">
+    <div class="row">
+        <div class="col-md-4">
+            Numéro de commande *
+            <input type="text" class="form-control" id="numcmd" placeholder="N° Commande (obligatoire)" />
+            <label id="error" style="display:none;color:red">Numéro de commande inconnu</label>
+        </div>
+        <div class="col-md-4">
+            Société *
+            <input type="text" class="form-control" id="societe" placeholder="Nom société" />
+        </div>
+        <div class="col-md-4">
+            Correspondant *
+            <input type="text" class="form-control" id="corres" placeholder="Correspondant OPAC" />
+        </div>
+    </div>
+</div>
+<div id="bloc_2" class="form-group" style="display:none">
+    <div class="row">
+        <div class="col-md-4">
+            Nom diagnostiqueur *
+            <input id="nomdiag" type="text" class="form-control" placeholder="Diagnostiqueur (obligatoire)" value="@ViewBag.Profil" />
+        </div>
+        <div class="col-md-4">
+            Date du rapport *
+            <input id="daterapport" type="text" class="form-control datecontrol" placeholder="Date du rapport (obligatoire)" />
+        </div>
+        <div class="col-md-4">
+            Date de dépot
+            <input id="datedepot" type="text" class="form-control datecontrol" value="@DateTime.Today.ToShortDateString()" disabled />
+        </div>
+        <hr />
+    </div>
+    <h4>Identification logement</h4>
+    <div class="form-group">
+        <button type="button" class="btn btn-success btn-lg btn-block" id="opengbal"><span class="glyphicon glyphicon-home"></span> Trouver GBAL</button>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                Groupe *
+                <input id="g" type="text" class="form-control" placeholder="Groupe (obligatoire)" />
+            </div>
+            <div class="col-md-3">
+                Bâtiment *
+                <input id="b" type="text" class="form-control" placeholder="Bâtiment (obligatoire)" />
+            </div>
+            <div class="col-md-3">
+                Allée
+                <input id="a" type="text" class="form-control" placeholder="Allée (obligatoire)" />
+            </div>
+            <div class="col-md-3">
+                Logement
+                <input id="l" type="text" class="form-control" placeholder="Logement (obligatoire)" />
+            </div>
+        </div>
+    </div>
+</div>
+<hr />
+<div id="bloc_3" class="row" style="display:none">
+    <div class="col-md-4">
+        <div class="form-group">
+            <button id="validerinfos" class="btn btn-primary btn-lg btn-block">Valider les informations</button>
+        </div>
+    </div>
+    <div class="col-md-4" style="padding-top:10px">
+        <span id="adresse_gbal"></span>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <button id="modifierinfos" class="btn btn-default btn-lg btn-block" disabled>Modifier la saisie</button>
+        </div>
+    </div>
+</div>
+<div id="findiag" style="margin-top:20px;display:none">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                <img src="~/Content/DPE.png" alt="DPE" class="img-responsive" />
+            </div>
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-3">
+                <img src="~/Content/GES.png" alt="GES" class="img-responsive" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                Etiquette DPE *
+                <select id="etiquettedpe" class="form-control">
+                    <option value="">Choisissez</option>
+                    <option value="1-50">A</option>
+                    <option value="51-90">B</option>
+                    <option value="91-150">C</option>
+                    <option value="151-230">D</option>
+                    <option value="231-330">E</option>
+                    <option value="331-450">F</option>
+                    <option value="> 451">G</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                Valeur DPE *
+                <input id="valeurdpe" type="text" class="form-control" placeholder="Valeur DPE" />
+            </div>
+            <div class="col-md-3">
+                Etiquette GES *
+                <select id="etiquetteGES" class="form-control">
+                    <option value="">Choisissez</option>
+                    <option value="1-5">A</option>
+                    <option value="6-10">B</option>
+                    <option value="11-20">C</option>
+                    <option value="21-35">D</option>
+                    <option value="36-55">E</option>
+                    <option value="56-80">F</option>
+                    <option value="> 80">G</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                Valeur GES *
+                <input id="valeurges" type="text" class="form-control" placeholder="Valeur GES" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                Type de chauffage *
+                <div id="divchauffage">
+                </div>
+            </div>
+            <div class="col-md-3">
+                Type d'ECS *
+                <div id="divecs">
+                </div>
+            </div>
+            <div class="col-md-3">
+                Surface m2 *
+                <input id="mcarre" type="text" class="form-control" placeholder="Surface m2" />
+            </div>
+            <div class="col-md-3">
+                Numéro de rapport *
+                <input id="numrapport" type="text" class="form-control" placeholder="Numéro de rapport" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group" id="container">
+        <button id="pickfiles" class="btn btn-success btn-lg">Choisir le fichier</button>
+    </div>
+    <div id="div_diag_fichiers">
+        Fichier à déposer *
+        <table class="table table-striped">
+            <thead>
+                <tr class="info">
+                    <th>Nom fichier</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="listefiles"></tbody>
+        </table>
+    </div>
+    <div class="form-group" id="savediv" style="padding-top:30px">
+        <div class="row">
+            <div class="col-md-12">
+                <button id="savediag" class="btn btn-primary btn-lg btn-block" disabled>Enregistrer le diagnostic</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="dialog-gbal" tabindex="-1" role="dialog" aria-labelledby="dialog-gbal" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="title">Recherche GBAL</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div id="divcommunes">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="divadresse">
+                        <i>Veuillez sélectionner une commune SVP</i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="divgbal">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="validgbal" type="button" class="btn btn-primary">Valider le GBAL</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="closegbal">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="dialog-choix" tabindex="-1" role="dialog" aria-labelledby="dialog-choix" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="title">Enregistrement terminé</h3>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button id="keep" type="button" class="btn btn-primary">Nouveau dépôt pour cette commande</button>
+                <button id="another" type="button" class="btn btn-primary">Nouveau dépôt</button>
+                <a href="/claimapp/Home/Index/@ViewBag.connect" class="btn btn-success">Retour</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="loading">Chargement&#8230;</div>
+<script>
+    $(document).ready(function () {
+        var dpemin = 0;
+        var dpemax = 0;
+
+        var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+        };
+        var origine = "";
+        var numcmd = "";
+
+        try {
+            origine = getUrlParameter('id');
+            numcmd = getUrlParameter('cmd');
+        }
+        catch(error)
+        {
+        }
+
+        if (numcmd != null) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("GetCommande", "DPE"))?diag=" + origine,
+                type: "POST",
+                data: "{ }",
+                success: function (result) {
+                    $('#numcmd').val(result.numcmd);
+                    $('#societe').val(result.societe);
+                    $('#corres').val(result.corres);
+                    $('#nomdiag').val(result.nomdiag);
+                    $('#bloc_2').show();
+                    $('#bloc_3').show();
+                }
+            });
+        }
+
+        $('.loading').hide();
+        $(".datecontrol").datepicker({ dateFormat: "dd/MM/yyyy", language: "fr" });
+        $('#opengbal').click(function (e) {
+            $('#dialog-gbal').modal("show");
+        });
+        $('#Communes').chosen({ width: "100%" });
+        $('#closegbal').click(function (e) {
+            $('#Communes').val("").trigger("chosen:updated");
+            $('#divgbal').html("");
+            $("#divadresse").html("<i>Veuillez sélectionner une commune SVP</i>");
+        });
+        $('#validgbal').click(function (e) {
+            var res = $("#code").html().split("-");
+            $("#g").val(res[0]);
+            $("#b").val(res[1]);
+            $("#a").val(res[2]);
+            $("#l").val(res[3]);
+            $('#divadresse').html("<i>Veuillez sélectionner une commune SVP</i>");
+            $('#divgbal').html("");
+            $('#Communes').val("");
+            $('#Communes').trigger("chosen:updated");
+
+            $('#dialog-gbal').modal("hide");
+        });
+        $('#another').click(function (e) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("CreateDPE", "DPE"))?diag=" + origine + "&cmd=" + $('#numcmd').val(),
+                type: "POST",
+                data: "{ }",
+                beforeSend: function (e) {
+                    $('.loading').show();
+                },
+                success: function (result) {
+                    $('.loading').hide();
+
+                    window.location.href = result.url;
+                }
+            });
+        });
+        $('#keep').click(function (e) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("NewDPE", "DPE"))?diag=" + origine + "&cmd=" + $('#numcmd').val(),
+                type: "POST",
+                data: "{ }",
+                beforeSend: function (e) {
+                    $('.loading').show();
+                },
+                success: function (result) {
+                    $('.loading').hide();
+
+                    window.location.href = result.url;
+                }
+            });
+        });
+        $('#Communes').change(function (e) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("Adresses", "DPE"))?ville=" + $('#Communes').val(),
+                cache: false,
+                type: "get",
+                dataType: "html",
+                beforeSend: function (e) {
+                    $('#divgbal').html("");
+                    $("#divadresse").html("Recherche en cours...");
+                },
+                success: function (result) {
+                    $("#divadresse").html(result);
+                }
+            });
+        });
+        $('#mcarre').focusout(function (e) {
+            if (parseFloat($('#mcarre').val()) < 0 || parseFloat($('#mcarre').val()) > 999) {
+                alert("La superficie doit être inférieure ou égale à 999 m2");
+            }
+        });
+        $('#valeurdpe').focusout(function (e) {
+            CheckValeurDPE();
+        });
+        $('#etiquettedpe').change(function (e) {
+            if ($("#etiquettedpe")[0].selectedIndex > 0 && $('#valeurdpe').val().length > 0)
+                CheckValeurDPE();
+        });
+        $('#valeurges').focusout(function (e) {
+            CheckValeurGES();
+        });
+        $('#etiquetteGES').change(function (e) {
+            if ($("#etiquetteGES")[0].selectedIndex > 0 && $('#valeurges').val().length > 0)
+                CheckValeurGES();
+        });
+        $('#societe').off("focusin").on("focusin", function (e) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("GetCommande", "Diagnostic_amiante"))?numcommande=" + $('#numcmd').val(),
+                type: "POST",
+                data: "{ }",
+                beforeSend: function (e) {
+                    $('.loading').show();
+                },
+                success: function (result) {
+                    $('.loading').hide();
+                    if (result.trouve) {
+                        $('#numcmd').attr("style", "border:1px solid #ccc");
+                        if (result.societe.length > 0) {
+                            $('#societe').val(result.societe);
+                            $('#societe').prop("disabled", true);
+                        }
+                        if (result.contact.length > 0) {
+                            $('#corres').val(result.contact);
+                            $('#corres').prop("disabled", true);
+                        }
+                        $('#bloc_2').show();
+                        $('#bloc_3').show();
+                        $('#numcmd').prop("disabled", true);
+                        $('#error').hide();
+                    }
+                    else {
+                        $('#bloc_2').hide();
+                        $('#bloc_3').hide();
+                        $('#numcmd').attr("style", "border:1px solid red");
+                        $('#numcmd').focus();
+                        $('#error').show();
+                        $('#societe').prop("disabled", true);
+                        $('#corres').prop("disabled", true);
+                        $('#societe').val("");
+                        $('#corres').val("");
+                    }
+                }
+            });
+        });
+        $('#numcmd').off("keypress").on("keypress", function (e) {
+            var key = e.which;
+            if (key == 13)  // the enter key code
+            {
+                $.ajax({
+                    url: "@Html.Raw(Url.Action("GetCommande", "Diagnostic_amiante"))?numcommande=" + $('#numcmd').val(),
+                    type: "POST",
+                    data: "{ }",
+                    beforeSend: function (e) {
+                        $('.loading').show();
+                    },
+                    success: function (result) {
+                        $('.loading').hide();
+                        if (result.trouve) {
+                            $('#numcmd').attr("style", "border:1px solid #ccc");
+                            if (result.societe.length > 0) {
+                                $('#societe').val(result.societe);
+                            }
+                            if (result.contact.length > 0) {
+                                $('#corres').val(result.contact);
+                            }
+                            $('#numcmd').prop("disabled", true);
+                            $('#bloc_2').show();
+                            $('#bloc_3').show();
+                            $('#error').hide();
+                        }
+                        else {
+                            $('#bloc_2').hide();
+                            $('#bloc_3').hide();
+                            $('#numcmd').attr("style", "border:1px solid red");
+                            $('#numcmd').focus();
+                            $('#error').show();
+                            $('#societe').prop("disabled", true);
+                            $('#corres').prop("disabled", true);
+                            $('#societe').val("");
+                            $('#corres').val("");
+                        }
+                    }
+                });
+            }
+        });
+
+        $('#savediag').click(function (e) {
+            if ($('#etiquettedpe').val().length > 0 && $('#valeurdpe').val().length > 0 && $('#etiquetteGES').val().length > 0 && $('#valeurges').val().length > 0 && $('#typechauffage').val().length > 0 && $('#typeecs').val().length > 0 && $('#mcarre').val().length > 0 && $('#numrapport').val().length > 0 && $('.file').length > 0 && $('.errorval').length == 0) {
+                var logements = new Array();
+            $('#divlogementsFichiers .lgt_diag').each(function (e) {
+                logements.push($(this).data("gbal"));
+            });
+                $.ajax({
+                    url: "@Html.Raw(Url.Action("SaveDiag", "DPE"))",
+                    type: "POST",
+                    data: {
+                        adresse: $('#adresse_gbal').html(), l: $('#l').val(), etiquettedpe: $("#etiquettedpe option:selected").text(), valeurdpe: $("#valeurdpe").val(), etiquetteges: $("#etiquetteGES option:selected").text(), valeurges: $("#valeurges").val(), typechauffage: $('#typechauffage').val(), typeecs: $('#typeecs').val(), mcarre: $('#mcarre').val(), numrapport: $('#numrapport').val()  },
+                    beforeSend: function (e) {
+                        $('.loading').show();
+                    },
+                    success: function (result) {
+                        $('.loading').hide();
+                        if (result.success) {
+                            $('#dialog-choix').modal("show");
+                        }
+                    }
+                });
+            }
+            else
+                alert("Veuillez contrôler les champs obligatoires SVP");
+        });
+
+        $('#validerinfos').click(function (e) {
+            var todayDate = new Date();
+            var parts = $('#daterapport').val().split('/');
+            var mydate = new Date(parts[2], parts[1] - 1, parts[0], 0, 0, 0);
+
+            if (todayDate >= mydate) {
+                if ($('#nomdiag').val().length > 0 && $('#daterapport').val().length > 0 && $('#g').val().length > 0 && $('#b').val().length > 0) {
+
+                    $.ajax({
+                        url: "@Html.Raw(Url.Action("Valider", "DPE"))",
+                        type: "POST",
+                        data: {
+                            g: $('#g').val(), b: $('#b').val(), a: $('#a').val(), l: $('#l').val(), cmd: $('#numcmd').val(), societe: $('#societe').val(), corres: $('#corres').val(), nomdiag: $('#nomdiag').val(), daterapport: $('#daterapport').val(), datedepot: $('#datedepot').val(), controle: 2
+                        },
+                        beforeSend: function (e) {
+                            $('.loading').show();
+                        },
+                        success: function (result) {
+                            $('.loading').hide();
+                            if (result.trouve) {
+                                $('#numcmd').prop("disabled", true);
+                                $('#societe').prop("disabled", true);
+                                $('#corres').prop("disabled", true);
+                                $('#nomdiag').prop("disabled", true);
+                                $('#opengbal').prop("disabled", true);
+                                $('#daterapport').prop("disabled", true);
+                                $('#modifierinfos').prop("disabled", false);
+                                $('#validerinfos').prop("disabled", true);
+                                $('#savediag').prop("disabled", false);
+                                $('#g').prop("disabled", true);
+                                $('#b').prop("disabled", true);
+                                $('#a').prop("disabled", true);
+                                $('#l').prop("disabled", true);
+                                $('#findiag').show();
+                                $('#adresse_gbal').html(result.adresse);
+
+                            }
+                            else {
+                                alert("Ce GBAL n’existe pas");
+                            }
+                        }
+                    });
+                    //$('#bloc_logement').show();
+                }
+                else {
+                    alert("Veuillez vérifier les champs obligatoires SVP");
+                }
+            }
+            else
+                alert("La date du rapport doit être inférieure ou égale à la date du jour.")
+        });
+
+        $('#modifierinfos').click(function (e) {
+            $('#numcmd').prop("disabled", false);
+            $('#nomdiag').prop("disabled", false);
+            $('#daterapport').prop("disabled", false);
+            $('#validerinfos').prop("disabled", false);
+            $('#savediag').prop("disabled", true);
+            $('#opengbal').prop("disabled", false);
+            $('#g').prop("disabled", false);
+            $('#b').prop("disabled", false);
+            $('#a').prop("disabled", false);
+            $('#l').prop("disabled", false);
+            $("input[name=choix]").removeAttr('disabled');
+        });
+
+        var uploader = new plupload.Uploader({
+            runtimes: 'html5,flash,silverlight,html4',
+            max_file_count: 1,
+            multi_selection: false,
+            browse_button: 'pickfiles', // you can pass in id...
+            multipart_params: { numrapport: $('#numrapport').val() },
+            container: document.getElementById('container'), // ... or DOM Element itself
+            url: "/claimapp/DPE/Upload",
+            flash_swf_url: '/plupload/js/Moxie.swf',
+            silverlight_xap_url: '/plupload/js/Moxie.xap',
+            init: {
+                FilesAdded: function (up, files) {
+                    var filenames = "";
+                    for (var i in files) {
+                        if (!files[i].name.endsWith(".doc") && !files[i].name.endsWith(".docx") && !files[i].name.endsWith(".pdf")) {
+                            up.removeFile(files[i]);
+                            alert("Le format du fichier n'est pas accepté");
+                        }
+                        else {
+                            if (files[i].size < 25000000)
+                                filenames += "<tr class='file'><td>" + files[i].name + "</td><td style='text-align:right'><span class='glyphicon glyphicon-trash delfichier' data-id='" + files[i].id + "' style='font-size:0.8em'></span></td></tr>";
+                            else {
+                                up.removeFile(files[i]);
+                                alert("Le fichier " + files[i].name + " est trop volumineux");
+                            }
+                        }
+                    }
+                    $('#listefiles').append(filenames);
+
+                    $('#div_diag_fichiers .delfichier').off("click").on("click", function (e) {
+                        uploader.removeFile($(this).data("id"));
+                        $(this).closest("tr").remove();
+                        $('#pickfiles').prop("disabled", false);
+                    });
+                    $('.loading').show();
+                    uploader.start();
+                },
+
+                UploadComplete: function (up, file) {
+                    $('.loading').hide();
+                    if ($('.file').length > 0) {
+                                $('#pickfiles').prop("disabled", true);
+                            }
+                },
+                Error: function (up, err) {
+                    $('.loading').hide();
+                    if (err.message == "File extension error.") {
+                        alert("Format de fichier incorrect");
+                    }
+                }
+            }
+        });
+
+        uploader.bind('BeforeUpload', function (up, file) {
+            var gbal = $('#g').val() + "-" + $('#b').val() + "-" + $('#a').val() + "-" + $('#l').val();
+            up.settings.multipart_params = { Gbal: gbal, numrapport: $('#numrapport').val()  }
+        });
+
+        uploader.init();
+
+        $.ajax({
+                            url: "@Html.Raw(Url.Action("GetCommunes", "Home"))",
+                            cache: false,
+                            type: "get",
+                            dataType: "html",
+                            beforeSend: function (e) {
+                                $('#divcommunes').html("");
+                            },
+                            success: function (result) {
+                                $('#divcommunes').html(result);
+                            }
+        });
+        $.ajax({
+                            url: "@Html.Raw(Url.Action("GetChauffage", "DPE"))",
+                            cache: false,
+                            type: "get",
+                            dataType: "html",
+                            beforeSend: function (e) {
+                                $('#divchauffage').html("");
+                            },
+                            success: function (result) {
+                                $('#divchauffage').html(result);
+                            }
+        });
+        $.ajax({
+                            url: "@Html.Raw(Url.Action("GetECS", "DPE"))",
+                            cache: false,
+                            type: "get",
+                            dataType: "html",
+                            beforeSend: function (e) {
+                                $('#divecs').html("");
+                            },
+                            success: function (result) {
+                                $('#divecs').html(result);
+                            }
+        });
+
+        function CheckValeurGES() {
+            if ($("#etiquetteGES")[0].selectedIndex == 1) {
+                if (parseFloat($('#valeurges').val()) < 0 || parseFloat($('#valeurges').val()) > 5) {
+                    alert("Valeur GES incorrecte : Plage autorisée " + $("#etiquetteGES option:selected").val());
+                    $('#valeurges').attr("style", "border:1px solid red");
+                    $('#valeurges').addClass("errorval");
+                }
+                else {
+                    $('#valeurges').attr("style", "border:1px solid #ccc");
+                    $('#valeurges').removeClass("errorval");
+                }
+            }
+            else if ($("#etiquetteGES")[0].selectedIndex == 2) {
+                if (parseFloat($('#valeurges').val()) < 6 || parseFloat($('#valeurges').val()) > 10) {
+                    alert("Valeur GES incorrecte : Plage autorisée " + $("#etiquetteGES option:selected").val());
+                    $('#valeurges').attr("style", "border:1px solid red");
+                    $('#valeurges').addClass("errorval");
+                }
+                else {
+                    $('#valeurges').attr("style", "border:1px solid #ccc");
+                    $('#valeurges').removeClass("errorval");
+                }
+            }
+            else if ($("#etiquetteGES")[0].selectedIndex == 3) {
+                if (parseFloat($('#valeurges').val()) < 11 || parseFloat($('#valeurges').val()) > 20) {
+                    alert("Valeur GES incorrecte : Plage autorisée " + $("#etiquetteGES option:selected").val());
+                    $('#valeurges').attr("style", "border:1px solid red");
+                    $('#valeurges').addClass("errorval");
+                }
+                else {
+                    $('#valeurges').attr("style", "border:1px solid #ccc");
+                    $('#valeurges').removeClass("errorval");
+                }
+            }
+            else if ($("#etiquetteGES")[0].selectedIndex == 4) {
+                if (parseFloat($('#valeurges').val()) < 21 || parseFloat($('#valeurges').val()) > 35) {
+                    alert("Valeur GES incorrecte : Plage autorisée " + $("#etiquetteGES option:selected").val());
+                    $('#valeurges').attr("style", "border:1px solid red");
+                    $('#valeurges').addClass("errorval");
+                }
+                else {
+                    $('#valeurges').attr("style", "border:1px solid #ccc");
+                    $('#valeurges').removeClass("errorval");
+                }
+            }
+            else if ($("#etiquetteGES")[0].selectedIndex == 5) {
+                if (parseFloat($('#valeurges').val()) < 36 || parseFloat($('#valeurges').val()) > 55) {
+                    alert("Valeur GES incorrecte : Plage autorisée " + $("#etiquetteGES option:selected").val());
+                    $('#valeurges').attr("style", "border:1px solid red");
+                    $('#valeurges').addClass("errorval");
+                }
+                else {
+                    $('#valeurges').attr("style", "border:1px solid #ccc");
+                    $('#valeurges').removeClass("errorval");
+                }
+            }
+            else if ($("#etiquetteGES")[0].selectedIndex == 6) {
+                if (parseFloat($('#valeurges').val()) < 56 || parseFloat($('#valeurges').val()) > 80) {
+                    alert("Valeur GES incorrecte : Plage autorisée " + $("#etiquetteGES option:selected").val());
+                    $('#valeurges').attr("style", "border:1px solid red");
+                    $('#valeurges').addClass("errorval");
+                }
+                else {
+                    $('#valeurges').attr("style", "border:1px solid #ccc");
+                    $('#valeurges').removeClass("errorval");
+                }
+            }
+            else if ($("#etiquetteGES")[0].selectedIndex == 7) {
+                if (parseFloat($('#valeurges').val()) < 80) {
+                    alert("Valeur GES incorrecte : Plage autorisée " + $("#etiquetteGES option:selected").val());
+                    $('#valeurges').attr("style", "border:1px solid red");
+                    $('#valeurges').addClass("errorval");
+                }
+                else {
+                    $('#valeurges').attr("style", "border:1px solid #ccc");
+                    $('#valeurges').removeClass("errorval");
+                }
+            }
+        }
+
+        function CheckValeurDPE() {
+            if ($("#etiquettedpe")[0].selectedIndex == 1) {
+                if (parseFloat($('#valeurdpe').val()) < 0 || parseFloat($('#valeurdpe').val()) > 50) {
+                    alert("Valeur DPE incorrecte : Plage autorisée " + $("#etiquettedpe option:selected").val());
+                    $('#valeurdpe').attr("style", "border:1px solid red");
+                    $('#valeurges').addClass("errorval");
+                }
+                else {
+                    $('#valeurdpe').attr("style", "border:1px solid #ccc");
+                    $('#valeurdpe').removeClass("errorval");
+                }
+            }
+            else if ($("#etiquettedpe")[0].selectedIndex == 2) {
+                if (parseFloat($('#valeurdpe').val()) < 51 || parseFloat($('#valeurdpe').val()) > 90) {
+                    alert("Valeur DPE incorrecte : Plage autorisée " + $("#etiquettedpe option:selected").val());
+                    $('#valeurdpe').attr("style", "border:1px solid red");
+                    $('#valeurges').addClass("errorval");
+                }
+                else {
+                    $('#valeurdpe').attr("style", "border:1px solid #ccc");
+                    $('#valeurdpe').removeClass("errorval");
+                }
+            }
+            else if ($("#etiquettedpe")[0].selectedIndex == 3) {
+                if (parseFloat($('#valeurdpe').val()) < 91 || parseFloat($('#valeurdpe').val()) > 150) {
+                    alert("Valeur DPE incorrecte : Plage autorisée " + $("#etiquettedpe option:selected").val());
+                    $('#valeurdpe').attr("style", "border:1px solid red");
+                    $('#valeurges').addClass("errorval");
+                }
+                else {
+                    $('#valeurdpe').attr("style", "border:1px solid #ccc");
+                    $('#valeurdpe').removeClass("errorval");
+                }
+            }
+            else if ($("#etiquettedpe")[0].selectedIndex == 4) {
+                if (parseFloat($('#valeurdpe').val()) < 151 || parseFloat($('#valeurdpe').val()) > 230) {
+                    alert("Valeur DPE incorrecte : Plage autorisée " + $("#etiquettedpe option:selected").val());
+                    $('#valeurdpe').attr("style", "border:1px solid red");
+                    $('#valeurges').addClass("errorval");
+                }
+                else {
+                    $('#valeurdpe').attr("style", "border:1px solid #ccc");
+                    $('#valeurdpe').removeClass("errorval");
+                }
+            }
+            else if ($("#etiquettedpe")[0].selectedIndex == 5) {
+                if (parseFloat($('#valeurdpe').val()) < 231 || parseFloat($('#valeurdpe').val()) > 330) {
+                    alert("Valeur DPE incorrecte : Plage autorisée " + $("#etiquettedpe option:selected").val());
+                    $('#valeurdpe').attr("style", "border:1px solid red");
+                    $('#valeurges').addClass("errorval");
+                }
+                else {
+                    $('#valeurdpe').attr("style", "border:1px solid #ccc");
+                    $('#valeurdpe').removeClass("errorval");
+                }
+            }
+            else if ($("#etiquettedpe")[0].selectedIndex == 6) {
+                if (parseFloat($('#valeurdpe').val()) < 331 || parseFloat($('#valeurdpe').val()) > 450) {
+                    alert("Valeur DPE incorrecte : Plage autorisée " + $("#etiquettedpe option:selected").val());
+                    $('#valeurdpe').attr("style", "border:1px solid red");
+                    $('#valeurges').addClass("errorval");
+                }
+                else {
+                    $('#valeurdpe').attr("style", "border:1px solid #ccc");
+                    $('#valeurdpe').removeClass("errorval");
+                }
+            }
+            else if ($("#etiquettedpe")[0].selectedIndex == 7) {
+                if (parseFloat($('#valeurdpe').val()) < 450) {
+                    alert("Valeur DPE incorrecte : Plage autorisée " + $("#etiquettedpe option:selected").val());
+                    $('#valeurdpe').attr("style", "border:1px solid red");
+                    $('#valeurges').addClass("errorval");
+                }
+                else {
+                    $('#valeurdpe').attr("style", "border:1px solid #ccc");
+                    $('#valeurdpe').removeClass("errorval");
+                }
+            }
+        }
+    });
+</script>

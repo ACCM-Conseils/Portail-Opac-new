@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Choix Portail";
+}
+
+@using PortailsOpacBase.Portails.Diagnostique.Models
+
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-md-10">
+            <h1>Portail OPAC Oise</h1>
+        </div>
+        <div class="col-md-2">
+            <img src="~/Content/Logo.jpg" alt="logo Opac" class="img-responsive" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8">Compte connecté : @ViewBag.Compte - Profil : @ViewBag.Profil &nbsp;&nbsp;&nbsp;<a href="@Url.Action("LogOut", "Home")">Deconnexion</a></div>
+    </div>
+    <div class="row" style="padding-top:80px">
+        <div class="col-md-4">
+            <div class="form-group">
+                <a id="diagnostics" class="btn btn-primary btn-lg btn-block">Accès portail Diagnostics</a>
+            </div>
+            <div class="form-group">
+                <a id="bdes" class="btn btn-primary btn-lg btn-block">Accès portail BDES</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#diagnostics').click(function (e) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("Diagnostics", "Choix"))",
+                type: "POST",
+                beforeSend: function (e) {
+                    $('.loading').show();
+                },
+                data: "{ }",
+                success: function (result) {
+                    window.location.href = "/claimapp/Home/Index?id=" + result.connect;
+                }
+            });
+        });
+        $('#bdes').click(function (e) {
+            $.ajax({
+                url: "@Html.Raw(Url.Action("BDES", "Choix"))",
+                type: "POST",
+                beforeSend: function (e) {
+                    $('.loading').show();
+                },
+                data: "{ }",
+                success: function (result) {
+                    window.location.href = "/claimapp/BDES/Index?id=" + result.connect;
+                }
+            });
+        });
+    });
+</script>

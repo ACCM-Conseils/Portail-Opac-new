@@ -1,0 +1,9 @@
+﻿<script src="~/Scripts/pdfobject.js"></script>
+
+@model String
+
+<div id="divdocuware" style="height:969px"></div>
+
+<script>
+    PDFObject.embed("@ViewBag.URL/viewdoc/@Model", "#divdocuware");
+</script>
