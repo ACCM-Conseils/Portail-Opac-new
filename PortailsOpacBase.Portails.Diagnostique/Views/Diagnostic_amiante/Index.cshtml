@@ -77,6 +77,9 @@
                 <label class="radio-inline">
                     <input type="radio" name="choix" id="choix2" value="2"> Logement
                 </label>
+                <label class="radio-inline">
+                    <input type="radio" name="choix" id="choix3" value="3"> RAT Bâtiment
+                </label>
             </div>
         </div>
     </div>
@@ -94,6 +97,20 @@
     <div class="col-md-4">
         <div class="form-group">
             <button id="modifierinfos" class="btn btn-default btn-lg btn-block" disabled>Modifier la saisie</button>
+        </div>
+    </div>
+</div>
+<div id="bloc_2_bis" style="display:none;margin-top:40px">
+    <div class="form-group row">
+        <div class="col-md-4">
+            Numéro de rapport *
+            <input type="text" class="form-control" id="numrapport" placeholder="N° de rapport (obligatoire)" />
+            <label id="errornumrapport" style="display:none;color:red">Numéro de rapport obligatoire</label>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-4">
+            <button id="addfiles" class="btn btn-success" disabled>Choisir le fichier</button>
         </div>
     </div>
 </div>
@@ -632,7 +649,7 @@
                                 $('#filtre_l').val($('#l').val());
                                 $("input[name=choix]").attr('disabled', 'disabled');
                                 $('#adresse_gbal').html(result.adresse);
-                                $('#bloc_logement').show();
+                                
 
                                 if ($("input[name='choix']:checked").val() == "1") {
                                     $('#headerlogement').hide();
@@ -641,11 +658,18 @@
                                     $('#corpsdapp').hide();
                                     $('#headerlocaux').hide();
                                     $('#corpslocaux').hide();
+                                    $('#bloc_2_bis').hide();
+                                    $('#bloc_logement').show();
                                 }
-                                else {
+                                else if ($("input[name='choix']:checked").val() == "2") {
                                     $('#headerparties').hide();
                                     $('#corpsparties').hide();
-                                    
+                                    $('#bloc_2_bis').hide();
+                                    $('#bloc_logement').show();
+                                }
+                                else {
+                                    $('#bloc_logement').hide();
+                                    $('#bloc_2_bis').show();
                                 }
 
                                 $.ajax({
@@ -1543,7 +1567,7 @@
                         $("input[name=choix][value='" + result.type_parties + "']").attr('checked', 'checked');
                         $('#bloc_2').show();
                         $('#bloc_3').show();
-                        $('#bloc_logement').show();
+                        
                         $('#savediag').prop("disabled", false);
 
                         if ($("input[name='choix']:checked").val() == "1") {
@@ -1553,11 +1577,19 @@
                             $('#corpsdapp').hide();
                             $('#headerlocaux').hide();
                             $('#corpslocaux').hide();
+                            $('#bloc_2_bis').hide();
+                            $('#bloc_logement').show();
                         }
-                        else {
+                        else if ($("input[name='choix']:checked").val() == "2") {
                             $('#headerparties').hide();
                             $('#corpsparties').hide();
+                            $('#bloc_2_bis').hide();
+                            $('#bloc_logement').show();
 
+                        }
+                        else {
+                            $('#bloc_logement').hide();
+                            $('#bloc_2_bis').show();
                         }
 
                         $.ajax({
@@ -1582,7 +1614,6 @@
                                     $('#a').prop("disabled", true);
                                     $("input[name=choix]").attr('disabled', 'disabled');
                                     $('#adresse_gbal').html(result.adresse);
-                                    $('#bloc_logement').show();
 
                                     if (result.export) {
                                         $('#action0').hide();

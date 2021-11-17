@@ -51,8 +51,8 @@ namespace PortailsOpacBase.Authentication
                 app.UseWsFederationAuthentication(new WsFederationAuthenticationOptions(WsFederationAuthenticationDefaults.AuthenticationType)
                 {
                     MetadataAddress = "https://adfs.opacoise.fr/federationmetadata/2007-06/federationmetadata.xml",
-                    Wtrealm = "https://portail-ged.opacoise.fr",
-                    //Wtrealm = "https://dev-portail-ged.opacoise.fr",
+                    //Wtrealm = "https://portail-ged.opacoise.fr",
+                    Wtrealm = "https://dw-dev-portail.opacoise.fr",
                     SignInAsAuthenticationType = WsFederationAuthenticationDefaults.AuthenticationType,
                     SecurityTokenHandlers = new SecurityTokenHandlerCollection
                 {
