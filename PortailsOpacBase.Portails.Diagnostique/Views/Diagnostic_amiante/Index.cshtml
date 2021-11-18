@@ -77,9 +77,9 @@
                 <label class="radio-inline">
                     <input type="radio" name="choix" id="choix2" value="2"> Logement
                 </label>
-                <label class="radio-inline">
+                <!--<label class="radio-inline">
                     <input type="radio" name="choix" id="choix3" value="3"> RAT Bâtiment
-                </label>
+                </label>-->
             </div>
         </div>
     </div>
@@ -104,13 +104,13 @@
     <div class="form-group row">
         <div class="col-md-4">
             Numéro de rapport *
-            <input type="text" class="form-control" id="numrapport" placeholder="N° de rapport (obligatoire)" />
-            <label id="errornumrapport" style="display:none;color:red">Numéro de rapport obligatoire</label>
+            <input type="text" class="form-control" id="numrapportRAT" placeholder="N° de rapport (obligatoire)" />
+            <label id="errornumrapportRAT" style="display:none;color:red">Numéro de rapport obligatoire</label>
         </div>
     </div>
     <div class="form-group row">
         <div class="col-md-4">
-            <button id="addfiles" class="btn btn-success" disabled>Choisir le fichier</button>
+            <button id="addrapportfiles" class="btn btn-success" disabled>Choisir le fichier</button>
         </div>
     </div>
 </div>
@@ -1477,33 +1477,33 @@
                     $('.loading').hide();
                     $('#classement_fichiers').hide();
                     $.ajax({
-                                url: "@Html.Raw(Url.Action("Fichiers", "Diagnostic_amiante"))",
-                                    cache: false,
-                                    type: "get",
-                                    dataType: "html",
-                                success: function (result) {
-                                    $('#div_diag_fichiers').html(result);
+                        url: "@Html.Raw(Url.Action("Fichiers", "Diagnostic_amiante"))",
+                        cache: false,
+                        type: "get",
+                        dataType: "html",
+                        success: function (result) {
+                            $('#div_diag_fichiers').html(result);
 
-                                    $('#dialog-fichiers').modal("hide");
-                                    $('#divfichiers').html("<table class='table table-striped'><thead><tr class='info'><th>Nom fichier</th><th></th></tr></thead><tbody id='listefiles'></tbody></table>");
-                                    $('#typefile').val("");
+                            $('#dialog-fichiers').modal("hide");
+                            $('#divfichiers').html("<table class='table table-striped'><thead><tr class='info'><th>Nom fichier</th><th></th></tr></thead><tbody id='listefiles'></tbody></table>");
+                            $('#typefile').val("");
 
-                                    $('#numrapport').val("");
-                                    $('#selectalllogementsfichiers').prop("checked", false);
-                                    $('.lgt_diag').prop("checked", false);
+                            $('#numrapport').val("");
+                            $('#selectalllogementsfichiers').prop("checked", false);
+                            $('.lgt_diag').prop("checked", false);
 
-                                    $('.selfichier').change(function (e) {
-                                        if ($('.selfichier:checked').length > 0) {
-                                            $('#delfile').prop("disabled", false);
-                                        }
-                                        else {
-                                            $('#delfile').prop("disabled", true);
-                                        }
-                                    });
-
-                                    ControlOK();
+                            $('.selfichier').change(function (e) {
+                                if ($('.selfichier:checked').length > 0) {
+                                    $('#delfile').prop("disabled", false);
+                                }
+                                else {
+                                    $('#delfile').prop("disabled", true);
                                 }
                             });
+
+                            ControlOK();
+                        }
+                    });
                 },
 
                 Error: function (up, err) {

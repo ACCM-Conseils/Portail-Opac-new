@@ -684,6 +684,257 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
 
         }
 
+        public ActionResult SaveRAT(String adresse)
+        {
+            try
+            {
+                log.Info("Début SaveRAT");
+
+                log.Info("Session : " + Session["idRapport"]);
+
+                List<diag_logement_fichiers> Fichiers = diag_logement.GetAllFichiers(((Guid)Session["idRapport"]));
+                List<diag_logement> diags = diag_logement.GetDiag(((Guid)Session["idRapport"])).OrderBy(m => m.gbal).ToList();
+                List<RapportLogement> DiagLogements = diag_logement.GetDiagsByIDRapport(((Guid)Session["idRapport"]));
+
+                log.Info("Fichiers : " + Fichiers.Count());
+                log.Info("Logements : " + diags.Count());
+                log.Info("Rapports : " + DiagLogements.Count());
+
+
+                Logement logt = (Logement)Session["LogementEnCours"];
+
+                String ville = logt.nomcom;
+                String addresse = (System.Convert.ToBoolean(Session["a"]) ? logt.adresse : "");
+
+                try
+                {
+                    ServiceConnection connect = PortailsOpacBase.Provider.Docuware.DocuwareProvider.Connect(System.Configuration.ConfigurationManager.AppSettings["URLDocuware"], System.Configuration.ConfigurationManager.AppSettings["Login"], System.Configuration.ConfigurationManager.AppSettings["MDP"]);
+
+                    try
+                    {
+                        if (connect != null)
+                        {
+                            log.Info("Connexion OK");
+
+                            org = PortailsOpacBase.Provider.Docuware.DocuwareProvider.GetOrganization(connect);
+
+                            //log.Info("Organization ID : " + org.Id);
+
+                            var fileCabinets = org.GetFileCabinetsFromFilecabinetsRelation().FileCabinet;
+
+                            log.Info("Armoires : " + fileCabinets.Count());
+
+                            defaultBasket = fileCabinets.Where(f => !f.IsBasket && f.Id == System.Configuration.ConfigurationManager.AppSettings["FileCabinetID"]).First();
+
+                            if (defaultBasket != null)
+                                log.Info("Armoire trouvée");
+                            diag diag = diag_logement.GetDiagBase(((Guid)Session["idRapport"]));
+
+                            if (diag != null)
+                            {
+                                foreach (diag_logement_fichiers f in Fichiers)
+                                {
+                                    String g = "";
+                                    String b = "";
+                                    String a = "";
+                                    String l = "";
+
+                                    log.Info("Fichier : " + f.nom_fichier);
+
+                                    String[] gbal = f.gbal.Split('-');
+
+                                    if (gbal.Length > 0)
+                                        g = gbal[0];
+                                    if (gbal.Length > 1)
+                                        b = gbal[1];
+                                    if (gbal.Length > 2)
+                                        a = gbal[2];
+                                    if (gbal.Length > 3)
+                                        l = gbal[3];
+
+                                    String CheminFichier = System.Configuration.ConfigurationManager.AppSettings["Racine"] + @"Upload\" + ((Guid)Session["idRapport"]) + @"\" + f.nom_fichier;
+
+                                    if (String.IsNullOrEmpty(l))
+                                        UploadSingleFileToFileCabinet(defaultBasket, "AMIANTE", "Immeuble", g, b, a, l, f.nom_fichier, f.type_fichier, CheminFichier, diag.diagnostiqueur, ville, addresse, diag.numcommande, diag.daterapport.Value, diag.correspondant, Session["Compte"].ToString(), Session["Profil"].ToString());
+                                    else
+                                        UploadSingleFileToFileCabinet(defaultBasket, "AMIANTE", "Logement", g, b, a, l, f.nom_fichier, f.type_fichier, CheminFichier, diag.diagnostiqueur, ville, addresse, diag.numcommande, diag.daterapport.Value, diag.correspondant, Session["Compte"].ToString(), Session["Profil"].ToString());
+
+                                }
+
+
+
+                                log.Info("Début création XML");
+
+                                log.Info("Diag trouvé");
+
+                                XmlDocument xmldoc = new XmlDocument();
+
+                                //(1) the xml declaration is recommended, but not mandatory
+                                XmlDeclaration xmlDeclaration = xmldoc.CreateXmlDeclaration("1.0", "UTF-8", null);
+                                XmlElement root = xmldoc.DocumentElement;
+                                xmldoc.InsertBefore(xmlDeclaration, root);
+
+                                //(2) string.Empty makes cleaner code
+                                XmlElement Diag = xmldoc.CreateElement(string.Empty, "Rapport", string.Empty);
+
+                                //(2) string.Empty makes cleaner code
+                                XmlElement element1 = xmldoc.CreateElement(string.Empty, "Identification", string.Empty);
+                                Diag.AppendChild(element1);
+
+                                XmlElement element3 = xmldoc.CreateElement(string.Empty, "Commande", string.Empty);
+                                XmlText text2 = xmldoc.CreateTextNode(diag.numcommande);
+                                element3.AppendChild(text2);
+                                element1.AppendChild(element3);
+
+                                XmlElement element4 = xmldoc.CreateElement(string.Empty, "Societe", string.Empty);
+                                XmlText text3 = xmldoc.CreateTextNode(diag.nomsociete);
+                                element4.AppendChild(text3);
+                                element1.AppendChild(element4);
+
+                                XmlElement element5 = xmldoc.CreateElement(string.Empty, "Correspondant", string.Empty);
+                                XmlText text4 = xmldoc.CreateTextNode(diag.correspondant);
+                                element5.AppendChild(text4);
+                                element1.AppendChild(element5);
+
+                                XmlElement element6 = xmldoc.CreateElement(string.Empty, "Diagnostiqueur", string.Empty);
+                                XmlText text5 = xmldoc.CreateTextNode(diag.diagnostiqueur);
+                                element6.AppendChild(text5);
+                                element1.AppendChild(element6);
+
+                                XmlElement element7 = xmldoc.CreateElement(string.Empty, "DateRapport", string.Empty);
+                                XmlText text6 = xmldoc.CreateTextNode(diag.daterapport.Value.ToShortDateString());
+                                element7.AppendChild(text6);
+                                element1.AppendChild(element7);
+
+                                XmlElement element8 = xmldoc.CreateElement(string.Empty, "CreeLe", string.Empty);
+                                XmlText text7 = xmldoc.CreateTextNode(diag.datedepot.Value.ToShortDateString());
+                                element8.AppendChild(text7);
+                                element1.AppendChild(element8);
+
+                                XmlElement element1_2 = xmldoc.CreateElement(string.Empty, "IdentificationLogement", string.Empty);
+                                Diag.AppendChild(element1_2);
+
+                                XmlElement element2_1 = xmldoc.CreateElement(string.Empty, "Groupe", string.Empty);
+                                XmlText text2_2 = xmldoc.CreateTextNode(diag.groupe);
+                                element2_1.AppendChild(text2_2);
+                                element1_2.AppendChild(element2_1);
+
+                                XmlElement element2_2 = xmldoc.CreateElement(string.Empty, "Bati", string.Empty);
+                                XmlText text3_2 = xmldoc.CreateTextNode(diag.bati);
+                                element2_2.AppendChild(text3_2);
+                                element1_2.AppendChild(element2_2);
+
+                                XmlElement element2_3 = xmldoc.CreateElement(string.Empty, "Allee", string.Empty);
+                                XmlText text3_3 = xmldoc.CreateTextNode(diag.allee);
+                                element2_3.AppendChild(text3_3);
+                                element1_2.AppendChild(element2_3);
+
+                                XmlElement element2_4 = xmldoc.CreateElement(string.Empty, "Adresse", string.Empty);
+                                XmlText text3_4 = xmldoc.CreateTextNode(addresse.TrimEnd());
+                                element2_4.AppendChild(text3_4);
+                                element1_2.AppendChild(element2_4);
+
+                                XmlElement element2_5 = xmldoc.CreateElement(string.Empty, "Ville", string.Empty);
+                                XmlText text3_5 = xmldoc.CreateTextNode(ville.TrimStart());
+                                element2_5.AppendChild(text3_5);
+                                element1_2.AppendChild(element2_5);                                
+
+                                XmlElement element1_4 = xmldoc.CreateElement(string.Empty, "Fichiers", string.Empty);
+                                Diag.AppendChild(element1_4);
+
+
+                                foreach (diag_logement_fichiers r in Fichiers)
+                                {
+                                    XmlElement newdiag = xmldoc.CreateElement(string.Empty, "Fichier", string.Empty);
+                                    element1_4.AppendChild(newdiag);
+
+                                    XmlElement elementnomfichier = xmldoc.CreateElement(string.Empty, "NomFichier", string.Empty);
+                                    XmlText textd_1 = xmldoc.CreateTextNode(r.nom_fichier);
+                                    elementnomfichier.AppendChild(textd_1);
+                                    newdiag.AppendChild(elementnomfichier);
+
+                                    XmlElement elementtypefichier = xmldoc.CreateElement(string.Empty, "TypeFichier", string.Empty);
+                                    XmlText textd_2 = xmldoc.CreateTextNode(r.type_fichier);
+                                    elementtypefichier.AppendChild(textd_2);
+                                    newdiag.AppendChild(elementtypefichier);
+
+                                    String[] _gbal = r.gbal.Split('-');
+
+                                    XmlElement elementg = xmldoc.CreateElement(string.Empty, "Groupe", string.Empty);
+                                    XmlText textd_4 = xmldoc.CreateTextNode(_gbal[0]);
+                                    elementg.AppendChild(textd_4);
+                                    newdiag.AppendChild(elementg);
+
+                                    if (_gbal.Length > 1)
+                                    {
+                                        XmlElement elementb = xmldoc.CreateElement(string.Empty, "Bati", string.Empty);
+                                        XmlText textd_1_b = xmldoc.CreateTextNode(_gbal[1]);
+                                        elementb.AppendChild(textd_1_b);
+                                        newdiag.AppendChild(elementb);
+                                    }
+
+                                    if (_gbal.Length > 2)
+                                    {
+                                        XmlElement elementa = xmldoc.CreateElement(string.Empty, "Allee", string.Empty);
+                                        XmlText textd_1_a = xmldoc.CreateTextNode(_gbal[2]);
+                                        elementa.AppendChild(textd_1_a);
+                                        newdiag.AppendChild(elementa);
+                                    }
+
+                                    if (_gbal.Length > 3)
+                                    {
+                                        XmlElement elementl = xmldoc.CreateElement(string.Empty, "Logement", string.Empty);
+                                        XmlText textd_1_l = xmldoc.CreateTextNode(_gbal[3]);
+                                        elementl.AppendChild(textd_1_l);
+                                        newdiag.AppendChild(elementl);
+                                    }
+
+                                    XmlElement elementrapport = xmldoc.CreateElement(string.Empty, "NumRapport", string.Empty);
+                                    XmlText textd_5 = xmldoc.CreateTextNode(((r.numrapport != null) ? r.numrapport : ""));
+                                    elementrapport.AppendChild(textd_5);
+                                    newdiag.AppendChild(elementrapport);
+                                }
+
+                                xmldoc.AppendChild(Diag);
+
+                                if (!Directory.Exists(System.Configuration.ConfigurationManager.AppSettings["RacineDIAG"] + @"AMIANTE\"))
+                                    Directory.CreateDirectory(System.Configuration.ConfigurationManager.AppSettings["RacineDIAG"] + @"AMIANTE\");
+
+                                xmldoc.Save(System.Configuration.ConfigurationManager.AppSettings["RacineDIAG"] + @"AMIANTE\" + ((Guid)Session["idRapport"]) + ".xml");
+                            }
+
+                            return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+                        }
+                        else
+                            return Json(new { trouve = false, societe = "", corres = "" }, JsonRequestBehavior.AllowGet);
+                    }
+                    catch (Exception e)
+                    {
+                        log.Error(e.Message);
+
+                        return Json(new { trouve = false, societe = "", corres = "" }, JsonRequestBehavior.AllowGet);
+                    }
+                    finally
+                    {
+                        connect.Disconnect();
+                    }
+                }
+                catch (Exception e)
+                {
+                    log.Error(e.Message);
+
+                    return Json(new { trouve = false, societe = "", corres = "" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+
+                return Json(new { trouve = false, societe = "", corres = "" }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
         public static Document UploadSingleFileToFileCabinet(FileCabinet fileCabinet, String Famille, String Patrimoine, String G, String B, String A, String L, string nomdoc, string typedoc, string CheminFichier, string diagnostiqueur, string ville, string addresse, string numcommande, DateTime datediag, string corres, String Compte, String Profil)
         {
             var indexData = new Document()
