@@ -479,7 +479,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
 
                     if (diag != null)
                     {
-                        UploadSingleFileToFileCabinet(defaultBasket, "DPE", "Logement", diag.groupe, diag.bati, diag.allee, l, f.Name, "DPE Logement", f.FullName, diag.diagnostiqueur, ville, addresse, diag.numcommande, diag.daterapport.Value, diag.correspondant, Session["Compte"].ToString(), Session["Profil"].ToString(), etiquettedpe, valeurdpe, etiquetteges, valeurges, typechauffage, typeecs, mcarre);
+                        UploadSingleFileToFileCabinet(defaultBasket, "DPE", "Logement", diag.groupe, diag.bati, diag.allee, l, f.Name, "DPE Logement", f.FullName, diag.diagnostiqueur, ville, addresse, diag.numcommande, diag.daterapport.Value, diag.correspondant, Session["Compte"].ToString(), Session["Profil"].ToString(), etiquettedpe, valeurdpe, etiquetteges, valeurges, typechauffage, typeecs, mcarre, numrapport);
 
                         XmlDocument xmldoc = new XmlDocument();
 
@@ -643,7 +643,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
             
         }
 
-        public static Document UploadSingleFileToFileCabinet(FileCabinet fileCabinet, String Famille, String Patrimoine, String G, String B, String A, String L, string nomdoc, string typedoc, string CheminFichier, string diagnostiqueur, string ville, string addresse, string numcommande, DateTime datediag, string corres, String Compte, String Profil, String etiquettedpe, String valeurdpe, String etiquetteges, String valeurges, String typechauffage, String typeecs, String mcarre)
+        public static Document UploadSingleFileToFileCabinet(FileCabinet fileCabinet, String Famille, String Patrimoine, String G, String B, String A, String L, string nomdoc, string typedoc, string CheminFichier, string diagnostiqueur, string ville, string addresse, string numcommande, DateTime datediag, string corres, String Compte, String Profil, String etiquettedpe, String valeurdpe, String etiquetteges, String valeurges, String typechauffage, String typeecs, String mcarre, String numrapport)
         {
             var indexData = new Document()
             {
@@ -673,6 +673,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
                     DocumentIndexField.CreateDate("DATE_DU_DIAGNOSTIC", datediag),
                     DocumentIndexField.Create("CREE_LE", DateTime.Today),
                     DocumentIndexField.Create("DESTINATAIRE_OPAC", corres),
+                    DocumentIndexField.Create("N_ADEME", numrapport),
                 }
             };
             var uploadedDocument = fileCabinet.UploadDocument(indexData, new FileInfo(CheminFichier));

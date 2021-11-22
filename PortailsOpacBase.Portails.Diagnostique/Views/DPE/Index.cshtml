@@ -160,8 +160,8 @@
                 <input id="mcarre" type="text" class="form-control" placeholder="Surface m2" />
             </div>
             <div class="col-md-3">
-                Numéro de rapport *
-                <input id="numrapport" type="text" class="form-control" placeholder="Numéro de rapport" />
+                Numéro ADEME *
+                <input id="numrapport" type="text" class="form-control" placeholder="Numéro ADEME" />
             </div>
         </div>
     </div>
@@ -353,13 +353,7 @@
                 alert("La superficie doit être inférieure ou égale à 999 m2");
             }
         });
-        $('#valeurges').focusout(function (e) {
-            CheckValeurGES();
-        });
-        $('#etiquetteGES').change(function (e) {
-            if ($("#etiquetteGES")[0].selectedIndex > 0 && $('#valeurges').val().length > 0)
-                CheckValeurGES();
-        });
+
         $('#societe').off("focusin").on("focusin", function (e) {
             $.ajax({
                 url: "@Html.Raw(Url.Action("GetCommande", "Diagnostic_amiante"))?numcommande=" + $('#numcmd').val(),
@@ -629,85 +623,5 @@
                                 $('#divecs').html(result);
                             }
         });
-
-        function CheckValeurGES() {
-            if ($("#etiquetteGES")[0].selectedIndex == 1) {
-                if (parseFloat($('#valeurges').val()) < 0 || parseFloat($('#valeurges').val()) > 5) {
-                    alert("Valeur GES incorrecte : Plage autorisée " + $("#etiquetteGES option:selected").val());
-                    $('#valeurges').attr("style", "border:1px solid red");
-                    $('#valeurges').addClass("errorval");
-                }
-                else {
-                    $('#valeurges').attr("style", "border:1px solid #ccc");
-                    $('#valeurges').removeClass("errorval");
-                }
-            }
-            else if ($("#etiquetteGES")[0].selectedIndex == 2) {
-                if (parseFloat($('#valeurges').val()) < 6 || parseFloat($('#valeurges').val()) > 10) {
-                    alert("Valeur GES incorrecte : Plage autorisée " + $("#etiquetteGES option:selected").val());
-                    $('#valeurges').attr("style", "border:1px solid red");
-                    $('#valeurges').addClass("errorval");
-                }
-                else {
-                    $('#valeurges').attr("style", "border:1px solid #ccc");
-                    $('#valeurges').removeClass("errorval");
-                }
-            }
-            else if ($("#etiquetteGES")[0].selectedIndex == 3) {
-                if (parseFloat($('#valeurges').val()) < 11 || parseFloat($('#valeurges').val()) > 20) {
-                    alert("Valeur GES incorrecte : Plage autorisée " + $("#etiquetteGES option:selected").val());
-                    $('#valeurges').attr("style", "border:1px solid red");
-                    $('#valeurges').addClass("errorval");
-                }
-                else {
-                    $('#valeurges').attr("style", "border:1px solid #ccc");
-                    $('#valeurges').removeClass("errorval");
-                }
-            }
-            else if ($("#etiquetteGES")[0].selectedIndex == 4) {
-                if (parseFloat($('#valeurges').val()) < 21 || parseFloat($('#valeurges').val()) > 35) {
-                    alert("Valeur GES incorrecte : Plage autorisée " + $("#etiquetteGES option:selected").val());
-                    $('#valeurges').attr("style", "border:1px solid red");
-                    $('#valeurges').addClass("errorval");
-                }
-                else {
-                    $('#valeurges').attr("style", "border:1px solid #ccc");
-                    $('#valeurges').removeClass("errorval");
-                }
-            }
-            else if ($("#etiquetteGES")[0].selectedIndex == 5) {
-                if (parseFloat($('#valeurges').val()) < 36 || parseFloat($('#valeurges').val()) > 55) {
-                    alert("Valeur GES incorrecte : Plage autorisée " + $("#etiquetteGES option:selected").val());
-                    $('#valeurges').attr("style", "border:1px solid red");
-                    $('#valeurges').addClass("errorval");
-                }
-                else {
-                    $('#valeurges').attr("style", "border:1px solid #ccc");
-                    $('#valeurges').removeClass("errorval");
-                }
-            }
-            else if ($("#etiquetteGES")[0].selectedIndex == 6) {
-                if (parseFloat($('#valeurges').val()) < 56 || parseFloat($('#valeurges').val()) > 80) {
-                    alert("Valeur GES incorrecte : Plage autorisée " + $("#etiquetteGES option:selected").val());
-                    $('#valeurges').attr("style", "border:1px solid red");
-                    $('#valeurges').addClass("errorval");
-                }
-                else {
-                    $('#valeurges').attr("style", "border:1px solid #ccc");
-                    $('#valeurges').removeClass("errorval");
-                }
-            }
-            else if ($("#etiquetteGES")[0].selectedIndex == 7) {
-                if (parseFloat($('#valeurges').val()) < 80) {
-                    alert("Valeur GES incorrecte : Plage autorisée " + $("#etiquetteGES option:selected").val());
-                    $('#valeurges').attr("style", "border:1px solid red");
-                    $('#valeurges').addClass("errorval");
-                }
-                else {
-                    $('#valeurges').attr("style", "border:1px solid #ccc");
-                    $('#valeurges').removeClass("errorval");
-                }
-            }
-        }
     });
 </script>
