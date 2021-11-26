@@ -77,9 +77,9 @@
                 <label class="radio-inline">
                     <input type="radio" name="choix" id="choix2" value="2"> Logement
                 </label>
-                <!--<label class="radio-inline">
+                <label class="radio-inline">
                     <input type="radio" name="choix" id="choix3" value="3"> RAT Bâtiment
-                </label>-->
+                </label>
             </div>
         </div>
     </div>
@@ -110,12 +110,26 @@
     </div>
     <div class="form-group row">
         <div class="col-md-4">
-            <button id="addrapportfiles" class="btn btn-success" disabled>Choisir le fichier</button>
+            <div class="form-group" id="containerRAT">
+                <button id="addrapportfiles" class="btn btn-success" disabled>Choisir le fichier</button>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div style="height:100px;overflow:auto">
+            <table id="divfichiersRAT" class="table table-striped">
+                <thead>
+                    <tr class="info">
+                        <th>Nom fichier</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="listefilesRAT"></tbody>
+            </table>
         </div>
     </div>
 </div>
 <div id="bloc_logement" style="display:none">
-
     <div class="form-group">
         <div class="row">
             <div class="col-md-8">
@@ -212,12 +226,12 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="form-group" style="padding-top:30px">
-        <div class="row">
-            <div class="col-md-8">
-                <button id="savediag" class="btn btn-primary btn-lg btn-block" disabled>Enregistrer le diagnostic</button>
-            </div>
+    </div>    
+</div>
+<div id="bloc_save" class="form-group" style="padding-top:30px;display:none">
+    <div class="row">
+        <div class="col-md-8">
+            <button id="savediag" class="btn btn-primary btn-lg btn-block" disabled>Enregistrer le diagnostic</button>
         </div>
     </div>
 </div>
@@ -649,7 +663,7 @@
                                 $('#filtre_l').val($('#l').val());
                                 $("input[name=choix]").attr('disabled', 'disabled');
                                 $('#adresse_gbal').html(result.adresse);
-                                
+
 
                                 if ($("input[name='choix']:checked").val() == "1") {
                                     $('#headerlogement').hide();
@@ -671,6 +685,8 @@
                                     $('#bloc_logement').hide();
                                     $('#bloc_2_bis').show();
                                 }
+
+                                $('#bloc_save').show();
 
                                 $.ajax({
                                     url: "@Html.Raw(Url.Action("GetFichiers", "Diagnostic_amiante"))",
@@ -885,6 +901,15 @@
             }
             else {
                 $('#validfichiers').prop("disabled", true);
+            }
+        });
+
+        $('#numrapportRAT').keyup(function (e) {
+            if ($(this).val().length > 0) {
+                $('#addrapportfiles').prop("disabled", false);
+            }
+            else {
+                $('#addrapportfiles').prop("disabled", true);
             }
         });
 
@@ -1116,7 +1141,7 @@
                             $('#filtre_b').val($('#b').val());
                             $('#filtre_a').val($('#a').val());
                             $('#filtre_l').val($('#l').val());
-                            
+
                             $('#addcontrole').prop("disabled", false);
                             $('#addfiles').prop("disabled", false);
 
@@ -1292,38 +1317,63 @@
             $('#dialog-fichiers').modal("show");
         });
         $('#savediag').click(function (e) {
+            if ($("input[name='choix']:checked").val() == "1" || $("input[name='choix']:checked").val() == "2") {
+                var nblogements = $('#div_logements_controles tr').length - 1;
+                var nbpieces = $('#table_controles tr').length - 1;
+                var nbfichiers = $('#table_fichiers tr').length - 1;
 
-            var nblogements = $('#div_logements_controles tr').length -1;
-            var nbpieces = $('#table_controles tr').length - 1;
-            var nbfichiers = $('#table_fichiers tr').length - 1;
-
-            if (nblogements > 0 && nbpieces > 0 && nbfichiers > 0) {
-                var logements = new Array();
-                $('#divlogementsFichiers .lgt_diag').each(function (e) {
-                    logements.push($(this).data("gbal"));
-                });
-                $.ajax({
-                    url: "@Html.Raw(Url.Action("SaveDiag", "Diagnostic_amiante"))",
-                    type: "POST",
-                    data: { adresse: $('#adresse_gbal').html(), liste_logements: logements },
-                    beforeSend: function (e) {
-                        $('.loading').show();
-                    },
-                    success: function (result) {
-                        $('.loading').hide();
-                        if (result.success) {
-                            $('#dialog-choix').modal("show");
+                if (nblogements > 0 && nbpieces > 0 && nbfichiers > 0) {
+                    var logements = new Array();
+                    $('#divlogementsFichiers .lgt_diag').each(function (e) {
+                        logements.push($(this).data("gbal"));
+                    });
+                    $.ajax({
+                        url: "@Html.Raw(Url.Action("SaveDiag", "Diagnostic_amiante"))",
+                        type: "POST",
+                        data: { adresse: $('#adresse_gbal').html(), liste_logements: logements },
+                        beforeSend: function (e) {
+                            $('.loading').show();
+                        },
+                        success: function (result) {
+                            $('.loading').hide();
+                            if (result.success) {
+                                $('#dialog-choix').modal("show");
+                            }
                         }
-                    }
-                });
+                    });
+                }
+                else {
+                    if (nblogements == 0)
+                        alert("Veuillez renseigner les logements contrôlés SVP");
+                    if (nbpieces == 0)
+                        alert("Veuillez renseigner les pièces contrôlées SVP");
+                    if (nbfichiers == 0)
+                        alert("Veuillez ajouter les fichiers de contrôle SVP");
+                }
             }
             else {
-                if (nblogements == 0)
-                    alert("Veuillez renseigner les logements contrôlés SVP");
-                if (nbpieces == 0)
-                    alert("Veuillez renseigner les pièces contrôlées SVP");
-                if (nbfichiers == 0)
-                    alert("Veuillez ajouter les fichiers de contrôle SVP");
+                var nbfichiers = $('#divfichiersRAT tr').length - 1;
+                if (nbfichiers > 0) {
+                    $.ajax({
+                        url: "@Html.Raw(Url.Action("SaveRAT", "Diagnostic_amiante"))",
+                        type: "POST",
+                        data: { adresse: $('#adresse_gbal').html() },
+                        beforeSend: function (e) {
+                            $('.loading').show();
+                        },
+                        success: function (result) {
+                            $('.loading').hide();
+                            if (result.success) {
+                                $('#dialog-choix').modal("show");
+                            }
+                        }
+                    });
+                }
+
+                else {
+                    if (nbfichiers == 0)
+                        alert("Veuillez ajouter les fichiers de contrôle SVP");
+                }
             }
         });
         $('#addcontrole').click(function (e) {
@@ -1526,6 +1576,100 @@
 
         uploader.init();
 
+        ///////////////////////////////////////////
+
+        var uploaderRat = new plupload.Uploader({
+            runtimes: 'html5,flash,silverlight,html4',
+            max_file_count: 1,
+            max_file_size: '100mb',
+            multi_selection: false,
+            browse_button: 'addrapportfiles', // you can pass in id...
+            multipart_params: { typeDoc: "RAT_BAT", numrapport: $('#numrapportRAT').val() },
+            container: document.getElementById('containerRAT'), // ... or DOM Element itself
+            url: "/claimapp/Diagnostic_amiante/Upload",
+            flash_swf_url: '/plupload/js/Moxie.swf',
+            silverlight_xap_url: '/plupload/js/Moxie.xap',
+            init: {
+                FilesAdded: function (up, files) {
+                    if ($('#listefilesRAT tr').length == 0) {
+                        uploaderRat.start();
+                        var filenames = "";
+                        for (var i in files) {
+                            if (!files[i].name.endsWith(".doc") && !files[i].name.endsWith(".docx") && !files[i].name.endsWith(".pdf")) {
+                                up.removeFile(files[i]);
+                                alert("Le format du fichier n'est pas accepté");
+                            }
+                            else {
+                                if (files[i].size < 25000000)
+                                    filenames += "<tr class='file'><td>" + files[i].name + "</td><td style='text-align:right'><span class='glyphicon glyphicon-trash delfichier' data-id='" + files[i].id + "' style='font-size:0.8em'></span></td></tr>";
+                                else {
+                                    up.removeFile(files[i]);
+                                    alert("Le fichier " + files[i].name + " est trop volumineux");
+                                }
+                            }
+                        }
+                        $('#listefilesRAT').append(filenames);
+
+                        $('#divfichiersRAT .delfichier').off("click").on("click", function (e) {
+                            uploaderRat.removeFile($(this).data("id"));
+                            $(this).closest("tr").remove();
+                        });
+                    }
+                    else
+                        alert("Vous ne pouvez déposer qu'un seul fichier.");
+                },
+
+                UploadComplete: function (up, file) {
+                    $('.loading').hide();
+                    $.ajax({
+                        url: "@Html.Raw(Url.Action("Fichiers", "Diagnostic_amiante"))",
+                        cache: false,
+                        type: "get",
+                        dataType: "html",
+                        success: function (result) {
+                            $('#divfichiers').html("<table class='table table-striped'><thead><tr class='info'><th>Nom fichier</th><th></th></tr></thead><tbody id='listefiles'></tbody></table>");
+                            $('#typefile').val("");
+
+                            $('#numrapport').val("");
+                            $('#selectalllogementsfichiers').prop("checked", false);
+                            $('.lgt_diag').prop("checked", false);
+
+                            $('.selfichier').change(function (e) {
+                                if ($('.selfichier:checked').length > 0) {
+                                    $('#delfile').prop("disabled", false);
+                                }
+                                else {
+                                    $('#delfile').prop("disabled", true);
+                                }
+                            });
+
+                            ControlOK();
+                        }
+                    });
+                },
+
+                Error: function (up, err) {
+                    $('.loading').hide();
+                    if (err.message == "File extension error.") {
+                        alert("Format de fichier incorrect");
+                    }
+                }
+            }
+        });
+
+        uploaderRat.bind('BeforeUpload', function (up, file) {
+            var gbal = $('#g').val() + "-" + $('#b').val();
+            if ($('#a').val().length > 0)
+                gbal += "-"+$('#a').val();
+            up.settings.multipart_params = { typeDoc: "RAT_BAT", Gbal: gbal, numrapport: $('#numrapportRAT').val() }
+        });
+
+        uploaderRat.init();
+
+
+        ///////////////////////////////////////////
+
+
         if(numcmd == null)
             LoadRapport();
 
@@ -1567,7 +1711,7 @@
                         $("input[name=choix][value='" + result.type_parties + "']").attr('checked', 'checked');
                         $('#bloc_2').show();
                         $('#bloc_3').show();
-                        
+
                         $('#savediag').prop("disabled", false);
 
                         if ($("input[name='choix']:checked").val() == "1") {
