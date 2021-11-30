@@ -563,7 +563,12 @@ namespace PortailsOpacBase.Portails.Diagnostique
 
                 foreach(diag_logement_fichiers d in result)
                 {
-                    if (filtered.Where(o => o.numrapport == d.numrapport && o.nom_fichier == d.nom_fichier).Count() == 0)
+                    if (!String.IsNullOrEmpty(d.numrapport) || !String.IsNullOrEmpty(d.nom_fichier))
+                    {
+                        if (filtered.Where(o => o.numrapport == d.numrapport && o.nom_fichier == d.nom_fichier).Count() == 0)
+                            filtered.Add(d);
+                    }
+                    else
                         filtered.Add(d);
                 }
 

@@ -1301,9 +1301,9 @@
             if ($("input[name='choix']:checked").val() == "1" || $("input[name='choix']:checked").val() == "2") {
                 var nblogements = $('#div_logements_controles tr').length - 1;
                 var nbpieces = $('#table_controles tr').length - 1;
-                var nbfichiers = $('#table_fichiers tr').length - 1;
+                var nbfichiers = $("#table_fichiers tr[data-good='Non']").length;
 
-                if (nblogements > 0 && nbpieces > 0 && nbfichiers > 0) {
+                if (nblogements > 0 && nbpieces > 0 && nbfichiers == 0) {
                     var logements = new Array();
                     $('#divlogementsFichiers .lgt_diag').each(function (e) {
                         logements.push($(this).data("gbal"));
@@ -1328,7 +1328,7 @@
                         alert("Veuillez renseigner les logements contrôlés SVP");
                     if (nbpieces == 0)
                         alert("Veuillez renseigner les pièces contrôlées SVP");
-                    if (nbfichiers == 0)
+                    if (nbfichiers > 0)
                         alert("Veuillez ajouter les fichiers de contrôle SVP");
                 }
             }
@@ -1698,6 +1698,7 @@
                         $("input[name=choix][value='" + result.type_parties + "']").attr('checked', 'checked');
                         $('#bloc_2').show();
                         $('#bloc_3').show();
+                        $('#bloc_save').show();
 
                         $('#savediag').prop("disabled", false);
 

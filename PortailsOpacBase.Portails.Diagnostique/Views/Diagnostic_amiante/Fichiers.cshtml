@@ -16,11 +16,11 @@
     <tbody>
         @foreach(diag_logement_fichiers l in Model)
         {
-        <tr>
+        <tr data-good="@((String.IsNullOrEmpty(l.nom_fichier) ? "Non" : "Oui"))">
             <td>@l.gbal</td>
-            <td>@((String.IsNullOrEmpty(l.type_fichier) ? "Choisissez un fichier" : l.type_fichier))</td>
+            <td>@l.type_fichier</td>
             <td>@((String.IsNullOrEmpty(l.nom_fichier) ? "Choisissez un fichier" : l.nom_fichier))</td>
-            <td>@((String.IsNullOrEmpty(l.numrapport) ? "Choisissez un fichier" : l.numrapport))</td>
+            <td>@l.numrapport</td>
             <td><button class="btn btn-success btn-xs selectfilelogement" data-gbal="@l.gbal" data-id="@l.id">Choisir le fichier</button></td>
             <td style="text-align:right"><input class="selfichier" type="checkbox" data-id="@l.id" /></td>
         </tr>
