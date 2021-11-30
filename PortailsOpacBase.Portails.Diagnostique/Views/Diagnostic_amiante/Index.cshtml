@@ -212,7 +212,7 @@
                 </div>
             </div>
         </div>
-        <div class="row" id="action2">
+        <!--<div class="row" id="action2">
             <div class="col-md-8">
                 <div class="row">
                     <div class="col-md-6">
@@ -225,7 +225,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>    
 </div>
 <div id="bloc_save" class="form-group" style="padding-top:30px;display:none">
@@ -281,10 +281,11 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="title">Ajout fichier</h4>
+                <h4 class="title">Ajout de fichier pour le gbal <span id="gbalfichier"></span></h4>
             </div>
             <div class="modal-body">
                 <div class="form-group">
+                    <input type="hidden" id="idlogementfichier" />
                     <div class="form-group" id="container">
                         <button id="pickfiles" class="btn btn-primary">Choisir le(s) fichier(s)</button>
                     </div>
@@ -308,17 +309,6 @@
                         <div class="form-group">
                             Numéro de rapport *:
                             <input id="numrapport" type="text" class="form-control" placeholder="Numéro de rapport" />
-                        </div>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-12 text-right">
-                                    Sélectionner tout <input type="checkbox" id="selectalllogementsfichiers" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div id="divlogementsFichiers" style="height:150px;overflow:auto">
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -703,7 +693,7 @@
                                         $('#typefile').show();
 
                                         $('#typefile').change(function (e) {
-                                            if ($(this).val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                            if ($(this).val().length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
                                                 $('#validfichiers').prop("disabled", false);
                                             }
                                             else {
@@ -734,7 +724,7 @@
                                             else
                                                 $('#dellogement').prop("disabled", true);
 
-                                            if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                            if ($('#typefile').val().length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
                                                 $('#validfichiers').prop("disabled", false);
                                             }
                                             else {
@@ -744,7 +734,7 @@
 
                                         $('#divlogementsFichiers .lgt_diag').change(function (e) {
 
-                                            if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                            if ($('#typefile').val().length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
                                                 $('#validfichiers').prop("disabled", false);
                                             }
                                             else {
@@ -781,6 +771,12 @@
                                     dataType: "html",
                                     success: function (result) {
                                         $('#div_diag_fichiers').html(result);
+
+                                        $('.selectfilelogement').click(function (e) {
+                                            $('#gbalfichier').html($(this).data("gbal"));
+                                            $('#idlogementfichier').val($(this).data("id"));
+                                            $('#dialog-fichiers').modal("show");
+                                        });
 
                                         $('.selfichier').change(function (e) {
                                             if ($('.selfichier:checked').length > 0) {
@@ -862,7 +858,7 @@
                                     else
                                         $('#dellogement').prop("disabled", true);
 
-                                    if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                    if ($('#typefile').val().length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
                                         $('#validfichiers').prop("disabled", false);
                                     }
                                     else {
@@ -872,7 +868,7 @@
 
                                 $('#divlogementsFichiers .lgt_diag').change(function (e) {
 
-                                    if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                    if ($('#typefile').val().length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
                                         $('#validfichiers').prop("disabled", false);
                                     }
                                     else {
@@ -896,7 +892,7 @@
         });
 
         $('#numrapport').keyup(function (e) {
-            if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+            if ($('#typefile').val().length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
                 $('#validfichiers').prop("disabled", false);
             }
             else {
@@ -988,26 +984,6 @@
                 $(this).val("0");
             if ($(this).val().length > 3)
                 $(this).val("999");
-        });
-
-        $('#selectalllogementsfichiers').change(function (e) {
-            if ($(this).prop("checked")) {
-                $('#divlogementsFichiers .lgt_diag').each(function (e) {
-                    $(this).prop("checked", true);
-                });
-            }
-            else {
-                $('#divlogementsFichiers .lgt_diag').each(function (e) {
-                    $(this).prop("checked", false);
-                });
-            }
-
-            if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
-                $('#validfichiers').prop("disabled", false);
-            }
-            else {
-                $('#validfichiers').prop("disabled", true);
-            }
         });
 
         $('#selectalllogementsdiag').change(function (e) {
@@ -1152,7 +1128,7 @@
                                 else
                                     $('#dellogement').prop("disabled", true);
 
-                                if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                if ($('#typefile').val().length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
                                     $('#validfichiers').prop("disabled", false);
                                 }
                                 else {
@@ -1161,7 +1137,7 @@
                             });
                             $('#divlogementsFichiers .lgt_diag').change(function (e) {
 
-                                if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                if ($('#typefile').val().length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
                                     $('#validfichiers').prop("disabled", false);
                                 }
                                 else {
@@ -1217,6 +1193,11 @@
                                 $('#div_diag_fichiers').html(result);
                                 ControlOK();
                                 $('#delfile').prop("disabled", true);
+                                $('.selectfilelogement').click(function (e) {
+                                    $('#gbalfichier').html($(this).data("gbal"));
+                                    $('#idlogementfichier').val($(this).data("id"));
+                                    $('#dialog-fichiers').modal("show");
+                                });
                                 $('.selfichier').change(function (e) {
                                     if ($('.selfichier:checked').length > 0) {
                                         $('#delfile').prop("disabled", false);
@@ -1479,7 +1460,7 @@
             max_file_size: '100mb',
             multi_selection: false,
             browse_button: 'pickfiles', // you can pass in id...
-            multipart_params: { typeDoc: $('#typefile').val(), numrapport: $('#numrapport').val() },
+            multipart_params: { id: $('#idlogementfichier').val(), typeDoc: $('#typefile').val(), numrapport: $('#numrapport').val() },
             container: document.getElementById('container'), // ... or DOM Element itself
             url: "/claimapp/Diagnostic_amiante/Upload",
             flash_swf_url: '/plupload/js/Moxie.swf',
@@ -1504,7 +1485,7 @@
                     $('#listefiles').append(filenames);
                     $('#classement_fichiers').show();
 
-                    if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                    if ($('#typefile').val().length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
                         $('#validfichiers').prop("disabled", false);
                     }
                     else {
@@ -1514,7 +1495,7 @@
                     $('#divfichiers .delfichier').off("click").on("click", function (e) {
                         uploader.removeFile($(this).data("id"));
                         $(this).closest("tr").remove();
-                        if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                        if ($('#typefile').val().length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
                             $('#validfichiers').prop("disabled", false);
                         }
                         else {
@@ -1539,9 +1520,12 @@
                             $('#typefile').val("");
 
                             $('#numrapport').val("");
-                            $('#selectalllogementsfichiers').prop("checked", false);
                             $('.lgt_diag').prop("checked", false);
-
+                            $('.selectfilelogement').click(function (e) {
+                                $('#gbalfichier').html($(this).data("gbal"));
+                                $('#idlogementfichier').val($(this).data("id"));
+                                $('#dialog-fichiers').modal("show");
+                            });
                             $('.selfichier').change(function (e) {
                                 if ($('.selfichier:checked').length > 0) {
                                     $('#delfile').prop("disabled", false);
@@ -1571,7 +1555,7 @@
             $('#divlogementsFichiers .lgt_diag:checked').each(function (e) {
                 gbal.push($(this).data("gbal"));
             });;
-            up.settings.multipart_params = { typeDoc: $('#typefile').val(), Gbal: gbal, numrapport: $('#numrapport').val()  }
+            up.settings.multipart_params = { id: $('#idlogementfichier').val(), typeDoc: $('#typefile').val(), Gbal: gbal, numrapport: $('#numrapport').val()  }
         });
 
         uploader.init();
@@ -1631,9 +1615,12 @@
                             $('#typefile').val("");
 
                             $('#numrapport').val("");
-                            $('#selectalllogementsfichiers').prop("checked", false);
                             $('.lgt_diag').prop("checked", false);
-
+                            $('.selectfilelogement').click(function (e) {
+                                $('#gbalfichier').html($(this).data("gbal"));
+                                $('#idlogementfichier').val($(this).data("id"));
+                                $('#dialog-fichiers').modal("show");
+                            });
                             $('.selfichier').change(function (e) {
                                 if ($('.selfichier:checked').length > 0) {
                                     $('#delfile').prop("disabled", false);
@@ -1793,7 +1780,7 @@
                                                     else
                                                         $('#dellogement').prop("disabled", true);
 
-                                                    if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                                    if ($('#typefile').val().length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
                                                         $('#validfichiers').prop("disabled", false);
                                                     }
                                                     else {
@@ -1803,7 +1790,7 @@
 
                                                 $('#divlogementsFichiers .lgt_diag').change(function (e) {
 
-                                                    if ($('#typefile').val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                                    if ($('#typefile').val().length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
                                                         $('#validfichiers').prop("disabled", false);
                                                     }
                                                     else {
@@ -1840,7 +1827,11 @@
                                             dataType: "html",
                                         success: function (result) {
                                             $('#div_diag_fichiers').html(result);
-
+                                            $('.selectfilelogement').click(function (e) {
+                                                $('#gbalfichier').html($(this).data("gbal"));
+                                                $('#idlogementfichier').val($(this).data("id"));
+                                                $('#dialog-fichiers').modal("show");
+                                            });
                                             $('.selfichier').change(function (e) {
                                                 if ($('.selfichier:checked').length > 0) {
                                                     $('#delfile').prop("disabled", false);
@@ -1866,7 +1857,7 @@
                                             $('#typefile').show();
 
                                             $('#typefile').change(function (e) {
-                                                if ($(this).val().length > 0 && $('#divlogementsFichiers .lgt_diag:checked').length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
+                                                if ($(this).val().length > 0 && $('#divfichiers .file').length > 0 && $('#numrapport').val().length > 0) {
                                                     $('#validfichiers').prop("disabled", false);
                                                 }
                                                 else {

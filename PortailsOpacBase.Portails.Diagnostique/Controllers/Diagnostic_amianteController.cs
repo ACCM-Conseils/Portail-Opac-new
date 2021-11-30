@@ -361,6 +361,8 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
                     diag_logement.AddRapport(((Guid)Session["idRapport"]), selection[i]);
                 else
                     diag_logement.AddRapportCommun(((Guid)Session["idRapport"]), _gbal);
+
+                diag_logement.AddFichier(((Guid)Session["idRapport"]), "", "", selection[i], "");
             }
 
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
@@ -1065,9 +1067,11 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
             return Json(new { success = ok }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Upload(int? chunk, string name, String typeDoc, String[] Gbal, String numrapport)
+        public ActionResult Upload(int? chunk, string name, Guid id, String typeDoc, String numrapport)
         {
+            log.Info("id upload : " + id);
             log.Info("typeDoc upload : " + typeDoc);
+            log.Info("numrapport upload : " + numrapport);
             var fileUpload = Request.Files[0];
             var uploadPath = System.Configuration.ConfigurationManager.AppSettings["Racine"] + @"Upload\" + ((Guid)Session["idRapport"]) + @"\";
             if (!Directory.Exists(uploadPath))
@@ -1081,11 +1085,7 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
                 fs.Write(buffer, 0, buffer.Length);
             }
 
-            foreach (String s in Gbal)
-            {
-                log.Info("upload fichier : " + name + " - " + s);
-                diag_logement.AddFichier(((Guid)Session["idRapport"]), name, typeDoc, s, numrapport);
-            }
+            diag_logement.updateFichier(id, name, typeDoc, numrapport);
 
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }

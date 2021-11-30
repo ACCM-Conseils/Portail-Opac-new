@@ -5,9 +5,11 @@
 <table id="table_fichiers" class="table table-striped">
     <thead>
         <tr class="info">
+            <th>GBAL</th>
             <th>Type fichier</th>
             <th>Nom fichier</th>
-            <th>Num rapport
+            <th>Num rapport</th>
+            <th></th>
             <th></th>
         </tr>
     </thead>
@@ -15,9 +17,11 @@
         @foreach(diag_logement_fichiers l in Model)
         {
         <tr>
-            <td>@l.type_fichier</td>
-            <td>@l.nom_fichier</td>
-            <td>@l.numrapport</td>
+            <td>@l.gbal</td>
+            <td>@((String.IsNullOrEmpty(l.type_fichier) ? "Choisissez un fichier" : l.type_fichier))</td>
+            <td>@((String.IsNullOrEmpty(l.nom_fichier) ? "Choisissez un fichier" : l.nom_fichier))</td>
+            <td>@((String.IsNullOrEmpty(l.numrapport) ? "Choisissez un fichier" : l.numrapport))</td>
+            <td><button class="btn btn-success btn-xs selectfilelogement" data-gbal="@l.gbal" data-id="@l.id">Choisir le fichier</button></td>
             <td style="text-align:right"><input class="selfichier" type="checkbox" data-id="@l.id" /></td>
         </tr>
         }

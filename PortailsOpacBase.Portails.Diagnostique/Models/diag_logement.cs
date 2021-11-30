@@ -207,6 +207,27 @@ namespace PortailsOpacBase.Portails.Diagnostique
             }
         }
 
+        public static bool updateFichier(Guid id, String nom, String typeDoc, String numrapport)
+        {
+            using (var dbContext = new DiagnostiquesEntities())
+            {
+                diag_logement_fichiers ToUpdate = dbContext.diag_logement_fichiers.FirstOrDefault(m => m.id == id);
+
+                if(ToUpdate != null)
+                {
+                    ToUpdate.nom_fichier = nom;
+                    ToUpdate.type_fichier = typeDoc;
+                    ToUpdate.numrapport = numrapport;
+
+                    dbContext.SaveChanges();
+
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
         public static List<Diag_effectues> Diags(Guid idrapport)
         {
             using (var dbContext = new DiagnostiquesEntities())
