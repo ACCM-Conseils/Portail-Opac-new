@@ -771,20 +771,13 @@
                                     dataType: "html",
                                     success: function (result) {
                                         $('#div_diag_fichiers').html(result);
-
+                                        $('.delfichierlogement').click(function (e) {
+                                            DelFile($(this).data("id"));
+                                        });
                                         $('.selectfilelogement').click(function (e) {
                                             $('#gbalfichier').html($(this).data("gbal"));
                                             $('#idlogementfichier').val($(this).data("id"));
                                             $('#dialog-fichiers').modal("show");
-                                        });
-
-                                        $('.selfichier').change(function (e) {
-                                            if ($('.selfichier:checked').length > 0) {
-                                                $('#delfile').prop("disabled", false);
-                                            }
-                                            else {
-                                                $('#delfile').prop("disabled", true);
-                                            }
                                         });
                                     }
                                 });
@@ -833,7 +826,7 @@
                         $('.loading').hide();
 
                         if (!result.success)
-                            alert("Au moins un logement n'a pu être supprimé (parties contrôlées ?)");
+                            alert("Au moins un logement n'a pu être supprimé (vous devez au préalable supprimer les parties contrôlées ou fichier rattaché)");
 
                         $.ajax({
                         url: "@Html.Raw(Url.Action("DiagLogements", "Diagnostic_amiante"))",
@@ -883,6 +876,25 @@
                                     dataType: "html",
                                     success: function (result) {
                                         $('#divlogementsacontroler').html(result);
+                                    }
+                                });
+
+                                $.ajax({
+                                    url: "@Html.Raw(Url.Action("Fichiers", "Diagnostic_amiante"))",
+                                    cache: false,
+                                    type: "get",
+                                    dataType: "html",
+                                    success: function (result) {
+                                        $('#div_diag_fichiers').html(result);
+                                        ControlOK();
+                                        $('.delfichierlogement').click(function (e) {
+                                            DelFile($(this).data("id"));
+                                        });
+                                        $('.selectfilelogement').click(function (e) {
+                                            $('#gbalfichier').html($(this).data("gbal"));
+                                            $('#idlogementfichier').val($(this).data("id"));
+                                            $('#dialog-fichiers').modal("show");
+                                        });
                                     }
                                 });
                             }
@@ -1144,6 +1156,25 @@
                                     $('#validfichiers').prop("disabled", true);
                                 }
                             });
+
+                            $.ajax({
+                                url: "@Html.Raw(Url.Action("Fichiers", "Diagnostic_amiante"))",
+                                cache: false,
+                                type: "get",
+                                dataType: "html",
+                                success: function (result) {
+                                    $('#div_diag_fichiers').html(result);
+                                    ControlOK();
+                                    $('.delfichierlogement').click(function (e) {
+                                        DelFile($(this).data("id"));
+                                    });
+                                    $('.selectfilelogement').click(function (e) {
+                                        $('#gbalfichier').html($(this).data("gbal"));
+                                        $('#idlogementfichier').val($(this).data("id"));
+                                        $('#dialog-fichiers').modal("show");
+                                    });
+                                }
+                            });
                         }
                     });
                     }
@@ -1166,52 +1197,7 @@
                     }
                 });
         });
-        $('#delfile').click(function (e) {
-            if (confirm("Supprimer ce fichier ?")) {
-                var selected = new Array();
 
-                $('.selfichier:checked').each(function (e) {
-                    selected.push($(this).data('id'));
-                });
-                $.ajax({
-                    url: "@Html.Raw(Url.Action("DelFichier", "Diagnostic_amiante"))",
-                    type: "POST",
-                    data: {
-                        ids: selected
-                    },
-                    beforeSend: function (e) {
-                        $('.loading').show();
-                    },
-                    success: function (result) {
-                        $('.loading').hide();
-                        $.ajax({
-                            url: "@Html.Raw(Url.Action("Fichiers", "Diagnostic_amiante"))",
-                            cache: false,
-                            type: "get",
-                            dataType: "html",
-                            success: function (result) {
-                                $('#div_diag_fichiers').html(result);
-                                ControlOK();
-                                $('#delfile').prop("disabled", true);
-                                $('.selectfilelogement').click(function (e) {
-                                    $('#gbalfichier').html($(this).data("gbal"));
-                                    $('#idlogementfichier').val($(this).data("id"));
-                                    $('#dialog-fichiers').modal("show");
-                                });
-                                $('.selfichier').change(function (e) {
-                                    if ($('.selfichier:checked').length > 0) {
-                                        $('#delfile').prop("disabled", false);
-                                    }
-                                    else {
-                                        $('#delfile').prop("disabled", true);
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        });
         $('#modcontrole').click(function (e) {
             $('#idgroupe').val($('.seldiag:checked').data('id'));
             $.ajax({
@@ -1521,18 +1507,13 @@
 
                             $('#numrapport').val("");
                             $('.lgt_diag').prop("checked", false);
+                            $('.delfichierlogement').click(function (e) {
+                                DelFile($(this).data("id"));
+                            });
                             $('.selectfilelogement').click(function (e) {
                                 $('#gbalfichier').html($(this).data("gbal"));
                                 $('#idlogementfichier').val($(this).data("id"));
                                 $('#dialog-fichiers').modal("show");
-                            });
-                            $('.selfichier').change(function (e) {
-                                if ($('.selfichier:checked').length > 0) {
-                                    $('#delfile').prop("disabled", false);
-                                }
-                                else {
-                                    $('#delfile').prop("disabled", true);
-                                }
                             });
 
                             ControlOK();
@@ -1616,18 +1597,13 @@
 
                             $('#numrapport').val("");
                             $('.lgt_diag').prop("checked", false);
+                            $('.delfichierlogement').click(function (e) {
+                                DelFile($(this).data("id"));
+                            });
                             $('.selectfilelogement').click(function (e) {
                                 $('#gbalfichier').html($(this).data("gbal"));
                                 $('#idlogementfichier').val($(this).data("id"));
                                 $('#dialog-fichiers').modal("show");
-                            });
-                            $('.selfichier').change(function (e) {
-                                if ($('.selfichier:checked').length > 0) {
-                                    $('#delfile').prop("disabled", false);
-                                }
-                                else {
-                                    $('#delfile').prop("disabled", true);
-                                }
                             });
 
                             ControlOK();
@@ -1659,6 +1635,42 @@
 
         if(numcmd == null)
             LoadRapport();
+
+        function DelFile(idfile) {
+            if (confirm("Supprimer ce fichier ?")) {
+                $.ajax({
+                    url: "@Html.Raw(Url.Action("DelFichier", "Diagnostic_amiante"))",
+                    type: "POST",
+                    data: {
+                        id: idfile
+                    },
+                    beforeSend: function (e) {
+                        $('.loading').show();
+                    },
+                    success: function (result) {
+                        $('.loading').hide();
+                        $.ajax({
+                            url: "@Html.Raw(Url.Action("Fichiers", "Diagnostic_amiante"))",
+                            cache: false,
+                            type: "get",
+                            dataType: "html",
+                            success: function (result) {
+                                $('#div_diag_fichiers').html(result);
+                                ControlOK();
+                                $('.delfichierlogement').click(function (e) {
+                                    DelFile($(this).data("id"));
+                                });
+                                $('.selectfilelogement').click(function (e) {
+                                    $('#gbalfichier').html($(this).data("gbal"));
+                                    $('#idlogementfichier').val($(this).data("id"));
+                                    $('#dialog-fichiers').modal("show");
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        }
 
         function ControlOK() {
             if ($('#table_fichiers tr').length > 0 && $('#table_controles tr').length > 0 && $('#table_logements tr').length > 0) {
@@ -1828,18 +1840,13 @@
                                             dataType: "html",
                                         success: function (result) {
                                             $('#div_diag_fichiers').html(result);
+                                            $('.delfichierlogement').click(function (e) {
+                                                DelFile($(this).data("id"));
+                                            });
                                             $('.selectfilelogement').click(function (e) {
                                                 $('#gbalfichier').html($(this).data("gbal"));
                                                 $('#idlogementfichier').val($(this).data("id"));
                                                 $('#dialog-fichiers').modal("show");
-                                            });
-                                            $('.selfichier').change(function (e) {
-                                                if ($('.selfichier:checked').length > 0) {
-                                                    $('#delfile').prop("disabled", false);
-                                                }
-                                                else {
-                                                    $('#delfile').prop("disabled", true);
-                                                }
                                             });
                                         }
                                     });

@@ -403,20 +403,24 @@ namespace PortailsOpacBase.Portails.Diagnostique
         {
             using (var dbContext = new DiagnostiquesEntities())
             {
-                diag_logement_fichiers f = dbContext.diag_logement_fichiers.FirstOrDefault(m => m.id == id);
+                diag_logement_fichiers f = dbContext.diag_logement_fichiers.FirstOrDefault(m => m.id == id);                
 
-                List<diag_logement_fichiers> fichiers = dbContext.diag_logement_fichiers.Where(m => m.iddiag == f.iddiag && m.nom_fichier == f.nom_fichier).ToList();
+                var uploadPath = @"C:\Temp\Upload\" + idRapport + @"\" + f.nom_fichier;
 
-                foreach (diag_logement_fichiers fi in fichiers)
-                {
-                    var uploadPath = @"C:\Temp\Upload\" + idRapport + @"\" + fi.nom_fichier;
-
-                    File.Delete(uploadPath);
-
-                    dbContext.diag_logement_fichiers.Remove(fi);
-                }
+                f.nom_fichier = String.Empty;
+                f.numrapport = String.Empty;
+                f.type_fichier = String.Empty;
 
                 dbContext.SaveChanges();
+
+                try
+                {
+                    File.Delete(uploadPath);
+                }
+                catch
+                {
+
+                }
 
                 return true;
             }
@@ -428,11 +432,19 @@ namespace PortailsOpacBase.Portails.Diagnostique
             {
                 int count = dbContext.diag_logement_pieces.Where(m => m.idligne == id).Count();
 
+                diag_logement diag = dbContext.diag_logement.FirstOrDefault(m => m.id == id);
+
+                count += dbContext.diag_logement_fichiers.Where(m => m.gbal == diag.gbal && m.iddiag == diag.iddiag && !String.IsNullOrEmpty(m.nom_fichier)).Count();
+
                 if (count == 0)
                 {
                     diag_logement f = dbContext.diag_logement.FirstOrDefault(m => m.id == id);
 
                     dbContext.diag_logement.Remove(f);
+
+                    diag_logement_fichiers fichier = dbContext.diag_logement_fichiers.FirstOrDefault(m => m.gbal == diag.gbal && m.iddiag == diag.iddiag);
+
+                    dbContext.diag_logement_fichiers.Remove(fichier);
 
                     dbContext.SaveChanges();
 

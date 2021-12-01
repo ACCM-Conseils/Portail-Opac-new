@@ -324,7 +324,7 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
 
         public ActionResult Fichiers()
         {
-            List<diag_logement_fichiers> diags = diag_logement.GetFichiers(((Guid)Session["idRapport"])).ToList();
+            List<diag_logement_fichiers> diags = diag_logement.GetFichiers(((Guid)Session["idRapport"])).OrderBy(m => m.gbal).ToList();
 
             return PartialView(diags);
         }
@@ -1046,10 +1046,9 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
             return Json(new { success = true, logements = _logements, pieces = _pieces, amiante = _amiante, prelevements = _prelevements, zone = _zone, commentaire = _commentaire }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult DelFichier(String[] ids)
+        public ActionResult DelFichier(String id)
         {
-            for (int i = 0; i < ids.Count(); i++)
-                diag_logement.DelFichierByID(Guid.Parse(ids[i]), ((Guid)Session["idRapport"]).ToString());
+            diag_logement.DelFichierByID(Guid.Parse(id), ((Guid)Session["idRapport"]).ToString());
 
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
