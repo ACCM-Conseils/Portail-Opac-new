@@ -30,10 +30,6 @@
             {
                 _gbal += "-" + l.numloc;
             }
-            if (l.appt != null)
-            {
-                _gbal += "/" + l.appt;
-            }
 
             <tr>
                 <td>@l.numgrpe-@l.numbati-@l.numall@(!String.IsNullOrEmpty(l.numloc) ? "-" + l.numloc : " Parties communes")</td>

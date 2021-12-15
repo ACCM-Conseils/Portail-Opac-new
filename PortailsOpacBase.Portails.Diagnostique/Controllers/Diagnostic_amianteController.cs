@@ -1089,6 +1089,29 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult UploadRAT(int? chunk, string name, String typeDoc, String Gbal, String numrapport)
+        {
+            log.Info("UploadRAT");
+            log.Info("typeDoc upload : " + typeDoc);
+            log.Info("numrapport upload : " + numrapport);
+            var fileUpload = Request.Files[0];
+            var uploadPath = System.Configuration.ConfigurationManager.AppSettings["Racine"] + @"Upload\" + ((Guid)Session["idRapport"]) + @"\";
+            if (!Directory.Exists(uploadPath))
+                Directory.CreateDirectory(uploadPath);
+
+            chunk = chunk ?? 0;
+            using (var fs = new FileStream(Path.Combine(uploadPath, name), chunk == 0 ? FileMode.Create : FileMode.Append))
+            {
+                var buffer = new byte[fileUpload.InputStream.Length];
+                fileUpload.InputStream.Read(buffer, 0, buffer.Length);
+                fs.Write(buffer, 0, buffer.Length);
+            }
+
+            diag_logement.AddFichier((Guid)Session["idRapport"], name, typeDoc, Gbal, numrapport);
+
+            return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult ListeDiagEffectues()
         {
             var results = diag_logement.Diags(((Guid)Session["idRapport"]));
