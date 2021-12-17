@@ -18,5 +18,6 @@ namespace PortailsOpacBase.Portails.Diagnostique
         public Nullable<System.Guid> idconnexion { get; set; }
         public string nom { get; set; }
         public string profil { get; set; }
+        public Nullable<System.DateTime> dateheure { get; set; }
     }
 }

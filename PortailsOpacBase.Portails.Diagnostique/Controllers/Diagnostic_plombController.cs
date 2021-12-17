@@ -790,7 +790,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
         public ActionResult DelFichier(String[] ids)
         {
             for (int i = 0; i < ids.Count(); i++)
-                diag_logement.DelFichierByID(Guid.Parse(ids[i]), ((Guid)Session["idRapport"]).ToString());
+                diag_logement.DelFichierByID(Guid.Parse(ids[i]), ((Guid)Session["idRapport"]).ToString(), true);
 
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
@@ -808,7 +808,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
             return Json(new { success = ok }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Upload(int? chunk, string name, String typeDoc, String[] Gbal, String numrapport)
+        public ActionResult Upload(int? chunk, string name, String typeDoc, String[] Gbal, String numrapport, bool ajout=false)
         {
             log.Info("typeDoc upload : " + typeDoc);
             var fileUpload = Request.Files[0];
@@ -827,7 +827,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
             foreach (String s in Gbal)
             {
                 log.Info("upload fichier : " + name + " - " + s);
-                diag_logement.AddFichier(((Guid)Session["idRapport"]), name, typeDoc, s, numrapport);
+                diag_logement.AddFichier(((Guid)Session["idRapport"]), name, typeDoc, s, numrapport, ajout);
             }
 
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);

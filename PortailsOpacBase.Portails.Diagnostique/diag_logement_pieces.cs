@@ -25,5 +25,6 @@ namespace PortailsOpacBase.Portails.Diagnostique
         public string elements_traites { get; set; }
         public string nature_travaux { get; set; }
         public Nullable<bool> plomb { get; set; }
+        public int numligne { get; set; }
     }
 }

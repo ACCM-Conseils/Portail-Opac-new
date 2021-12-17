@@ -698,7 +698,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
             return PartialView(diags);
         }
 
-        public ActionResult Upload(int? chunk, string name, String[] Gbal, String numrapport)
+        public ActionResult Upload(int? chunk, string name, String[] Gbal, String numrapport, bool ajout=false)
         {
             log.Info("typeDoc upload : DPE");
             var fileUpload = Request.Files[0];
@@ -715,7 +715,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
             }
 
             foreach (String s in Gbal)
-                diag_logement.AddFichier(((Guid)Session["idRapport"]), name, "DPE", s, numrapport);
+                diag_logement.AddFichier(((Guid)Session["idRapport"]), name, "DPE", s, numrapport, ajout);
 
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }

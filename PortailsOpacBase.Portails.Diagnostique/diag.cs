@@ -24,7 +24,7 @@ namespace PortailsOpacBase.Portails.Diagnostique
         public string groupe { get; set; }
         public string bati { get; set; }
         public string allee { get; set; }
-        public bool export { get; set; }
+        public Nullable<bool> export { get; set; }
         public string profil { get; set; }
         public Nullable<System.DateTime> datedepot { get; set; }
         public Nullable<int> type_diag { get; set; }

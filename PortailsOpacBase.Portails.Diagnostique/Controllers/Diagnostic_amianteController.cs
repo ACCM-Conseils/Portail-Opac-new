@@ -351,7 +351,7 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
             return Json(new { url = URL }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Selections(String[] selection, String g, String b, String a)
+        public ActionResult Selections(String[] selection, String g, String b, String a, bool ajout=false)
         {
             for (int i = 0; i < selection.Length; i++)
             {
@@ -362,7 +362,7 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
                 else
                     diag_logement.AddRapportCommun(((Guid)Session["idRapport"]), _gbal);
 
-                diag_logement.AddFichier(((Guid)Session["idRapport"]), "", "", selection[i], "");
+                diag_logement.AddFichier(((Guid)Session["idRapport"]), "", "", selection[i], "", ajout);
             }
 
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
@@ -1046,9 +1046,9 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
             return Json(new { success = true, logements = _logements, pieces = _pieces, amiante = _amiante, prelevements = _prelevements, zone = _zone, commentaire = _commentaire }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult DelFichier(String id)
+        public ActionResult DelFichier(String id, bool ajout)
         {
-            diag_logement.DelFichierByID(Guid.Parse(id), ((Guid)Session["idRapport"]).ToString());
+            diag_logement.DelFichierByID(Guid.Parse(id), ((Guid)Session["idRapport"]).ToString(), ajout);
 
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
@@ -1089,7 +1089,7 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult UploadRAT(int? chunk, string name, String typeDoc, String Gbal, String numrapport)
+        public ActionResult UploadRAT(int? chunk, string name, String typeDoc, String Gbal, String numrapport, bool ajout=false)
         {
             log.Info("UploadRAT");
             log.Info("typeDoc upload : " + typeDoc);
@@ -1107,7 +1107,7 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
                 fs.Write(buffer, 0, buffer.Length);
             }
 
-            diag_logement.AddFichier((Guid)Session["idRapport"], name, typeDoc, Gbal, numrapport);
+            diag_logement.AddFichier((Guid)Session["idRapport"], name, typeDoc, Gbal, numrapport, ajout);
 
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }

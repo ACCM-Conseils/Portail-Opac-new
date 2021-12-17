@@ -184,7 +184,7 @@ namespace PortailsOpacBase.Portails.Diagnostique
             }
         }
 
-        public static bool AddFichier(Guid id, String nom, String typeDoc, String gbal, String numrapport)
+        public static bool AddFichier(Guid id, String nom, String typeDoc, String gbal, String numrapport, bool ajout)
         {
             using (var dbContext = new DiagnostiquesEntities())
             {
@@ -197,6 +197,7 @@ namespace PortailsOpacBase.Portails.Diagnostique
                     p.type_fichier = typeDoc;
                     p.gbal = gbal;
                     p.numrapport = numrapport;
+                    p.ajout = ajout;
 
                     dbContext.diag_logement_fichiers.Add(p);
 
@@ -399,7 +400,7 @@ namespace PortailsOpacBase.Portails.Diagnostique
             }
         }
 
-        public static bool DelFichierByID(Guid id, String idRapport)
+        public static bool DelFichierByID(Guid id, String idRapport, bool ajout)
         {
             using (var dbContext = new DiagnostiquesEntities())
             {
@@ -407,9 +408,14 @@ namespace PortailsOpacBase.Portails.Diagnostique
 
                 var uploadPath = @"C:\Temp\Upload\" + idRapport + @"\" + f.nom_fichier;
 
-                f.nom_fichier = String.Empty;
-                f.numrapport = String.Empty;
-                f.type_fichier = String.Empty;
+                if (!ajout)
+                {
+                    f.nom_fichier = String.Empty;
+                    f.numrapport = String.Empty;
+                    f.type_fichier = String.Empty;
+                }
+                else
+                    dbContext.diag_logement_fichiers.Remove(f);
 
                 dbContext.SaveChanges();
 

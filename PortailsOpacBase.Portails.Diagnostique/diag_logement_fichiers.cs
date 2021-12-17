@@ -20,5 +20,6 @@ namespace PortailsOpacBase.Portails.Diagnostique
         public string type_fichier { get; set; }
         public string gbal { get; set; }
         public string numrapport { get; set; }
+        public Nullable<bool> ajout { get; set; }
     }
 }

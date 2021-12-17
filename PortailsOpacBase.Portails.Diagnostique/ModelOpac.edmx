@@ -13,6 +13,7 @@
           <Property Name="idconnexion" Type="uniqueidentifier" />
           <Property Name="nom" Type="nvarchar" MaxLength="50" />
           <Property Name="profil" Type="nvarchar" MaxLength="50" />
+          <Property Name="dateheure" Type="datetime" />
         </EntityType>
         <EntityType Name="diag">
           <Key>
@@ -29,7 +30,7 @@
           <Property Name="groupe" Type="nvarchar" MaxLength="10" />
           <Property Name="bati" Type="nvarchar" MaxLength="10" />
           <Property Name="allee" Type="nvarchar" MaxLength="10" />
-          <Property Name="export" Type="bit" Nullable="false" />
+          <Property Name="export" Type="bit" />
           <Property Name="profil" Type="nvarchar" MaxLength="50" />
           <Property Name="type_diag" Type="int" />
           <Property Name="type_parties" Type="int" />
@@ -62,6 +63,7 @@
           <Property Name="type_fichier" Type="nvarchar" MaxLength="50" />
           <Property Name="gbal" Type="nvarchar" MaxLength="50" />
           <Property Name="numrapport" Type="nvarchar" MaxLength="50" />
+          <Property Name="ajout" Type="bit" />
         </EntityType>
         <EntityType Name="diag_logement_pieces">
           <Key>
@@ -78,6 +80,7 @@
           <Property Name="commentaires" Type="nvarchar(max)" />
           <Property Name="elements_traites" Type="nvarchar" MaxLength="50" />
           <Property Name="nature_travaux" Type="nvarchar(max)" />
+          <Property Name="numligne" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityContainer Name="DiagnostiquesModelStoreContainer">
           <EntitySet Name="connexions" EntityType="Self.connexions" Schema="dbo" store:Type="Tables" />
@@ -123,6 +126,7 @@
           <Property Name="elements_traites" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="nature_travaux" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="plomb" Type="Boolean" />
+          <Property Name="numligne" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="diag_logement_fichiers">
           <Key>
@@ -134,6 +138,7 @@
           <Property Name="type_fichier" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="gbal" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="numrapport" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ajout" Type="Boolean" />
         </EntityType>
         <EntityType Name="diag">
           <Key>
@@ -149,7 +154,7 @@
           <Property Name="groupe" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="bati" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="allee" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="export" Type="Boolean" Nullable="false" />
+          <Property Name="export" Type="Boolean" />
           <Property Name="profil" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="datedepot" Type="DateTime" Precision="0" />
           <Property Name="type_diag" Type="Int32" />
@@ -170,6 +175,7 @@
           <Property Name="idconnexion" Type="Guid" />
           <Property Name="nom" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="profil" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="dateheure" Type="DateTime" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -192,6 +198,7 @@
           <EntitySetMapping Name="diag_logement_pieces">
             <EntityTypeMapping TypeName="DiagnostiquesModel.diag_logement_pieces">
               <MappingFragment StoreEntitySet="diag_logement_pieces">
+                <ScalarProperty Name="numligne" ColumnName="numligne" />
                 <ScalarProperty Name="plomb" ColumnName="plomb" />
                 <ScalarProperty Name="nature_travaux" ColumnName="nature_travaux" />
                 <ScalarProperty Name="elements_traites" ColumnName="elements_traites" />
@@ -209,6 +216,7 @@
           <EntitySetMapping Name="diag_logement_fichiers">
             <EntityTypeMapping TypeName="DiagnostiquesModel.diag_logement_fichiers">
               <MappingFragment StoreEntitySet="diag_logement_fichiers">
+                <ScalarProperty Name="ajout" ColumnName="ajout" />
                 <ScalarProperty Name="numrapport" ColumnName="numrapport" />
                 <ScalarProperty Name="gbal" ColumnName="gbal" />
                 <ScalarProperty Name="type_fichier" ColumnName="type_fichier" />
@@ -249,6 +257,7 @@
           <EntitySetMapping Name="connexions">
             <EntityTypeMapping TypeName="DiagnostiquesModel.connexions">
               <MappingFragment StoreEntitySet="connexions">
+                <ScalarProperty Name="dateheure" ColumnName="dateheure" />
                 <ScalarProperty Name="profil" ColumnName="profil" />
                 <ScalarProperty Name="nom" ColumnName="nom" />
                 <ScalarProperty Name="idconnexion" ColumnName="idconnexion" />
