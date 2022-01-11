@@ -595,7 +595,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
                         newdiag.AppendChild(elementEcs);
 
                         XmlElement elementSurface = xmldoc.CreateElement(string.Empty, "Surface", string.Empty);
-                        XmlText textd_8 = xmldoc.CreateTextNode(mcarre);
+                        XmlText textd_8 = xmldoc.CreateTextNode(mcarre.Replace(".",","));
                         elementSurface.AppendChild(textd_8);
                         newdiag.AppendChild(elementSurface);
 
