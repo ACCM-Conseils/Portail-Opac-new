@@ -657,7 +657,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
                     DocumentIndexField.Create("GES_EMISSIONS", valeurges),
                     DocumentIndexField.Create("TYPE_ENERGIE_CHAUFFAGE", typechauffage),
                     DocumentIndexField.Create("TYPE_ENERGIE_ECS", typeecs),
-                    DocumentIndexField.Create("SURFACE", mcarre),
+                    DocumentIndexField.Create("SURFACE", mcarre.Replace(".",",")),
                     DocumentIndexField.Create("TYPE_CONTENU", "DPE Logement"),
                     DocumentIndexField.Create("NOM_DOCUMENT", nomdoc),
                     DocumentIndexField.Create("GROUPE", G),
