@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortailsOpacBase.Portails.Diagnostic", "PortailsOpacBase.Portails.Diagnostique\PortailsOpacBase.Portails.Diagnostic.csproj", "{9BB0402B-05FB-4612-AA00-55FCF8D315E9}"
 EndProject
