@@ -356,6 +356,8 @@
     <Content Include="Content\DPENew.png" />
     <Content Include="Content\GES.png" />
     <Content Include="Content\Logo.jpg" />
+    <Content Include="Content\Logo.png" />
+    <Content Include="Content\NotConnected.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -550,6 +552,8 @@
     <Content Include="Views\BDES\DocuwarePreview.cshtml" />
     <Content Include="Views\Erreur\Index.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Login\Connect.cshtml" />
+    <Content Include="Views\Shared\_LayoutEmpty.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -38,6 +38,9 @@ namespace PortailsOpacBase.Portails.Diagnostique
                       "~/Content/datepicker.css",
                       "~/Content/datepicker3.css",
                       "~/Content/chosen.css"));
+            bundles.Add(new StyleBundle("~/Content/cssEmpty").Include(
+                      "~/Content/bootstrap.css",
+                      "~/Content/NotConnected.css"));
         }
 
         class PassthruBundleOrderer : IBundleOrderer

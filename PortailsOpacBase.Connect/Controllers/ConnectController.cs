@@ -13,5 +13,11 @@ namespace PortailsOpacBase.Connect.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public ActionResult Redirect()
+        {
+            return Redirect("http://www.google.com");
+        }
     }
 }

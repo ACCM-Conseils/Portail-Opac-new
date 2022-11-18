@@ -1,4 +1,8 @@
-﻿<div id="app" class="b-app-structure">
+﻿@{ 
+    Layout = "~/Views/Shared/_LayoutEmpty.cshtml";
+}
+
+<div id="app" class="b-app-structure">
     <div class="b-app-structure__main">
         <section class="b-login-holder">
             <div class="w-app-login-logo">
@@ -6,7 +10,7 @@
             </div>
             <div class="content">
                 <div class="page-login">
-                    @using (Html.BeginForm("Redirect", "Connect"))
+                    @using (Html.BeginForm("Index", "Claims", new { id = Guid.NewGuid() }))
                     {
                         <div class="standrard-form">
                             <div class="content">

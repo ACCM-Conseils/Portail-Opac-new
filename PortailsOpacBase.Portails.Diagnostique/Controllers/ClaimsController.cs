@@ -14,7 +14,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         // GET: Claims
         [Authorize]
-        public ActionResult Index()
+        public ActionResult Index(Guid idConnect)
         {
             try
             {
@@ -40,39 +40,13 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
                                 Session["role_agent"] = claim.Value;
                         }
 
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Home", new { id = idConnect });
                     }
                 }
                 else
                 {
                     log.Info("Pas de claims...");
-                }
-
-                ClaimsPrincipal principal = Thread.CurrentPrincipal as ClaimsPrincipal;
-
-                if (principal != null)
-                {
-                    log.Info("Claims trouvé : " + principal.Claims.Count());
-
-                    if (principal.Claims.Count() > 0)
-                    {
-                        Session["auth_agent"] = true;
-
-                        foreach (System.Security.Claims.Claim claim in principal.Claims)
-                        {
-                            if (claim.Type.EndsWith("emailaddress"))
-                                Session["email_agent"] = claim.Value;
-                            else if (claim.Type.EndsWith("role"))
-                                Session["role_agent"] = claim.Value;
-                        }
-
-                        return RedirectToAction("Index", "Home");
-                    }
-                }
-                else
-                {
-                    log.Info("Pas de claims...");
-                }
+                }                
             }
             catch(Exception e)
             {
