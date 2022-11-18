@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace PortailsOpacBase.Portails.Diagnostique
+namespace PortailsOpacBase.Connect
 {
     public class RouteConfig
     {
@@ -16,7 +16,7 @@ namespace PortailsOpacBase.Portails.Diagnostique
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Login", action = "Connect", id = UrlParameter.Optional }
+                defaults: new { controller = "Connect", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

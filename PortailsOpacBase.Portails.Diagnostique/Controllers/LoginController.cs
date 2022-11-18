@@ -42,6 +42,11 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
             return View();
         }
 
+        public ActionResult Connect()
+        {
+            return View();
+        }
+
         public ActionResult Auth()
         {
             
