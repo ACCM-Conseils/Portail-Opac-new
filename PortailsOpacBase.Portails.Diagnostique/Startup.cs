@@ -1,15 +1,23 @@
-﻿using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Notifications;
 using Microsoft.Owin.Security.OpenIdConnect;
+using Microsoft.Owin.Security.Jwt;
 using Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel.Security.Tokens;
 using System.Threading.Tasks;
 using System.Web;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Protocols;
+using System.Configuration;
 
 [assembly: OwinStartup(typeof(PortailsOpacBase.Portails.Diagnostique.Startup))]
 
@@ -35,28 +43,43 @@ namespace PortailsOpacBase.Portails.Diagnostique
         /// <param name="app"></param>
         public void Configuration(IAppBuilder app)
         {
+            IdentityModelEventSource.ShowPII = true;
+
             app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
+
+            ConfigurationManager<OpenIdConnectConfiguration> configManager = new ConfigurationManager<OpenIdConnectConfiguration>("https://login.windows.net/35635740-39c9-45fd-9aa9-89aca788192e/discovery/v2.0/keys", new OpenIdConnectConfigurationRetriever());
+            OpenIdConnectConfiguration openIdconfig = configManager.GetConfigurationAsync().Result;
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions());
             app.UseOpenIdConnectAuthentication(
-            new OpenIdConnectAuthenticationOptions
-            {
-                // Sets the ClientId, authority, RedirectUri as obtained from web.config
-                ClientId = clientId,
-                Authority = authority,
-                RedirectUri = redirectUri,
-                // PostLogoutRedirectUri is the page that users will be redirected to after sign-out. In this case, it is using the home page
-                PostLogoutRedirectUri = redirectUri,
-                Scope = OpenIdConnectScope.OpenIdProfile,
-                // ResponseType is set to request the code id_token - which contains basic information about the signed-in user
-                ResponseType = OpenIdConnectResponseType.CodeIdToken,
-                // OpenIdConnectAuthenticationNotifications configures OWIN to send notification of failed authentications to OnAuthenticationFailed method
-                Notifications = new OpenIdConnectAuthenticationNotifications
+                new OpenIdConnectAuthenticationOptions
                 {
-                    AuthenticationFailed = OnAuthenticationFailed
+                    ClientId = clientId,
+                    Authority = authority,
+                    RedirectUri = redirectUri,
+                    PostLogoutRedirectUri = redirectUri,
+                    Scope = OpenIdConnectScope.OpenIdProfile,
+                    ResponseType = OpenIdConnectResponseType.CodeIdToken,
+                    TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = true,
+                        ValidAudience = clientId,
+                        ValidateIssuer = true,
+                        ValidIssuer = openIdconfig.Issuer,
+                        IssuerSigningKeys = openIdconfig.SigningKeys,
+                        ValidateLifetime = true
+                    },
+                    Notifications = new OpenIdConnectAuthenticationNotifications()
+                    {
+                        SecurityTokenValidated = context =>
+                        {
+                            ClaimsIdentity identity = context.AuthenticationTicket.Identity;
+
+                            return Task.FromResult(0);
+                        }
+                    }
                 }
-            }
-        );
+            );
         }
 
         /// <summary>
