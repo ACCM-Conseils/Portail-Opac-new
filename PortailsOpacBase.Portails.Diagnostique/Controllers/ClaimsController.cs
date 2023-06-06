@@ -14,41 +14,37 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         // GET: Claims
         [Authorize]
-        public ActionResult Index(Guid idConnect)
+        public ActionResult Index(Guid? idConnect)
         {
             try
             {
                 log.Info("Recherche claims");
 
-                var authenticationManager = Request.GetOwinContext().Authentication.User;
-
-                if (authenticationManager != null)
+                if (User.Identity.IsAuthenticated)
                 {
-                    log.Info("Claims trouvé : "+ authenticationManager.Claims.Count());
 
-                    if (authenticationManager.Claims.Count() > 0)
+                    log.Info("Claims trouvé : " + System.Security.Claims.ClaimsPrincipal.Current.Claims.Count());
+
+                    Session["auth_agent"] = true;
+
+                    foreach (var c in System.Security.Claims.ClaimsPrincipal.Current.Claims)
                     {
-                        
 
-                        Session["auth_agent"] = true;
-
-                        foreach (System.Security.Claims.Claim claim in authenticationManager.Claims)
-                        {
-                            if (claim.Type.EndsWith("emailaddress"))
-                                Session["email_agent"] = claim.Value;
-                            else if (claim.Type.EndsWith("role"))
-                                Session["role_agent"] = claim.Value;
-                        }
-
-                        return RedirectToAction("Index", "Home", new { id = idConnect });
+                        if (c.Type.EndsWith("emailaddress"))
+                            Session["email_agent"] = c.Value;
+                        else if (c.Type.EndsWith("role"))
+                            Session["role_agent"] = c.Value;
                     }
+
+                    return RedirectToAction("Index", "Home", new { id = idConnect });
+
                 }
                 else
                 {
-                    log.Info("Pas de claims...");
-                }                
+                    return RedirectToAction("Connect", "Login");
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 log.Error(e);
             }

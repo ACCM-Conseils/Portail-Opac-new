@@ -1,4 +1,4 @@
-﻿@{ 
+﻿@{
     Layout = "~/Views/Shared/_LayoutEmpty.cshtml";
 }
 
@@ -10,8 +10,6 @@
             </div>
             <div class="content">
                 <div class="page-login">
-                    @using (Html.BeginForm("Index", "Claims", new { id = Guid.NewGuid() }))
-                    {
                         <div class="standrard-form">
                             <div class="content">
                                 <div class="login-form">
@@ -20,15 +18,15 @@
                                     </div>
                                     <div class="w-page-header no-subtitle hideable">
                                         <div class="w-page-header__title">
-                                            <button type="submit" class="btn btn-primary">
-                                                <span class="w-button__label">Se connecter avec Microsoft</span>
-                                            </button>
+                                            <a href="@Url.Content("~/Saml2/SignIn")"  class="btn btn-primary" style="text-decoration: none;">
+                                                    <span class="w-button__label">Se connecter avec Microsoft</span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    }
+                    
                 </div>
             </div>
         </section>
