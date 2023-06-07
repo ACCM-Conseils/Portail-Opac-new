@@ -418,6 +418,7 @@
     </Content>
     <Content Include="App_Data\Sustainsys.Saml2.Tests.pfx" />
     <Content Include="App_Data\Azure AD SAML Toolkit.cer" />
+    <Content Include="App_Data\PORTAIL GED REC.cer" />
     <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -639,7 +640,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>51428</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost:44379/</IISUrl>
+          <IISUrl>https://localhost:44369/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

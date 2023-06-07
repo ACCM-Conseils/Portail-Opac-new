@@ -31,7 +31,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static String StaticGBAL = "";
 
-        public ActionResult Index(Guid id)
+        public ActionResult Index(Guid? id)
         {
             log.Info("Home id : " + id);
 
