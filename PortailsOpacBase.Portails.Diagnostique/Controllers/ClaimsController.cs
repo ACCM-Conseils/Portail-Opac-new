@@ -14,7 +14,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         // GET: Claims
         [Authorize]
-        public ActionResult Index(Guid? idConnect)
+        public ActionResult Index()
         {
             try
             {
@@ -32,11 +32,25 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
 
                         if (c.Type.EndsWith("emailaddress"))
                             Session["email_agent"] = c.Value;
-                        else if (c.Type.EndsWith("role"))
+                        else if (c.Type.EndsWith("affectation"))
                             Session["role_agent"] = c.Value;
+                        else if (c.Type.EndsWith("displayname"))
+                            Session["nom_agent"] = c.Value;
                     }
 
-                    return RedirectToAction("Index", "Home", new { id = idConnect });
+                    Guid? idConnect = Guid.NewGuid();
+
+                    using (var dbContext = new DiagnostiquesEntities())
+                    {
+                        connexions c = new connexions();
+                        c.profil = "Referent";
+                        c.idconnexion = idConnect;
+                        c.id = Guid.NewGuid();
+                        c.dateheure = DateTime.Now;
+                        c.nom = Session["nom_agent"].ToString();
+
+                        return RedirectToAction("Index", "Home", new { id = idConnect });
+                    }
 
                 }
                 else
