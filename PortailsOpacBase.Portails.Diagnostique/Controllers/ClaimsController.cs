@@ -27,7 +27,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
 
                     Session["auth_agent"] = true;
 
-                    foreach (var c in System.Security.Claims.ClaimsPrincipal.Current.Claims)
+                   /* foreach (var c in System.Security.Claims.ClaimsPrincipal.Current.Claims)
                     {
 
                         if (c.Type.EndsWith("emailaddress"))
@@ -36,7 +36,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
                             Session["role_agent"] = c.Value;
                         else if (c.Type.EndsWith("displayname"))
                             Session["nom_agent"] = c.Value;
-                    }
+                    }*/
 
                     Guid? idConnect = Guid.NewGuid();
 
@@ -47,7 +47,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
                         c.idconnexion = idConnect;
                         c.id = Guid.NewGuid();
                         c.dateheure = DateTime.Now;
-                        c.nom = Session["nom_agent"].ToString();
+                        c.nom = System.Security.Claims.ClaimsPrincipal.Current.Claims.FirstOrDefault(m => m.Type.EndsWith("displayname")).Value;
 
                         return RedirectToAction("Index", "Home", new { id = idConnect });
                     }
