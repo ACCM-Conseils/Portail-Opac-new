@@ -336,7 +336,7 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
 
             Guid newdiag = diag_logement.CopyDiag(diag);
 
-            String URL = @"/claimapp/Travaux_amiante/Index?id=" + newdiag + "&connect=" + Session["Connect"] + "&cmd=" + cmd;
+            String URL = @"/Travaux_amiante/Index?id=" + newdiag + "&connect=" + Session["Connect"] + "&cmd=" + cmd;
 
             return Json(new { url = URL }, JsonRequestBehavior.AllowGet);
         }
@@ -347,7 +347,7 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
 
             Guid newdiag = diag_logement.NewDiag(diag);
 
-            String URL = @"/claimapp/Travaux_amiante/Index?id=" + newdiag + "&connect=" + Session["Connect"];
+            String URL = @"/Travaux_amiante/Index?id=" + newdiag + "&connect=" + Session["Connect"];
 
             return Json(new { url = URL }, JsonRequestBehavior.AllowGet);
         }

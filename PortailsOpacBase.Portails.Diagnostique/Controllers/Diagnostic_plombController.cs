@@ -333,7 +333,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
 
             Guid newdiag = diag_logement.CopyDiag(diag);
 
-            String URL = @"/claimapp/Diagnostic_plomb/Index?id=" + newdiag + "&connect=" + Session["Connect"] + "&cmd=" + cmd;
+            String URL = @"/Diagnostic_plomb/Index?id=" + newdiag + "&connect=" + Session["Connect"] + "&cmd=" + cmd;
 
             return Json(new { url = URL }, JsonRequestBehavior.AllowGet);
         }
@@ -344,7 +344,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
 
             Guid newdiag = diag_logement.NewDiag(diag);
 
-            String URL = @"/claimapp/Diagnostic_plomb/Index?id=" + newdiag + "&connect=" + Session["Connect"];
+            String URL = @"/Diagnostic_plomb/Index?id=" + newdiag + "&connect=" + Session["Connect"];
 
             return Json(new { url = URL }, JsonRequestBehavior.AllowGet);
         }

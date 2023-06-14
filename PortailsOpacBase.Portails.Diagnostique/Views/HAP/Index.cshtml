@@ -12,7 +12,7 @@
             <h2>Déposer un HAP</h2>
         </div>
         <div class="col-md-4">
-            <a href="/claimapp/Home/Index/@ViewBag.connect" class="btn btn-success btn-lg btn-block">Retour</a>
+            <a href="/Home/Index/@ViewBag.connect" class="btn btn-success btn-lg btn-block">Retour</a>
         </div>
     </div>
 </div>
@@ -404,7 +404,7 @@
             browse_button: 'pickfiles', // you can pass in id...
             multipart_params: { numrapport: $('#numrapport').val() },
             container: document.getElementById('container'), // ... or DOM Element itself
-            url: "/claimapp/DPE/Upload",
+            url: "/DPE/Upload",
             filters: {
                 mime_types: [
                     { title: "Excel Files", extensions: "xls,xslx,csv" },

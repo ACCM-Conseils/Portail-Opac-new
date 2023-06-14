@@ -49,16 +49,16 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
                             Session["Profil"] = c.profil;
                             Session["Connect"] = id;
 
-                            log.Info("Compte : " + Session["Compte"]);
+                            log.Info("Session compte : " + Session["Compte"]);
 
-                            log.Info("Profil : " + Session["Profil"]);
+                            log.Info("Session profil : " + Session["Profil"]);
                         }
                         else
                             return RedirectToAction("Index", "Erreur");
                     }
                     else
                     {
-                        Response.Redirect("https://adfs.opacoise.fr/adfs/ls/?wa=wsignout1.0");
+                        Response.Redirect("https://login.microsoftonline.com/35635740-39c9-45fd-9aa9-89aca788192e/saml2");
                     }
                 }
 
@@ -66,10 +66,6 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
                 {
                     ViewBag.Compte = Session["Compte"];
                     ViewBag.Profil = Session["Profil"];
-
-                    /*
-
-                    */
                 }
                 return View(_communes);
             }
@@ -123,14 +119,20 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
                 wb2.ContentType = "application/x-www-form-urlencoded";
                 wb2.Headers.Add("Authorization", "Bearer " + OracleToken.access_token);
 
+                log.Info("URL Oracle : " + wb2.RequestUri);
+
                 StreamReader streamIn2 = new StreamReader(wb2.GetResponse().GetResponseStream());
 
                 String jsonResp2 = streamIn2.ReadToEnd();
+
+                log.Info("Réponse Oracle : " + jsonResp2);
 
                 streamIn2.Close();
                 readStreamToken.Close();
 
                 _communes = JsonConvert.DeserializeObject<Communes>(jsonResp2);
+
+                log.Info("Elements liste : " + _communes.items.Count());
 
                 return PartialView(_communes.items.OrderBy(m => m.nomcom).ToList());
             }
@@ -577,9 +579,15 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
 
         public ActionResult NewDiagAmiante()
         {
+            log.Info("NewDiagAmiante");
+
             Guid idRapport = Guid.NewGuid();
 
+            log.Info("Profil : " + Session["Profil"].ToString());
+
             diag_logement.AddDiag(idRapport, Session["Profil"].ToString(), 1);
+
+            log.Info("Connect : " + Session["Connect"].ToString());
 
             ViewBag.connect = Session["Connect"];
 

@@ -57,7 +57,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
                 return View();
             }
 
-            return Redirect("/Claimapp/Home");
+            return Redirect("/Home");
         }
 
         public ActionResult NewHAP(Guid diag, String cmd)
@@ -66,7 +66,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
 
             Guid newdiag = diag_logement.CopyDiag(diag);
 
-            String URL = @"/claimapp/HAP/Index?id=" + newdiag + "&connect=" + Session["Connect"] + "&cmd=" + cmd;
+            String URL = @"/HAP/Index?id=" + newdiag + "&connect=" + Session["Connect"] + "&cmd=" + cmd;
 
             return Json(new { url = URL }, JsonRequestBehavior.AllowGet);
         }
@@ -77,7 +77,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
 
             Guid newdiag = diag_logement.NewDiag(diag);
 
-            String URL = @"/claimapp/HAP/Index?id=" + newdiag + "&connect=" + Session["Connect"];
+            String URL = @"/HAP/Index?id=" + newdiag + "&connect=" + Session["Connect"];
 
             return Json(new { url = URL }, JsonRequestBehavior.AllowGet);
         }

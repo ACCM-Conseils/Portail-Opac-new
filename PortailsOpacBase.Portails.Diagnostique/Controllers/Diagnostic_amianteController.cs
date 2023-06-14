@@ -27,6 +27,8 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
         // GET: Diagnostique_amiante
         public ActionResult Index(Guid id, Guid connect)
         {
+            log.Info("Diagnostic amiante");
+
             Session["idRapport"] = id;
             ViewBag.connect = connect;
 
@@ -335,7 +337,7 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
 
             Guid newdiag = diag_logement.CopyDiag(diag);
 
-            String URL = @"/claimapp/Diagnostic_amiante/Index?id=" + newdiag + "&connect=" + Session["Connect"] + "&cmd=" + cmd;
+            String URL = @"/cDiagnostic_amiante/Index?id=" + newdiag + "&connect=" + Session["Connect"] + "&cmd=" + cmd;
 
             return Json(new { url = URL }, JsonRequestBehavior.AllowGet);
         }
@@ -346,7 +348,7 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
 
             Guid newdiag = diag_logement.NewDiag(diag);
 
-            String URL = @"/claimapp/Diagnostic_amiante/Index?id=" + newdiag + "&connect=" + Session["Connect"];
+            String URL = @"/Diagnostic_amiante/Index?id=" + newdiag + "&connect=" + Session["Connect"];
 
             return Json(new { url = URL }, JsonRequestBehavior.AllowGet);
         }

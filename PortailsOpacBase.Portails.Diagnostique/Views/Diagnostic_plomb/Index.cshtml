@@ -9,7 +9,7 @@
             <h2>Déposer un diagnostic plomb</h2>
         </div>
         <div class="col-md-4">
-            <a href="/claimapp/Home/Index/@ViewBag.connect" class="btn btn-success btn-lg btn-block">Retour</a>
+            <a href="/Home/Index/@ViewBag.connect" class="btn btn-success btn-lg btn-block">Retour</a>
         </div>
     </div>
 </div>
@@ -379,7 +379,7 @@
             <div class="modal-footer">
                 <button id="keep" type="button" class="btn btn-primary">Nouveau dépôt pour cette commande</button>
                 <button id="another" type="button" class="btn btn-primary">Nouveau dépôt</button>
-                <a href="/claimapp/Home/Index/@ViewBag.connect" class="btn btn-success">Retour</a>
+                <a href="/Home/Index/@ViewBag.connect" class="btn btn-success">Retour</a>
             </div>
         </div>
     </div>
@@ -1373,7 +1373,7 @@
             browse_button: 'pickfiles', // you can pass in id...
             multipart_params: { typeDoc: $('#typefile').val(), numrapport: $('#numrapport').val() },
             container: document.getElementById('container'), // ... or DOM Element itself
-            url: "/claimapp/Diagnostic_plomb/Upload",
+            url: "/Diagnostic_plomb/Upload",
             flash_swf_url: '/plupload/js/Moxie.swf',
             silverlight_xap_url: '/plupload/js/Moxie.xap',
             init: {
