@@ -48,7 +48,7 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
                 }
                 else
                 {
-                    Response.Redirect("https://adfs.opacoise.fr/adfs/ls/?wa=wsignout1.0");
+                    Response.Redirect("~/Saml2/Logout");
                 }
             }
 

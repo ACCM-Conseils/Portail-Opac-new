@@ -58,7 +58,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
                     }
                     else
                     {
-                        Response.Redirect("https://login.microsoftonline.com/35635740-39c9-45fd-9aa9-89aca788192e/saml2");
+                        Response.Redirect("~/Saml2/Logout");
                     }
                 }
 
@@ -573,7 +573,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
 
                 dbContext.SaveChanges();
 
-                Response.Redirect("https://adfs.opacoise.fr/adfs/ls/?wa=wsignout1.0");
+                Response.Redirect("~/Saml2/Logout");
             }
         }
 
