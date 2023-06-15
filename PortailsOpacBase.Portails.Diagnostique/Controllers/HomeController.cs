@@ -572,7 +572,6 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
                 dbContext.connexions.Remove(c);
 
                 dbContext.SaveChanges();
-
                 Response.Redirect("~/Saml2/Logout");
             }
         }

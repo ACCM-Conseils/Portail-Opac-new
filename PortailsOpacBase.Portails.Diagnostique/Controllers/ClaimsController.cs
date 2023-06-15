@@ -37,19 +37,19 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
                             switch (c.Value)
                             {
                                 case "4ca2d1a6-c286-49e9-87b6-457aa109b3bd":
-                                    ProfilClaim = "REFERENT";
+                                    ProfilClaim += "REFERENT;";
                                     break;
                                 case "c99ea476-f0be-49d7-ad63-c82f6dd61692":
-                                    ProfilClaim = "OR";
+                                    ProfilClaim += "OR;";
                                     break;
                                 case "db02ab2f-f924-4064-a4e6-d18dc46fa3a5":
-                                    ProfilClaim = "DPE";
+                                    ProfilClaim += "DPE;";
                                     break;
                                 case "f7cb8b84-d977-420b-989a-9d33c0745898":
-                                    ProfilClaim = "ENT";
+                                    ProfilClaim += "ENT;";
                                     break;
                                 case "83f762e0-c785-4396-9ce5-8120bef8bf60":
-                                    ProfilClaim = "BDES;";
+                                    ProfilClaim += "BDES;";
                                     break;
                             }
 
@@ -76,9 +76,21 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
 
                         dbContext.SaveChanges();
 
-                        return RedirectToAction("Index", "Home", new { id = idConnect });
+                        int num = 1;
+                        if (ProfilClaim.Contains("BDES") && (ProfilClaim.Contains("DPE") || ProfilClaim.Contains("OR") || ProfilClaim.Contains("REF") || ProfilClaim.Contains("ENT")))
+                            num = 2;
+                        else if (ProfilClaim.Contains("BDES") && !ProfilClaim.Contains("DPE") && !ProfilClaim.Contains("OR") && !ProfilClaim.Contains("REF") && !ProfilClaim.Contains("ENT"))
+                            num = 3;
+                        switch (num)
+                        {
+                            case 1:
+                                return RedirectToAction("Index", "Home", new { id = idConnect });
+                            case 2:
+                                return RedirectToAction("Index", "Choix", new { id = idConnect });
+                            case 3:
+                                return RedirectToAction("Index", "BDES", new { id = idConnect });
+                        }
                     }
-
                 }
                 else
                 {
