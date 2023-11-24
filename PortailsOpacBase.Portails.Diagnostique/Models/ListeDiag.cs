@@ -5,6 +5,7 @@ using System.Web;
 
 namespace PortailsOpacBase.Portails.Diagnostique.Models
 {
+    [Serializable]
     public class ElemDiag
     {
         public string type_diag { get; set; }
@@ -21,13 +22,13 @@ namespace PortailsOpacBase.Portails.Diagnostique.Models
         public object date_modif { get; set; }
         public object commentaire { get; set; }
     }
-
+    [Serializable]
     public class LinkDiag
     {
         public string rel { get; set; }
         public string href { get; set; }
     }
-
+    [Serializable]
     public class ListeDiag
     {
         public List<ElemDiag> items { get; set; }

@@ -5,6 +5,7 @@ using System.Web;
 
 namespace PortailsOpacBase.Portails.Diagnostique.Models
 {
+    [Serializable]
     public class Logement
     {
         public string antenne { get; set; }
@@ -30,13 +31,13 @@ namespace PortailsOpacBase.Portails.Diagnostique.Models
         public string nom_epci { get; set; }
         public string statut_logt { get; set; }
     }
-
+    [Serializable]
     public class Lien
     {
         public string rel { get; set; }
         public string href { get; set; }
     }
-
+    [Serializable]
     public class Gbal
     {
         public List<Logement> items { get; set; }

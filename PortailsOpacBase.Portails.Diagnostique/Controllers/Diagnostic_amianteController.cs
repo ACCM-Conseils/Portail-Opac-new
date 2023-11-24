@@ -59,6 +59,8 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
 
         public ActionResult GetFichiers(int typelogement)
         {
+            log.Info("Début GetFichiers");
+
             string dataToken = "grant_type=client_credentials";
 
             WebRequest wbToken = WebRequest.Create(System.Configuration.ConfigurationManager.AppSettings["url_Auth_Etud"]);
@@ -1176,6 +1178,8 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
 
                 if (((List<Logement>)Session["Adresses"]).Count > 0)
                 {
+                    log.Info(((List<Logement>)Session["Adresses"]).Count + " adresses");
+
                     diag_logement.UpdateDiag(((Guid)Session["idRapport"]), g, b, a, cmd, societe, corres, nomdiag, daterapport, datedepot, controle);
 
                     foreach (Logement l in (List<Logement>)Session["Adresses"])
@@ -1183,16 +1187,24 @@ namespace PortailsOpacBase.Portails.Diagnostic.Controllers
                         log.Info(l.adresse + " - " + l.nomcom);
                     }
 
+                    log.Info("a : " + a);
+
                     if (String.IsNullOrEmpty(a))
                     {
                         Session["a"] = false;
                         Session["LogementEnCours"] = ((List<Logement>)Session["Adresses"]).Where(m => m.numgrpe == g && m.numbati == b && m.numall == null).First(m => String.IsNullOrEmpty(m.numloc));
+
+                        log.Info("Envoi des logements");
+
                         return Json(new { trouve = true, adresse = ((List<Logement>)Session["Adresses"]).Where(m => m.numgrpe == g && m.numbati == b && m.numall == null).First(m => String.IsNullOrEmpty(m.numloc)).nomcom }, JsonRequestBehavior.AllowGet);
                     }
                     else
                     {
                         Session["a"] = true;
                         Session["LogementEnCours"] = ((List<Logement>)Session["Adresses"]).Where(m => m.numgrpe == g && m.numbati == b && m.numall == a).First(m => String.IsNullOrEmpty(m.numloc));
+
+                        log.Info("Envoi des logements");
+
                         return Json(new { trouve = true, adresse = ((List<Logement>)Session["Adresses"]).Where(m => m.numgrpe == g && m.numbati == b && m.numall == a).First(m => String.IsNullOrEmpty(m.numloc)).adresse + " - " + ((List<Logement>)Session["Adresses"]).First(m => String.IsNullOrEmpty(m.numloc)).nomcom }, JsonRequestBehavior.AllowGet);
                     }
                 }
