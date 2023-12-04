@@ -31,6 +31,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
 
                    foreach (var c in System.Security.Claims.ClaimsPrincipal.Current.Claims)
                     {
+                        log.Info("Claim : " + c.Value);
 
                         if (c.Type.StartsWith("group"))
                         {
@@ -48,13 +49,10 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
                                 case "f7cb8b84-d977-420b-989a-9d33c0745898":
                                     ProfilClaim += "ENT;";
                                     break;
-                                case "83f762e0-c785-4396-9ce5-8120bef8bf60":
+                                case "349f5160-ab12-4d23-86f4-d2b01fd999a2":
                                     ProfilClaim += "BDES;";
                                     break;
                             }
-
-                            if(!string.IsNullOrEmpty(ProfilClaim))
-                                break;
                         }
                     }
 
@@ -62,6 +60,8 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
 
                     Session["Connect"] = idConnect;
                     Session["Profil"] = ProfilClaim;
+
+                    log.Info("Profil : " + ProfilClaim);
 
                     using (var dbContext = new DiagnostiquesEntities())
                     {
