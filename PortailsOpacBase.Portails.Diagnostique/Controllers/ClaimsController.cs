@@ -49,7 +49,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
                                 case "f7cb8b84-d977-420b-989a-9d33c0745898":
                                     ProfilClaim += "ENT;";
                                     break;
-                                case "349f5160-ab12-4d23-86f4-d2b01fd999a2":
+                                case "83f762e0-c785-4396-9ce5-8120bef8bf60":
                                     ProfilClaim += "BDES;";
                                     break;
                             }
@@ -79,7 +79,7 @@ namespace PortailsOpacBase.Portails.Diagnostique.Controllers
                         int num = 1;
                         if (ProfilClaim.Contains("BDES") && (ProfilClaim.Contains("DPE") || ProfilClaim.Contains("OR") || ProfilClaim.Contains("REF") || ProfilClaim.Contains("ENT")))
                             num = 2;
-                        else if (ProfilClaim.Contains("BDES") && !ProfilClaim.Contains("DPE") && !ProfilClaim.Contains("OR") && !ProfilClaim.Contains("REF") && !ProfilClaim.Contains("ENT"))
+                        else if (ProfilClaim.Contains("BDES") && (!ProfilClaim.Contains("DPE") && !ProfilClaim.Contains("OR") && !ProfilClaim.Contains("REF") && !ProfilClaim.Contains("ENT")))
                             num = 3;
                         switch (num)
                         {
